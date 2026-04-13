@@ -178,7 +178,7 @@ export default function App() {
                 <span style={{ fontSize: isMobile ? '11px' : '12px' }}>{item.icon}</span>
                 {/* On mobile show shorter label for Patient Records */}
                 <span style={{
-                  fontSize: isMobile ? '11px' : '12px', fontWeight: '600',
+                  fontSize: isMobile ? '11px' : '15px', fontWeight: '600',
                   color: hoveredNav === i ? item.color : 'rgba(255,255,255,0.5)',
                   transition: 'color 0.2s', whiteSpace: 'nowrap'
                 }}>
