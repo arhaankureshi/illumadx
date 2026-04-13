@@ -26,89 +26,57 @@ function FadeUp({ children, delay = 0 }) {
 
 const translations = {
   en: {
-    live: 'LIVE CLINICAL AI SYSTEM',
-    tagline: 'BECAUSE DIAGNOSIS STARTS WITH CLARITY',
+    live: 'LIVE CLINICAL AI SYSTEM', tagline: 'BECAUSE DIAGNOSIS STARTS WITH CLARITY',
     desc: '40 trained deep learning models · GradCAM++ interpretability · Statistical validation across 4 augmentation strategies',
-    upload: 'UPLOAD MRI',
-    research: 'View Research',
-    thesis: 'THE THESIS',
-    finding: 'THE FINDING',
-    features: 'WHAT ILLUMADX DOES',
+    upload: 'UPLOAD MRI', research: 'View Research', thesis: 'THE THESIS', finding: 'THE FINDING', features: 'WHAT ILLUMADX DOES',
     hawkingLine1: '"The greatest enemy of knowledge is not ignorance',
     hawkingLine2: 'it is the illusion of knowledge."',
-    hawkingBody1: 'A model scoring',
-    hawkingBody2: '99.69% accuracy',
-    hawkingBody3: 'can still be',
-    hawkingBody4: 'completely wrong',
-    hawkingBody5: 'about what it sees.',
+    hawkingBody1: 'A model scoring', hawkingBody2: '99.69% accuracy', hawkingBody3: 'can still be',
+    hawkingBody4: 'completely wrong', hawkingBody5: 'about what it sees.',
     hawkingBody6: 'This research proves it — and builds the system that fixes it.',
     quote: '"Accuracy measures outcomes. GradCAM++ measures reasoning. A model that looks at the wrong region will fail silently the moment it sees a scan from a different hospital."',
     featuresTitle: 'A complete clinical AI platform',
     featuresDesc: 'Not just a model. A deployable diagnostic system built for real clinical environments.',
     finding33x: 'Group C had 33× higher training loss than Group B with nearly identical accuracy. Same score. Completely different trustworthiness.',
     groupLabels: ['No Augmentation', 'Basic Augmentation', 'Extreme Augmentation', 'Domain-Specific'],
-    groupDescs: [
-      'Control — baseline performance',
-      'Flip, rotation 15°, brightness jitter',
-      'Illusion of knowledge — looks fine, fails silently',
-      'Expected winner — hypothesis rejected'
-    ],
+    groupDescs: ['Control — baseline performance', 'Flip, rotation 15°, brightness jitter', 'Illusion of knowledge — looks fine, fails silently', 'Expected winner — hypothesis rejected'],
     statLabels: ['Accuracy', 'ECE', 'Epoch 50 Loss'],
-    peakAcc: 'Peak Accuracy',
-    lossGap: 'Loss Gap Detected',
-    modelsTrained: 'Models Trained',
-    patients: 'Patients Underserved Globally',
+    peakAcc: 'Peak Accuracy', lossGap: 'Loss Gap Detected', modelsTrained: 'Models Trained', patients: 'Patients Underserved Globally',
   },
   fr: {
-    live: 'SYSTÈME IA CLINIQUE EN DIRECT',
-    tagline: 'PARCE QUE LE DIAGNOSTIC COMMENCE PAR LA CLARTÉ',
+    live: 'SYSTÈME IA CLINIQUE EN DIRECT', tagline: 'PARCE QUE LE DIAGNOSTIC COMMENCE PAR LA CLARTÉ',
     desc: '40 modèles d\'apprentissage profond · Interprétabilité GradCAM++ · Validation statistique sur 4 stratégies',
-    upload: 'TÉLÉCHARGER IRM',
-    research: 'Voir la Recherche',
-    thesis: 'LA THÈSE',
-    finding: 'LA DÉCOUVERTE',
-    features: 'CE QUE FAIT ILLUMADX',
+    upload: 'TÉLÉCHARGER IRM', research: 'Voir la Recherche', thesis: 'LA THÈSE', finding: 'LA DÉCOUVERTE', features: 'CE QUE FAIT ILLUMADX',
     hawkingLine1: '"Le plus grand ennemi de la connaissance n\'est pas l\'ignorance',
     hawkingLine2: 'c\'est l\'illusion de la connaissance."',
-    hawkingBody1: 'Un modèle avec',
-    hawkingBody2: '99,69% de précision',
-    hawkingBody3: 'peut encore être',
-    hawkingBody4: 'complètement erroné',
-    hawkingBody5: 'dans ce qu\'il observe.',
+    hawkingBody1: 'Un modèle avec', hawkingBody2: '99,69% de précision', hawkingBody3: 'peut encore être',
+    hawkingBody4: 'complètement erroné', hawkingBody5: 'dans ce qu\'il observe.',
     hawkingBody6: 'Cette recherche le prouve — et construit le système qui le corrige.',
     quote: '"La précision mesure les résultats. GradCAM++ mesure le raisonnement. Un modèle qui regarde la mauvaise région échouera silencieusement dès qu\'il verra un scan d\'un autre hôpital."',
     featuresTitle: 'Une plateforme IA clinique complète',
     featuresDesc: 'Pas seulement un modèle. Un système diagnostique déployable conçu pour les environnements cliniques réels.',
     finding33x: 'Le Groupe C avait une perte d\'entraînement 33× plus élevée que le Groupe B avec une précision presque identique. Même score. Fiabilité clinique complètement différente.',
     groupLabels: ['Aucune Augmentation', 'Augmentation Basique', 'Augmentation Extrême', 'Spécifique au Domaine'],
-    groupDescs: [
-      'Contrôle — performance de référence',
-      'Retournement, rotation 15°, variation de luminosité',
-      'Illusion de connaissance — semble correct, échoue silencieusement',
-      'Gagnant attendu — hypothèse rejetée'
-    ],
+    groupDescs: ['Contrôle — performance de référence', 'Retournement, rotation 15°, variation de luminosité', 'Illusion de connaissance — semble correct, échoue silencieusement', 'Gagnant attendu — hypothèse rejetée'],
     statLabels: ['Précision', 'ECE', 'Perte Époque 50'],
-    peakAcc: 'Précision Maximale',
-    lossGap: 'Écart de Perte Détecté',
-    modelsTrained: 'Modèles Entraînés',
-    patients: 'Patients Non Desservis Mondialement',
+    peakAcc: 'Précision Maximale', lossGap: 'Écart de Perte Détecté', modelsTrained: 'Modèles Entraînés', patients: 'Patients Non Desservis Mondialement',
   }
 }
 
 const navItems = [
-  { label: 'System', labelFr: 'Système', desc: 'Live AI Demo', descFr: 'Démo IA en direct', color: '#00B4D8', bg: 'rgba(0,180,216,0.1)', border: 'rgba(0,180,216,0.35)', icon: '⚡' },
-  { label: 'Patient Records', labelFr: 'Dossiers Patients', desc: 'EHR / Connect Care', descFr: 'DSE / Connect Care', color: '#10B981', bg: 'rgba(16,185,129,0.08)', border: 'rgba(16,185,129,0.25)', icon: '🗂' },
-  { label: 'PDF Report', labelFr: 'Rapport PDF', desc: 'Diagnostic Export', descFr: 'Export Diagnostique', color: '#FFB703', bg: 'rgba(255,183,3,0.08)', border: 'rgba(255,183,3,0.25)', icon: '📄' },
-  { label: 'Research', labelFr: 'Recherche', desc: 'Findings & Stats', descFr: 'Résultats & Statistiques', color: 'rgba(255,255,255,0.8)', bg: 'rgba(255,255,255,0.04)', border: 'rgba(255,255,255,0.12)', icon: '📊' },
-  { label: 'Ethics', labelFr: 'Éthique', desc: 'Health Canada', descFr: 'Santé Canada', color: 'rgba(255,255,255,0.8)', bg: 'rgba(255,255,255,0.04)', border: 'rgba(255,255,255,0.12)', icon: '⚖' },
+  { label: 'System', labelFr: 'Système', desc: 'Live AI Demo', descFr: 'Démo IA en direct', color: '#00B4D8', bg: 'rgba(0,180,216,0.1)', border: 'rgba(0,180,216,0.35)', icon: '⚡', mobileShow: true },
+  { label: 'Patient Records', labelFr: 'Dossiers', desc: 'EHR / Connect Care', descFr: 'DSE / Connect Care', color: '#10B981', bg: 'rgba(16,185,129,0.08)', border: 'rgba(16,185,129,0.25)', icon: '🗂', mobileShow: true },
+  { label: 'PDF Report', labelFr: 'Rapport PDF', desc: 'Diagnostic Export', descFr: 'Export Diagnostique', color: '#FFB703', bg: 'rgba(255,183,3,0.08)', border: 'rgba(255,183,3,0.25)', icon: '📄', mobileShow: true },
+  { label: 'Research', labelFr: 'Recherche', desc: 'Findings & Stats', descFr: 'Résultats & Stats', color: 'rgba(255,255,255,0.8)', bg: 'rgba(255,255,255,0.04)', border: 'rgba(255,255,255,0.12)', icon: '📊', mobileShow: false },
+  { label: 'Ethics', labelFr: 'Éthique', desc: 'Health Canada', descFr: 'Santé Canada', color: 'rgba(255,255,255,0.8)', bg: 'rgba(255,255,255,0.04)', border: 'rgba(255,255,255,0.12)', icon: '⚖', mobileShow: false },
 ]
 
 const features = [
-  { icon: '⬆', title: 'Live MRI Upload', titleFr: 'Téléchargement IRM', desc: 'Upload any brain MRI scan. IllumaDx runs real-time inference across all 4 trained model groups instantly.', descFr: 'Téléchargez n\'importe quelle IRM cérébrale pour une inférence en temps réel sur les 4 groupes.', color: '#00B4D8', tag: 'REAL-TIME', tagFr: 'TEMPS RÉEL' },
+  { icon: '⬆', title: 'Live MRI Upload', titleFr: 'Téléchargement IRM', desc: 'Upload any brain MRI scan. IllumaDX runs real-time inference across all 4 trained model groups instantly.', descFr: 'Téléchargez n\'importe quelle IRM cérébrale pour une inférence en temps réel sur les 4 groupes.', color: '#00B4D8', tag: 'REAL-TIME', tagFr: 'TEMPS RÉEL' },
   { icon: '🧠', title: 'GradCAM++ Heatmaps', titleFr: 'Cartes GradCAM++', desc: 'See exactly what the AI is looking at. All 4 group heatmaps side-by-side + consensus overlay.', descFr: 'Voyez exactement ce que l\'IA regarde. 4 cartes de chaleur côte à côte + superposition consensus.', color: '#10B981', tag: 'INTERPRETABILITY', tagFr: 'INTERPRÉTABILITÉ' },
   { icon: '📄', title: 'Diagnostic PDF Export', titleFr: 'Export PDF Diagnostique', desc: 'Auto-generated clinical report with prediction, heatmap, benchmark stats, and clinical disclaimer. Print-ready.', descFr: 'Rapport clinique auto-généré avec prédiction, carte de chaleur, statistiques et avertissement clinique.', color: '#FFB703', tag: 'CLINICAL', tagFr: 'CLINIQUE' },
   { icon: '🗂', title: 'EHR Integration', titleFr: 'Intégration DSE', desc: 'Mock Connect Care–style patient profiles. Enter a patient ID, run the AI, save the diagnostic PDF to their record.', descFr: 'Profils patients style Connect Care. Entrez un ID patient, lancez l\'IA, sauvegardez le PDF.', color: '#00B4D8', tag: 'PATIENT RECORDS', tagFr: 'DOSSIERS PATIENTS' },
-  { icon: '🛡', title: 'Confidence Gate', titleFr: 'Seuil de Confiance', desc: 'If model confidence falls below 60%, IllumaDx flags the scan as invalid rather than guessing.', descFr: 'Si la confiance tombe sous 60%, IllumaDx signale le scan comme invalide plutôt que de deviner.', color: '#E63946', tag: 'SAFETY', tagFr: 'SÉCURITÉ' },
+  { icon: '🛡', title: 'Confidence Gate', titleFr: 'Seuil de Confiance', desc: 'If model confidence falls below 60%, IllumaDX flags the scan as invalid rather than guessing.', descFr: 'Si la confiance tombe sous 60%, IllumaDX signale le scan comme invalide plutôt que de deviner.', color: '#E63946', tag: 'SAFETY', tagFr: 'SÉCURITÉ' },
   { icon: '⚖', title: 'Ethics & Compliance', titleFr: 'Éthique et Conformité', desc: 'Health Canada regulatory pathway, AI bias analysis, data privacy framework, and clinical limitations.', descFr: 'Voie réglementaire Santé Canada, analyse des biais IA, cadre de confidentialité des données.', color: '#FFB703', tag: 'REGULATORY', tagFr: 'RÉGLEMENTAIRE' },
 ]
 
@@ -127,10 +95,17 @@ export default function App() {
   const [hoveredStat, setHoveredStat] = useState(null)
   const [hoveredFeature, setHoveredFeature] = useState(null)
   const [hoveredNav, setHoveredNav] = useState(null)
-  const [hoveredGroup, setHoveredGroup] = useState(null)
   const [lang, setLang] = useState('en')
+  const [isMobile, setIsMobile] = useState(false)
 
   const t = translations[lang]
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
 
   useEffect(() => { const timer = setTimeout(() => setLoaded(true), 100); return () => clearTimeout(timer) }, [])
   useEffect(() => {
@@ -151,6 +126,9 @@ export default function App() {
     { value: '300K+', label: t.patients, color: '#FFB703' },
   ]
 
+  // On mobile show only mobileShow:true items, on desktop show all
+  const visibleNavItems = isMobile ? navItems.filter(n => n.mobileShow) : navItems
+
   return (
     <div style={{ background: '#05080F', minHeight: '100vh', overflowX: 'hidden', fontFamily: "'Inter', system-ui, sans-serif" }}>
       <style>{`
@@ -169,7 +147,7 @@ export default function App() {
       {/* ── NAV ── */}
       <nav style={{
         position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
-        padding: '0 36px', height: '64px',
+        padding: '0 24px', height: '60px',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
         background: scrollY > 60 ? 'rgba(5,8,15,0.94)' : 'rgba(5,8,15,0.6)',
         backdropFilter: 'blur(24px)',
@@ -178,113 +156,122 @@ export default function App() {
         opacity: loaded ? 1 : 0,
         animation: loaded ? 'fadeSlideIn 0.8s ease 0.2s both' : 'none',
       }}>
-        <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '26px', letterSpacing: '2px', color: '#fff', cursor: 'pointer', flexShrink: 0 }}>
-          IllumaDx
+        {/* Logo */}
+        <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: isMobile ? '22px' : '26px', letterSpacing: '2px', cursor: 'pointer', flexShrink: 0 }}>
+          <span style={{ color: '#fff' }}>Illuma</span><span style={{ color: '#00B4D8' }}>DX</span>
         </div>
 
-        {/* Nav buttons */}
-        <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
-          {navItems.map((item, i) => (
+        {/* Nav items — all on desktop, only 3 on mobile */}
+        <div style={{ display: 'flex', gap: isMobile ? '4px' : '6px', alignItems: 'center' }}>
+          {visibleNavItems.map((item, i) => (
             <div key={item.label} className="nav-btn"
               onMouseEnter={() => setHoveredNav(i)}
               onMouseLeave={() => setHoveredNav(null)}
               style={{ position: 'relative', cursor: 'pointer' }}>
               <div style={{
-                display: 'flex', alignItems: 'center', gap: '7px',
-                padding: '8px 16px',
+                display: 'flex', alignItems: 'center', gap: isMobile ? '4px' : '6px',
+                padding: isMobile ? '6px 8px' : '7px 14px',
                 background: hoveredNav === i ? item.bg : 'transparent',
                 border: `1px solid ${hoveredNav === i ? item.border : 'transparent'}`,
-                borderRadius: '6px',
-                transition: 'all 0.2s ease',
+                borderRadius: '6px', transition: 'all 0.2s ease',
               }}>
-                <span style={{ fontSize: '13px' }}>{item.icon}</span>
+                <span style={{ fontSize: isMobile ? '11px' : '12px' }}>{item.icon}</span>
+                {/* On mobile show shorter label for Patient Records */}
                 <span style={{
-                  fontSize: '13px', fontWeight: '600',
+                  fontSize: isMobile ? '11px' : '12px', fontWeight: '600',
                   color: hoveredNav === i ? item.color : 'rgba(255,255,255,0.5)',
                   transition: 'color 0.2s', whiteSpace: 'nowrap'
                 }}>
-                  {lang === 'fr' ? item.labelFr : item.label}
+                  {isMobile
+                    ? (lang === 'fr' ? item.labelFr : item.label).split(' ')[0]
+                    : (lang === 'fr' ? item.labelFr : item.label)
+                  }
                 </span>
               </div>
-              {/* Tooltip */}
-              <div className="nav-tooltip" style={{
-                position: 'absolute', top: 'calc(100% + 8px)', left: '50%',
-                transform: 'translateX(-50%) translateY(4px)',
-                background: 'rgba(10,22,40,0.98)', border: `1px solid ${item.border}`,
-                borderRadius: '5px', padding: '6px 12px', whiteSpace: 'nowrap',
-                fontSize: '11px', color: item.color, letterSpacing: '0.5px',
-                opacity: 0, transition: 'opacity 0.2s, transform 0.2s', pointerEvents: 'none',
-                backdropFilter: 'blur(12px)', zIndex: 200
-              }}>
-                {lang === 'fr' ? item.descFr : item.desc}
-              </div>
+              {/* Tooltip — desktop only */}
+              {!isMobile && (
+                <div className="nav-tooltip" style={{
+                  position: 'absolute', top: 'calc(100% + 8px)', left: '50%',
+                  transform: 'translateX(-50%) translateY(4px)',
+                  background: 'rgba(10,22,40,0.98)', border: `1px solid ${item.border}`,
+                  borderRadius: '5px', padding: '5px 10px', whiteSpace: 'nowrap',
+                  fontSize: '10px', color: item.color, letterSpacing: '0.5px',
+                  opacity: 0, transition: 'opacity 0.2s, transform 0.2s', pointerEvents: 'none',
+                  backdropFilter: 'blur(12px)', zIndex: 200
+                }}>
+                  {lang === 'fr' ? item.descFr : item.desc}
+                </div>
+              )}
             </div>
           ))}
         </div>
 
-        {/* Upload CTA */}
+        {/* Upload button */}
         <button style={{
-          padding: '9px 20px', background: '#00B4D8', color: '#05080F',
-          border: 'none', borderRadius: '4px', fontSize: '12px', fontWeight: '800',
-          cursor: 'pointer', letterSpacing: '1px', transition: 'all 0.2s',
-          boxShadow: '0 0 20px rgba(0,180,216,0.2)', fontFamily: 'inherit', flexShrink: 0
+          padding: isMobile ? '6px 12px' : '8px 18px',
+          background: '#00B4D8', color: '#05080F',
+          border: 'none', borderRadius: '4px',
+          fontSize: isMobile ? '10px' : '11px',
+          fontWeight: '800', cursor: 'pointer', letterSpacing: '1px',
+          transition: 'all 0.2s', boxShadow: '0 0 20px rgba(0,180,216,0.2)',
+          fontFamily: 'inherit', flexShrink: 0
         }}
           onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 0 40px rgba(0,180,216,0.5)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
           onMouseLeave={e => { e.currentTarget.style.boxShadow = '0 0 20px rgba(0,180,216,0.2)'; e.currentTarget.style.transform = 'translateY(0)' }}>
-          {t.upload}
+          {isMobile ? 'UPLOAD' : t.upload}
         </button>
       </nav>
 
       {/* ── HERO ── */}
-      <section style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center', padding: '80px 24px 40px', position: 'relative', zIndex: 1 }}>
+      <section style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center', padding: isMobile ? '80px 20px 40px' : '80px 24px 40px', position: 'relative', zIndex: 1 }}>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '28px', animation: loaded ? 'fadeSlideIn 0.8s ease 0.4s both' : 'none', opacity: 0 }}>
           <div style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#10B981', animation: 'ripple 2s infinite' }} />
-          <span style={{ fontSize: '11px', color: '#10B981', letterSpacing: '3px', fontWeight: '700' }}>{t.live}</span>
+          <span style={{ fontSize: isMobile ? '9px' : '11px', color: '#10B981', letterSpacing: '3px', fontWeight: '700' }}>{t.live}</span>
         </div>
 
         <div style={{ animation: loaded ? 'fadeSlideIn 1s cubic-bezier(0.16,1,0.3,1) 0.5s both' : 'none', opacity: 0 }}>
           <h1 style={{
             fontFamily: "'Bebas Neue', sans-serif",
-            fontSize: 'clamp(80px, 13vw, 160px)',
-            fontWeight: '400', letterSpacing: '6px', lineHeight: '0.9', margin: 0, color: '#fff',
+            fontSize: isMobile ? 'clamp(72px, 22vw, 130px)' : 'clamp(80px, 13vw, 160px)',
+            fontWeight: '400', letterSpacing: '6px', lineHeight: '0.9', margin: 0,
             transform: `translate(${mouseX * 0.15}px, ${mouseY * 0.1}px)`,
             transition: 'transform 0.2s ease', userSelect: 'none',
           }}>
-            IllumaDx
+            <span style={{ color: '#fff' }}>Illuma</span><span style={{ color: '#00B4D8' }}>DX</span>
           </h1>
         </div>
 
         <div style={{ animation: loaded ? 'fadeSlideIn 0.8s ease 0.8s both' : 'none', opacity: 0, marginTop: '28px' }}>
-          <p style={{ fontSize: '11px', color: '#00B4D8', letterSpacing: '4px', fontWeight: '600', marginBottom: '14px' }}>{t.tagline}</p>
-          <p style={{ fontSize: '15px', color: 'rgba(255,255,255,0.3)', maxWidth: '500px', lineHeight: '1.85', margin: '0 auto 44px' }}>{t.desc}</p>
+          <p style={{ fontSize: isMobile ? '9px' : '11px', color: '#00B4D8', letterSpacing: isMobile ? '2px' : '4px', fontWeight: '600', marginBottom: '14px' }}>{t.tagline}</p>
+          <p style={{ fontSize: isMobile ? '13px' : '15px', color: 'rgba(255,255,255,0.3)', maxWidth: '500px', lineHeight: '1.85', margin: '0 auto 44px' }}>{t.desc}</p>
         </div>
 
         <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', flexWrap: 'wrap', animation: loaded ? 'fadeSlideIn 0.8s ease 1s both' : 'none', opacity: 0 }}>
-          <button style={{ padding: '14px 40px', background: '#00B4D8', color: '#05080F', border: 'none', borderRadius: '3px', fontSize: '13px', fontWeight: '800', cursor: 'pointer', letterSpacing: '1.5px', boxShadow: '0 0 40px rgba(0,180,216,0.25)', transition: 'all 0.25s', fontFamily: 'inherit' }}
+          <button style={{ padding: isMobile ? '12px 28px' : '14px 40px', background: '#00B4D8', color: '#05080F', border: 'none', borderRadius: '3px', fontSize: '13px', fontWeight: '800', cursor: 'pointer', letterSpacing: '1.5px', boxShadow: '0 0 40px rgba(0,180,216,0.25)', transition: 'all 0.25s', fontFamily: 'inherit' }}
             onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 0 70px rgba(0,180,216,0.55)'; e.currentTarget.style.transform = 'translateY(-2px)' }}
             onMouseLeave={e => { e.currentTarget.style.boxShadow = '0 0 40px rgba(0,180,216,0.25)'; e.currentTarget.style.transform = 'translateY(0)' }}>
             {t.upload}
           </button>
-          <button style={{ padding: '14px 40px', background: 'transparent', color: 'rgba(255,255,255,0.65)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '3px', fontSize: '13px', fontWeight: '500', cursor: 'pointer', transition: 'all 0.25s', fontFamily: 'inherit' }}
+          <button style={{ padding: isMobile ? '12px 28px' : '14px 40px', background: 'transparent', color: 'rgba(255,255,255,0.65)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '3px', fontSize: '13px', fontWeight: '500', cursor: 'pointer', transition: 'all 0.25s', fontFamily: 'inherit' }}
             onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.3)'; e.currentTarget.style.color = '#fff'; e.currentTarget.style.transform = 'translateY(-2px)' }}
             onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)'; e.currentTarget.style.color = 'rgba(255,255,255,0.65)'; e.currentTarget.style.transform = 'translateY(0)' }}>
             {t.research}
           </button>
         </div>
 
-        <div style={{ display: 'flex', gap: '10px', marginTop: '64px', flexWrap: 'wrap', justifyContent: 'center', animation: loaded ? 'fadeSlideIn 0.8s ease 1.2s both' : 'none', opacity: 0 }}>
+        <div style={{ display: 'flex', gap: '8px', marginTop: '56px', flexWrap: 'wrap', justifyContent: 'center', animation: loaded ? 'fadeSlideIn 0.8s ease 1.2s both' : 'none', opacity: 0 }}>
           {stats.map((stat, i) => (
             <div key={i} onMouseEnter={() => setHoveredStat(i)} onMouseLeave={() => setHoveredStat(null)}
               style={{
-                padding: '18px 22px',
+                padding: isMobile ? '12px 14px' : '18px 22px',
                 border: `1px solid ${hoveredStat === i ? stat.color + '55' : 'rgba(255,255,255,0.06)'}`,
                 borderRadius: '6px', background: hoveredStat === i ? stat.color + '0A' : 'rgba(255,255,255,0.015)',
-                textAlign: 'center', minWidth: '110px', cursor: 'default',
+                textAlign: 'center', minWidth: isMobile ? '70px' : '110px', cursor: 'default',
                 transition: 'all 0.3s ease', transform: hoveredStat === i ? 'translateY(-4px)' : 'translateY(0)'
               }}>
-              <div style={{ fontSize: '24px', fontWeight: '900', color: stat.color, letterSpacing: '-0.5px' }}>{stat.value}</div>
-              <div style={{ fontSize: '9px', color: 'rgba(255,255,255,0.28)', marginTop: '5px', letterSpacing: '1.5px', fontWeight: '600' }}>{stat.label.toUpperCase()}</div>
+              <div style={{ fontSize: isMobile ? '16px' : '24px', fontWeight: '900', color: stat.color, letterSpacing: '-0.5px' }}>{stat.value}</div>
+              <div style={{ fontSize: '8px', color: 'rgba(255,255,255,0.28)', marginTop: '4px', letterSpacing: '1px', fontWeight: '600' }}>{stat.label.toUpperCase()}</div>
             </div>
           ))}
         </div>
@@ -295,53 +282,37 @@ export default function App() {
       </section>
 
       {/* ── HAWKING QUOTE ── */}
-      <section style={{ minHeight: '50vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center', padding: '100px 24px', position: 'relative', zIndex: 1, borderTop: '1px solid rgba(255,255,255,0.04)', background: 'linear-gradient(180deg, rgba(0,180,216,0.02) 0%, transparent 100%)' }}>
-        <FadeUp>
-          <p style={{ fontSize: '10px', color: 'rgba(255,255,255,0.25)', letterSpacing: '5px', marginBottom: '44px', fontWeight: '600' }}>{t.thesis}</p>
-        </FadeUp>
+      <section style={{ minHeight: '50vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center', padding: isMobile ? '80px 20px' : '100px 24px', position: 'relative', zIndex: 1, borderTop: '1px solid rgba(255,255,255,0.04)', background: 'linear-gradient(180deg, rgba(0,180,216,0.02) 0%, transparent 100%)' }}>
+        <FadeUp><p style={{ fontSize: '10px', color: 'rgba(255,255,255,0.25)', letterSpacing: '5px', marginBottom: '44px', fontWeight: '600' }}>{t.thesis}</p></FadeUp>
         <FadeUp delay={0.12}>
-          <blockquote style={{ fontSize: 'clamp(20px, 3.5vw, 40px)', fontWeight: '300', color: 'rgba(255,255,255,0.72)', lineHeight: '1.5', maxWidth: '800px', margin: '0 auto 16px', fontStyle: 'italic', fontFamily: 'Georgia, serif' }}>
-            {t.hawkingLine1}<br />
-            <span style={{ color: '#fff', fontWeight: '400' }}>{t.hawkingLine2}</span>
+          <blockquote style={{ fontSize: isMobile ? 'clamp(18px, 5vw, 28px)' : 'clamp(20px, 3.5vw, 40px)', fontWeight: '300', color: 'rgba(255,255,255,0.72)', lineHeight: '1.5', maxWidth: '800px', margin: '0 auto 16px', fontStyle: 'italic', fontFamily: 'Georgia, serif' }}>
+            {t.hawkingLine1}<br /><span style={{ color: '#fff', fontWeight: '400' }}>{t.hawkingLine2}</span>
           </blockquote>
         </FadeUp>
-        <FadeUp delay={0.22}>
-          <p style={{ fontSize: '11px', color: 'rgba(255,255,255,0.2)', letterSpacing: '3px', marginBottom: '48px' }}>— STEPHEN HAWKING</p>
-        </FadeUp>
+        <FadeUp delay={0.22}><p style={{ fontSize: '11px', color: 'rgba(255,255,255,0.2)', letterSpacing: '3px', marginBottom: '48px' }}>— STEPHEN HAWKING</p></FadeUp>
         <FadeUp delay={0.34}>
-          <p style={{ fontSize: 'clamp(14px, 1.8vw, 17px)', color: 'rgba(255,255,255,0.38)', maxWidth: '520px', lineHeight: '1.9' }}>
+          <p style={{ fontSize: isMobile ? '14px' : 'clamp(14px, 1.8vw, 17px)', color: 'rgba(255,255,255,0.38)', maxWidth: '520px', lineHeight: '1.9' }}>
             {t.hawkingBody1} <span style={{ color: '#fff', fontWeight: '600' }}>{t.hawkingBody2}</span> {t.hawkingBody3} <span style={{ color: '#E63946', fontWeight: '600' }}>{t.hawkingBody4}</span> {t.hawkingBody5}
-            <br /><br />
-            {t.hawkingBody6}
+            <br /><br />{t.hawkingBody6}
           </p>
         </FadeUp>
       </section>
 
       {/* ── FEATURES ── */}
-      <section style={{ padding: '100px 48px', position: 'relative', zIndex: 1, borderTop: '1px solid rgba(255,255,255,0.04)' }}>
+      <section style={{ padding: isMobile ? '80px 20px' : '100px 48px', position: 'relative', zIndex: 1, borderTop: '1px solid rgba(255,255,255,0.04)' }}>
         <FadeUp>
           <p style={{ fontSize: '10px', color: '#00B4D8', letterSpacing: '5px', marginBottom: '14px', fontWeight: '700', textAlign: 'center' }}>{t.features}</p>
-          <h2 style={{ fontSize: 'clamp(32px, 5vw, 60px)', fontWeight: '900', textAlign: 'center', letterSpacing: '-2px', marginBottom: '14px', color: '#fff' }}>{t.featuresTitle}</h2>
+          <h2 style={{ fontSize: isMobile ? 'clamp(28px, 8vw, 48px)' : 'clamp(32px, 5vw, 60px)', fontWeight: '900', textAlign: 'center', letterSpacing: '-2px', marginBottom: '14px', color: '#fff' }}>{t.featuresTitle}</h2>
           <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.35)', fontSize: '15px', maxWidth: '500px', margin: '0 auto 60px', lineHeight: '1.7' }}>{t.featuresDesc}</p>
         </FadeUp>
-
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '12px', maxWidth: '1000px', margin: '0 auto' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(280px, 1fr))', gap: '12px', maxWidth: '1000px', margin: '0 auto' }}>
           {features.map((f, i) => (
             <FadeUp key={f.title} delay={i * 0.07}>
               <div onMouseEnter={() => setHoveredFeature(i)} onMouseLeave={() => setHoveredFeature(null)}
-                style={{
-                  padding: '28px 26px',
-                  border: `1px solid ${hoveredFeature === i ? f.color + '40' : 'rgba(255,255,255,0.05)'}`,
-                  borderRadius: '8px', background: hoveredFeature === i ? f.color + '08' : 'rgba(255,255,255,0.015)',
-                  transition: 'all 0.35s cubic-bezier(0.16,1,0.3,1)',
-                  transform: hoveredFeature === i ? 'translateY(-5px)' : 'translateY(0)',
-                  cursor: 'default', height: '100%'
-                }}>
+                style={{ padding: '28px 26px', border: `1px solid ${hoveredFeature === i ? f.color + '40' : 'rgba(255,255,255,0.05)'}`, borderRadius: '8px', background: hoveredFeature === i ? f.color + '08' : 'rgba(255,255,255,0.015)', transition: 'all 0.35s cubic-bezier(0.16,1,0.3,1)', transform: hoveredFeature === i ? 'translateY(-5px)' : 'translateY(0)', cursor: 'default', height: '100%' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '14px' }}>
                   <span style={{ fontSize: '26px' }}>{f.icon}</span>
-                  <span style={{ fontSize: '9px', fontWeight: '700', color: f.color, border: `1px solid ${f.color}44`, padding: '3px 8px', borderRadius: '20px', letterSpacing: '1px' }}>
-                    {lang === 'fr' ? f.tagFr : f.tag}
-                  </span>
+                  <span style={{ fontSize: '9px', fontWeight: '700', color: f.color, border: `1px solid ${f.color}44`, padding: '3px 8px', borderRadius: '20px', letterSpacing: '1px' }}>{lang === 'fr' ? f.tagFr : f.tag}</span>
                 </div>
                 <p style={{ fontSize: '15px', fontWeight: '700', color: '#fff', marginBottom: '8px' }}>{lang === 'fr' ? f.titleFr : f.title}</p>
                 <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.38)', lineHeight: '1.7' }}>{lang === 'fr' ? f.descFr : f.desc}</p>
@@ -352,48 +323,41 @@ export default function App() {
       </section>
 
       {/* ── BEYOND ACCURACY ── */}
-      <section style={{ padding: '100px 48px 140px', position: 'relative', zIndex: 1, borderTop: '1px solid rgba(255,255,255,0.04)' }}>
+      <section style={{ padding: isMobile ? '80px 20px 100px' : '100px 48px 140px', position: 'relative', zIndex: 1, borderTop: '1px solid rgba(255,255,255,0.04)' }}>
         <FadeUp>
           <p style={{ fontSize: '10px', color: '#00B4D8', letterSpacing: '5px', marginBottom: '14px', fontWeight: '700', textAlign: 'center' }}>{t.finding}</p>
-          <h2 style={{ fontSize: 'clamp(40px, 7vw, 88px)', fontWeight: '900', textAlign: 'center', letterSpacing: '-3px', marginBottom: '72px', lineHeight: '0.9', color: '#fff' }}>
+          <h2 style={{ fontSize: isMobile ? 'clamp(36px, 10vw, 64px)' : 'clamp(40px, 7vw, 88px)', fontWeight: '900', textAlign: 'center', letterSpacing: '-3px', marginBottom: '72px', lineHeight: '0.9', color: '#fff' }}>
             {lang === 'fr' ? 'Au-Delà de la Précision' : 'Beyond Accuracy'}
           </h2>
         </FadeUp>
 
         <FadeUp delay={0.1}>
-          <div style={{ maxWidth: '800px', margin: '0 auto 60px', padding: '48px', background: 'rgba(230,57,70,0.03)', border: '1px solid rgba(230,57,70,0.14)', borderRadius: '8px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
+          <div style={{ maxWidth: '800px', margin: '0 auto 60px', padding: isMobile ? '36px 24px' : '48px', background: 'rgba(230,57,70,0.03)', border: '1px solid rgba(230,57,70,0.14)', borderRadius: '8px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
             <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'radial-gradient(ellipse at 50% -10%, rgba(230,57,70,0.1), transparent 55%)' }} />
-            <div style={{ fontSize: 'clamp(72px, 12vw, 140px)', fontWeight: '900', color: '#E63946', letterSpacing: '-5px', lineHeight: '1', marginBottom: '18px', animation: 'subtleGlow 3s ease-in-out infinite' }}>33×</div>
-            <p style={{ fontSize: '15px', color: 'rgba(255,255,255,0.5)', maxWidth: '460px', margin: '0 auto', lineHeight: '1.85' }}>{t.finding33x}</p>
+            <div style={{ fontSize: isMobile ? 'clamp(60px, 18vw, 100px)' : 'clamp(72px, 12vw, 140px)', fontWeight: '900', color: '#E63946', letterSpacing: '-5px', lineHeight: '1', marginBottom: '18px', animation: 'subtleGlow 3s ease-in-out infinite' }}>33×</div>
+            <p style={{ fontSize: isMobile ? '13px' : '15px', color: 'rgba(255,255,255,0.5)', maxWidth: '460px', margin: '0 auto', lineHeight: '1.85' }}>{t.finding33x}</p>
           </div>
         </FadeUp>
 
-        {/* Group cards — all translated */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(215px, 1fr))', gap: '10px', maxWidth: '960px', margin: '0 auto' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr 1fr' : 'repeat(auto-fit, minmax(215px, 1fr))', gap: '10px', maxWidth: '960px', margin: '0 auto' }}>
           {groups.map((g, i) => (
             <FadeUp key={g.group} delay={i * 0.08}>
-              <div style={{ padding: '24px 20px', border: `1px solid ${g.color}18`, borderRadius: '6px', background: `${g.color}04`, transition: 'all 0.35s cubic-bezier(0.16,1,0.3,1)', cursor: 'default', height: '100%' }}
+              <div style={{ padding: '20px 16px', border: `1px solid ${g.color}18`, borderRadius: '6px', background: `${g.color}04`, transition: 'all 0.35s cubic-bezier(0.16,1,0.3,1)', cursor: 'default', height: '100%' }}
                 onMouseEnter={e => { e.currentTarget.style.borderColor = g.color + '44'; e.currentTarget.style.background = g.color + '0C'; e.currentTarget.style.transform = 'translateY(-5px)' }}
                 onMouseLeave={e => { e.currentTarget.style.borderColor = g.color + '18'; e.currentTarget.style.background = g.color + '04'; e.currentTarget.style.transform = 'translateY(0)' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
-                  <span style={{ fontSize: '32px', fontWeight: '900', color: g.color, lineHeight: 1 }}>G{g.group}</span>
-                  {g.badge && (
-                    <span style={{ fontSize: '9px', fontWeight: '800', color: g.color, border: `1px solid ${g.color}55`, padding: '3px 8px', borderRadius: '2px', letterSpacing: '1px' }}>
-                      {g.badgeType === 'winner' ? (lang === 'fr' ? '✓ GAGNANT' : '✓ WINNER') : (lang === 'fr' ? '✗ DANGER' : '✗ DANGER')}
-                    </span>
-                  )}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '10px' }}>
+                  <span style={{ fontSize: '28px', fontWeight: '900', color: g.color, lineHeight: 1 }}>G{g.group}</span>
+                  {g.badge && <span style={{ fontSize: '8px', fontWeight: '800', color: g.color, border: `1px solid ${g.color}55`, padding: '2px 6px', borderRadius: '2px', letterSpacing: '0.5px' }}>
+                    {g.badgeType === 'winner' ? (lang === 'fr' ? '✓ GAGNANT' : '✓ WINNER') : '✗ DANGER'}
+                  </span>}
                 </div>
-                <p style={{ fontSize: '12px', fontWeight: '700', color: '#fff', marginBottom: '6px' }}>{t.groupLabels[i]}</p>
-                <p style={{ fontSize: '11px', color: 'rgba(255,255,255,0.28)', lineHeight: '1.6', marginBottom: '14px' }}>{t.groupDescs[i]}</p>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', borderTop: '1px solid rgba(255,255,255,0.04)', paddingTop: '12px' }}>
-                  {[
-                    [t.statLabels[0], g.acc, '#fff'],
-                    [t.statLabels[1], g.ece, g.group === 'C' ? '#E63946' : '#10B981'],
-                    [t.statLabels[2], g.loss, g.group === 'C' ? '#E63946' : 'rgba(255,255,255,0.45)']
-                  ].map(([label, val, col]) => (
+                <p style={{ fontSize: '11px', fontWeight: '700', color: '#fff', marginBottom: '4px' }}>{t.groupLabels[i]}</p>
+                <p style={{ fontSize: '10px', color: 'rgba(255,255,255,0.28)', lineHeight: '1.5', marginBottom: '12px' }}>{t.groupDescs[i]}</p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', borderTop: '1px solid rgba(255,255,255,0.04)', paddingTop: '10px' }}>
+                  {[[t.statLabels[0], g.acc, '#fff'], [t.statLabels[1], g.ece, g.group === 'C' ? '#E63946' : '#10B981'], [t.statLabels[2], g.loss, g.group === 'C' ? '#E63946' : 'rgba(255,255,255,0.45)']].map(([label, val, col]) => (
                     <div key={label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <span style={{ fontSize: '10px', color: 'rgba(255,255,255,0.25)' }}>{label}</span>
-                      <span style={{ fontSize: '11px', fontWeight: '700', color: col }}>{val}</span>
+                      <span style={{ fontSize: '9px', color: 'rgba(255,255,255,0.25)' }}>{label}</span>
+                      <span style={{ fontSize: '10px', fontWeight: '700', color: col }}>{val}</span>
                     </div>
                   ))}
                 </div>
@@ -404,7 +368,7 @@ export default function App() {
 
         <FadeUp delay={0.2}>
           <div style={{ maxWidth: '600px', margin: '60px auto 0', textAlign: 'center', padding: '36px 28px', borderTop: '1px solid rgba(255,255,255,0.04)' }}>
-            <p style={{ fontSize: '16px', color: 'rgba(255,255,255,0.4)', lineHeight: '1.9', fontStyle: 'italic', fontFamily: 'Georgia, serif' }}>{t.quote}</p>
+            <p style={{ fontSize: isMobile ? '14px' : '16px', color: 'rgba(255,255,255,0.4)', lineHeight: '1.9', fontStyle: 'italic', fontFamily: 'Georgia, serif' }}>{t.quote}</p>
           </div>
         </FadeUp>
       </section>
@@ -420,12 +384,10 @@ export default function App() {
       }}>
         {['en', 'fr'].map((l) => (
           <button key={l} onClick={() => setLang(l)} style={{
-            padding: '10px 18px',
-            background: lang === l ? '#00B4D8' : 'transparent',
+            padding: '10px 18px', background: lang === l ? '#00B4D8' : 'transparent',
             color: lang === l ? '#05080F' : 'rgba(255,255,255,0.4)',
-            border: 'none', cursor: 'pointer',
-            fontSize: '11px', fontWeight: '800', letterSpacing: '1.5px',
-            transition: 'all 0.25s ease', fontFamily: 'inherit'
+            border: 'none', cursor: 'pointer', fontSize: '11px', fontWeight: '800',
+            letterSpacing: '1.5px', transition: 'all 0.25s ease', fontFamily: 'inherit'
           }}>
             {l.toUpperCase()}
           </button>
