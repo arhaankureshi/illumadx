@@ -96,8 +96,541 @@ const CLASS_COLORS = {
   pituitary: '#00B4D8',
 }
 
+// ─── MOCK PATIENT DATA ───────────────────────────────────────────────────────
+const PATIENTS = [
+  {
+    id: 'AHS-10042',
+    name: 'James Okafor',
+    age: 54,
+    dob: '1970-03-12',
+    sex: 'Male',
+    physician: 'Dr. R. Patel',
+    facility: 'Northern Lights Regional Hospital',
+    dept: 'Neurology',
+    scanDate: '2026-04-10',
+    status: 'Awaiting Analysis',
+    statusColor: '#FFB703',
+    history: 'Presented with recurring headaches and vision disturbances for 3 weeks. Referred for MRI evaluation.',
+    priorScans: ['2026-01-15 — No abnormality detected'],
+    tumorType: null,
+    result: null,
+  },
+  {
+    id: 'AHS-10078',
+    name: 'Sarah Mahmoud',
+    age: 38,
+    dob: '1987-09-24',
+    sex: 'Female',
+    physician: 'Dr. L. Chen',
+    facility: 'Northern Lights Regional Hospital',
+    dept: 'Oncology',
+    scanDate: '2026-04-14',
+    status: 'Awaiting Analysis',
+    statusColor: '#FFB703',
+    history: 'Follow-up scan post-surgical resection. Patient reports fatigue and intermittent nausea.',
+    priorScans: ['2025-10-02 — Meningioma detected, surgical consult initiated', '2025-06-18 — First MRI, incidental finding'],
+    tumorType: null,
+    result: null,
+  },
+  {
+    id: 'AHS-10113',
+    name: 'David Tremblay',
+    age: 67,
+    dob: '1958-11-05',
+    sex: 'Male',
+    physician: 'Dr. A. Singh',
+    facility: 'Northern Lights Regional Hospital',
+    dept: 'Neurology',
+    scanDate: '2026-04-16',
+    status: 'Awaiting Analysis',
+    statusColor: '#FFB703',
+    history: 'Routine monitoring for known pituitary adenoma. No acute symptoms reported.',
+    priorScans: ['2025-12-10 — Pituitary adenoma stable', '2025-08-03 — Pituitary adenoma, mild enlargement noted'],
+    tumorType: null,
+    result: null,
+  },
+  {
+    id: 'AHS-10157',
+    name: 'Priya Nair',
+    age: 29,
+    dob: '1996-07-18',
+    sex: 'Female',
+    physician: 'Dr. R. Patel',
+    facility: 'Northern Lights Regional Hospital',
+    dept: 'Emergency Neurology',
+    scanDate: '2026-04-17',
+    status: 'Awaiting Analysis',
+    statusColor: '#FFB703',
+    history: 'Acute presentation — sudden onset severe headache. Seizure episode in ER. Urgent MRI ordered.',
+    priorScans: ['No prior scans on record'],
+    tumorType: null,
+    result: null,
+  },
+  {
+    id: 'AHS-10201',
+    name: 'Marc Bouchard',
+    age: 45,
+    dob: '1980-02-28',
+    sex: 'Male',
+    physician: 'Dr. L. Chen',
+    facility: 'Northern Lights Regional Hospital',
+    dept: 'Neurology',
+    scanDate: '2026-04-18',
+    status: 'Scan Complete',
+    statusColor: '#10B981',
+    history: 'Annual surveillance scan. Patient under watch for glioma family history. No current symptoms.',
+    priorScans: ['2025-04-10 — No abnormality detected', '2024-04-08 — No abnormality detected'],
+    tumorType: 'notumor',
+    result: { prediction: 'notumor', confidence: 0.9421, probabilities: { glioma: 0.021, meningioma: 0.018, notumor: 0.9421, pituitary: 0.019 } },
+  },
+]
+
+// ─── PATIENT RECORDS PAGE ────────────────────────────────────────────────────
+function PatientRecordsPage({ lang, onClose, onRunScan }) {
+  const [searchId, setSearchId] = useState('')
+  const [selectedPatient, setSelectedPatient] = useState(null)
+  const [patients, setPatients] = useState(PATIENTS)
+  const [searchError, setSearchError] = useState(false)
+  const [hoveredRow, setHoveredRow] = useState(null)
+
+  const handleSearch = () => {
+    const found = patients.find(p => p.id.toLowerCase() === searchId.trim().toLowerCase())
+    if (found) { setSelectedPatient(found); setSearchError(false) }
+    else setSearchError(true)
+  }
+
+  const handleRunScan = (patient) => {
+    onRunScan(patient, (result) => {
+      const updated = patients.map(p =>
+        p.id === patient.id
+          ? { ...p, result, status: 'Scan Complete', statusColor: '#10B981', tumorType: result.prediction }
+          : p
+      )
+      setPatients(updated)
+      setSelectedPatient({ ...patient, result, status: 'Scan Complete', statusColor: '#10B981', tumorType: result.prediction })
+    })
+  }
+
+  const isFr = lang === 'fr'
+
+  return (
+    <div style={{
+      position: 'fixed', inset: 0, zIndex: 500,
+      background: '#05080F',
+      display: 'flex', flexDirection: 'column',
+      fontFamily: "'Inter', system-ui, sans-serif",
+      animation: 'slideInRight 0.4s cubic-bezier(0.16,1,0.3,1)',
+    }}>
+      {/* Top bar */}
+      <div style={{
+        background: 'rgba(10,22,40,0.98)', borderBottom: '1px solid rgba(16,185,129,0.2)',
+        padding: '0 24px', height: '60px',
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        backdropFilter: 'blur(20px)', flexShrink: 0,
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <button onClick={onClose} style={{
+            background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
+            color: 'rgba(255,255,255,0.5)', borderRadius: '6px', width: '32px', height: '32px',
+            cursor: 'pointer', fontSize: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}>←</button>
+          <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '22px', letterSpacing: '2px' }}>
+            <span style={{ color: '#fff' }}>Illuma</span><span style={{ color: '#00B4D8' }}>DX</span>
+          </div>
+          <div style={{ width: '1px', height: '20px', background: 'rgba(255,255,255,0.1)' }} />
+          <span style={{ fontSize: '11px', color: '#10B981', letterSpacing: '3px', fontWeight: '700' }}>
+            {isFr ? 'DOSSIERS PATIENTS' : 'PATIENT RECORDS'}
+          </span>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <div style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#10B981', animation: 'ripple 2s infinite' }} />
+          <span style={{ fontSize: '10px', color: 'rgba(255,255,255,0.3)', letterSpacing: '2px' }}>
+            {isFr ? 'HÔPITAL NORTHERN LIGHTS · CONNECT CARE' : 'NORTHERN LIGHTS REGIONAL · CONNECT CARE'}
+          </span>
+        </div>
+      </div>
+
+      <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
+        {/* LEFT PANEL — patient list */}
+        <div style={{
+          width: selectedPatient ? '320px' : '100%',
+          borderRight: selectedPatient ? '1px solid rgba(255,255,255,0.06)' : 'none',
+          display: 'flex', flexDirection: 'column', flexShrink: 0,
+          transition: 'width 0.4s cubic-bezier(0.16,1,0.3,1)',
+          overflowY: 'auto',
+        }}>
+          {/* Search bar */}
+          <div style={{ padding: '20px', borderBottom: '1px solid rgba(255,255,255,0.05)', flexShrink: 0 }}>
+            <p style={{ fontSize: '9px', color: 'rgba(255,255,255,0.25)', letterSpacing: '3px', marginBottom: '10px', fontWeight: '600' }}>
+              {isFr ? 'RECHERCHER PAR ID PATIENT' : 'SEARCH BY PATIENT ID'}
+            </p>
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <input
+                value={searchId}
+                onChange={e => { setSearchId(e.target.value); setSearchError(false) }}
+                onKeyDown={e => e.key === 'Enter' && handleSearch()}
+                placeholder={isFr ? 'ex. AHS-10042' : 'e.g. AHS-10042'}
+                style={{
+                  flex: 1, background: 'rgba(255,255,255,0.04)',
+                  border: `1px solid ${searchError ? '#E63946' : 'rgba(255,255,255,0.1)'}`,
+                  borderRadius: '6px', padding: '10px 14px',
+                  color: '#fff', fontSize: '13px', outline: 'none',
+                  fontFamily: 'inherit',
+                }}
+              />
+              <button onClick={handleSearch} style={{
+                padding: '10px 16px', background: '#10B981', color: '#05080F',
+                border: 'none', borderRadius: '6px', cursor: 'pointer',
+                fontSize: '11px', fontWeight: '800', letterSpacing: '0.5px', fontFamily: 'inherit',
+              }}>
+                {isFr ? 'CHERCHER' : 'SEARCH'}
+              </button>
+            </div>
+            {searchError && (
+              <p style={{ fontSize: '10px', color: '#E63946', marginTop: '8px' }}>
+                {isFr ? 'Aucun patient trouvé.' : 'No patient found with that ID.'}
+              </p>
+            )}
+          </div>
+
+          {/* Patient list */}
+          <div style={{ padding: '12px', flex: 1 }}>
+            <p style={{ fontSize: '9px', color: 'rgba(255,255,255,0.2)', letterSpacing: '3px', marginBottom: '10px', padding: '0 8px', fontWeight: '600' }}>
+              {isFr ? `${patients.length} DOSSIERS ACTIFS` : `${patients.length} ACTIVE RECORDS`}
+            </p>
+            {patients.map((p, i) => (
+              <div key={p.id}
+                onClick={() => setSelectedPatient(p)}
+                onMouseEnter={() => setHoveredRow(i)}
+                onMouseLeave={() => setHoveredRow(null)}
+                style={{
+                  padding: '14px 16px', borderRadius: '8px', cursor: 'pointer', marginBottom: '4px',
+                  background: selectedPatient?.id === p.id
+                    ? 'rgba(16,185,129,0.08)'
+                    : hoveredRow === i ? 'rgba(255,255,255,0.03)' : 'transparent',
+                  border: `1px solid ${selectedPatient?.id === p.id ? 'rgba(16,185,129,0.25)' : 'rgba(255,255,255,0.04)'}`,
+                  transition: 'all 0.2s ease',
+                }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '6px' }}>
+                  <div>
+                    <p style={{ fontSize: '13px', fontWeight: '700', color: '#fff', marginBottom: '2px' }}>{p.name}</p>
+                    <p style={{ fontSize: '10px', color: 'rgba(255,255,255,0.3)', letterSpacing: '1px' }}>{p.id}</p>
+                  </div>
+                  <span style={{
+                    fontSize: '8px', fontWeight: '800', color: p.statusColor,
+                    border: `1px solid ${p.statusColor}44`, padding: '3px 7px',
+                    borderRadius: '3px', letterSpacing: '0.5px', whiteSpace: 'nowrap', marginLeft: '8px',
+                  }}>
+                    {p.status === 'Scan Complete'
+                      ? (isFr ? 'SCAN TERMINÉ' : 'SCAN COMPLETE')
+                      : (isFr ? 'EN ATTENTE' : 'AWAITING')}
+                  </span>
+                </div>
+                <div style={{ display: 'flex', gap: '12px' }}>
+                  <span style={{ fontSize: '10px', color: 'rgba(255,255,255,0.25)' }}>{p.age}y · {p.sex}</span>
+                  <span style={{ fontSize: '10px', color: 'rgba(255,255,255,0.25)' }}>{p.dept}</span>
+                </div>
+                {p.tumorType && (
+                  <div style={{ marginTop: '6px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <div style={{ width: '5px', height: '5px', borderRadius: '50%', background: CLASS_COLORS[p.tumorType] }} />
+                    <span style={{ fontSize: '10px', color: CLASS_COLORS[p.tumorType], fontWeight: '700', textTransform: 'uppercase' }}>
+                      {p.tumorType} {isFr ? 'détecté' : 'detected'}
+                    </span>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* RIGHT PANEL — patient detail */}
+        {selectedPatient && (
+          <PatientDetail
+            patient={selectedPatient}
+            lang={lang}
+            onRunScan={handleRunScan}
+            onClose={() => setSelectedPatient(null)}
+          />
+        )}
+
+        {/* Empty state when no patient selected and list is collapsed */}
+        {!selectedPatient && (
+          <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', display: 'none' }} />
+        )}
+      </div>
+    </div>
+  )
+}
+
+function PatientDetail({ patient, lang, onRunScan, onClose }) {
+  const [scanPhase, setScanPhase] = useState(patient.result ? 'done' : 'idle')
+  const [localResult, setLocalResult] = useState(patient.result || null)
+  const isFr = lang === 'fr'
+  const fileRef = useRef(null)
+
+  useEffect(() => {
+    setScanPhase(patient.result ? 'done' : 'idle')
+    setLocalResult(patient.result || null)
+  }, [patient.id])
+
+  const handleFile = async (file) => {
+    if (!file || !file.type.startsWith('image/')) return
+    setScanPhase('loading')
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+      const res = await fetch(`${API_URL}/predict`, { method: 'POST', body: formData })
+      const data = await res.json()
+      if (!res.ok) { setScanPhase(data.error === 'not_mri' ? 'not_mri' : 'invalid'); return }
+      setLocalResult(data)
+      setScanPhase('done')
+      onRunScan(data)
+    } catch { setScanPhase('error') }
+  }
+
+  const classOrder = ['glioma', 'meningioma', 'notumor', 'pituitary']
+
+  return (
+    <div style={{
+      flex: 1, overflowY: 'auto', padding: '28px',
+      animation: 'fadeSlideIn 0.35s cubic-bezier(0.16,1,0.3,1)',
+    }}>
+      {/* Patient header */}
+      <div style={{
+        background: 'rgba(10,22,40,0.6)', border: '1px solid rgba(255,255,255,0.07)',
+        borderRadius: '10px', padding: '24px 28px', marginBottom: '20px',
+        display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px',
+      }}>
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px' }}>
+            <h2 style={{ fontSize: '22px', fontWeight: '800', color: '#fff', letterSpacing: '-0.5px' }}>{patient.name}</h2>
+            <span style={{
+              fontSize: '8px', fontWeight: '800', color: patient.statusColor,
+              border: `1px solid ${patient.statusColor}44`, padding: '3px 8px', borderRadius: '3px', letterSpacing: '0.5px',
+            }}>
+              {patient.status === 'Scan Complete' ? (isFr ? 'SCAN TERMINÉ' : 'SCAN COMPLETE') : (isFr ? 'EN ATTENTE' : 'AWAITING ANALYSIS')}
+            </span>
+          </div>
+          <p style={{ fontSize: '11px', color: '#10B981', letterSpacing: '2px', fontWeight: '700', marginBottom: '14px' }}>{patient.id}</p>
+          <div style={{ display: 'flex', gap: '24px', flexWrap: 'wrap' }}>
+            {[
+              [isFr ? 'ÂGE' : 'AGE', `${patient.age} ${isFr ? 'ans' : 'yrs'}`],
+              [isFr ? 'SEXE' : 'SEX', patient.sex],
+              [isFr ? 'MÉDECIN' : 'PHYSICIAN', patient.physician],
+              [isFr ? 'SERVICE' : 'DEPARTMENT', patient.dept],
+              [isFr ? 'DATE SCAN' : 'SCAN DATE', patient.scanDate],
+            ].map(([label, val]) => (
+              <div key={label}>
+                <p style={{ fontSize: '8px', color: 'rgba(255,255,255,0.25)', letterSpacing: '2px', marginBottom: '3px' }}>{label}</p>
+                <p style={{ fontSize: '13px', fontWeight: '600', color: 'rgba(255,255,255,0.8)' }}>{val}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div style={{ textAlign: 'right' }}>
+          <p style={{ fontSize: '9px', color: 'rgba(255,255,255,0.2)', letterSpacing: '2px', marginBottom: '4px' }}>
+            {isFr ? 'ÉTABLISSEMENT' : 'FACILITY'}
+          </p>
+          <p style={{ fontSize: '11px', color: 'rgba(255,255,255,0.5)', maxWidth: '200px', textAlign: 'right', lineHeight: '1.5' }}>{patient.facility}</p>
+        </div>
+      </div>
+
+      {/* Clinical history */}
+      <div style={{
+        background: 'rgba(10,22,40,0.4)', border: '1px solid rgba(255,255,255,0.05)',
+        borderRadius: '8px', padding: '20px 24px', marginBottom: '20px',
+      }}>
+        <p style={{ fontSize: '9px', color: 'rgba(255,255,255,0.25)', letterSpacing: '3px', marginBottom: '10px', fontWeight: '600' }}>
+          {isFr ? 'HISTORIQUE CLINIQUE' : 'CLINICAL HISTORY'}
+        </p>
+        <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.6)', lineHeight: '1.8' }}>{patient.history}</p>
+        <div style={{ marginTop: '16px', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '14px' }}>
+          <p style={{ fontSize: '9px', color: 'rgba(255,255,255,0.2)', letterSpacing: '3px', marginBottom: '8px', fontWeight: '600' }}>
+            {isFr ? 'SCANS PRÉCÉDENTS' : 'PRIOR SCANS'}
+          </p>
+          {patient.priorScans.map((s, i) => (
+            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px' }}>
+              <div style={{ width: '4px', height: '4px', borderRadius: '50%', background: 'rgba(255,255,255,0.2)', flexShrink: 0 }} />
+              <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.4)' }}>{s}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* IllumaDX scan section */}
+      <div style={{
+        background: 'rgba(0,180,216,0.03)', border: '1px solid rgba(0,180,216,0.15)',
+        borderRadius: '10px', padding: '24px',
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '20px' }}>
+          <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#00B4D8', animation: 'ripple 2s infinite' }} />
+          <span style={{ fontSize: '10px', color: '#00B4D8', letterSpacing: '3px', fontWeight: '700' }}>
+            {isFr ? 'ANALYSE ILLUMADX' : 'ILLUMADX ANALYSIS'}
+          </span>
+        </div>
+
+        {/* IDLE */}
+        {scanPhase === 'idle' && (
+          <div>
+            <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.4)', marginBottom: '16px', lineHeight: '1.7' }}>
+              {isFr
+                ? 'Téléchargez l\'IRM de ce patient pour lancer l\'analyse IA en temps réel avec GradCAM++.'
+                : "Upload this patient's MRI scan to run real-time AI analysis with GradCAM++ interpretability."}
+            </p>
+            <input ref={fileRef} type="file" accept="image/*" style={{ display: 'none' }}
+              onChange={e => handleFile(e.target.files[0])} />
+            <button onClick={() => fileRef.current.click()} style={{
+              padding: '12px 28px', background: '#00B4D8', color: '#05080F',
+              border: 'none', borderRadius: '6px', cursor: 'pointer',
+              fontSize: '11px', fontWeight: '800', letterSpacing: '1px', fontFamily: 'inherit',
+            }}>
+              {isFr ? '⚡ LANCER SCAN ILLUMADX' : '⚡ RUN ILLUMADX SCAN'}
+            </button>
+          </div>
+        )}
+
+        {/* LOADING */}
+        {scanPhase === 'loading' && (
+          <div style={{ textAlign: 'center', padding: '32px' }}>
+            <div style={{ width: '40px', height: '40px', border: '3px solid rgba(0,180,216,0.2)', borderTop: '3px solid #00B4D8', borderRadius: '50%', animation: 'spin 1s linear infinite', margin: '0 auto 16px' }} />
+            <p style={{ color: '#00B4D8', fontSize: '12px', letterSpacing: '2px', fontWeight: '700' }}>
+              {isFr ? 'ANALYSE EN COURS...' : 'ANALYSING...'}
+            </p>
+            <p style={{ color: 'rgba(255,255,255,0.2)', fontSize: '11px', marginTop: '6px' }}>
+              {isFr ? 'GradCAM++ génère les cartes de chaleur' : 'GradCAM++ generating heatmaps'}
+            </p>
+          </div>
+        )}
+
+        {/* ERROR STATES */}
+        {(scanPhase === 'not_mri' || scanPhase === 'invalid' || scanPhase === 'error') && (
+          <div style={{ textAlign: 'center', padding: '24px' }}>
+            <p style={{ color: '#E63946', fontWeight: '800', fontSize: '14px', marginBottom: '8px' }}>
+              {scanPhase === 'not_mri' ? (isFr ? 'PAS UNE IRM' : 'NOT A BRAIN MRI')
+                : scanPhase === 'invalid' ? (isFr ? 'CONFIANCE INSUFFISANTE' : 'LOW CONFIDENCE')
+                : (isFr ? 'ERREUR CONNEXION' : 'CONNECTION ERROR')}
+            </p>
+            <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: '12px', marginBottom: '16px' }}>
+              {isFr ? 'Veuillez télécharger une IRM cérébrale valide.' : 'Please upload a valid brain MRI scan.'}
+            </p>
+            <button onClick={() => setScanPhase('idle')} style={{
+              padding: '8px 20px', background: 'rgba(0,180,216,0.1)', color: '#00B4D8',
+              border: '1px solid rgba(0,180,216,0.3)', borderRadius: '4px', cursor: 'pointer',
+              fontSize: '11px', fontWeight: '700', fontFamily: 'inherit',
+            }}>
+              {isFr ? 'RÉESSAYER' : 'TRY AGAIN'}
+            </button>
+          </div>
+        )}
+
+        {/* RESULTS */}
+        {scanPhase === 'done' && localResult && (
+          <div>
+            {/* Prediction banner */}
+            <div style={{
+              background: `${CLASS_COLORS[localResult.prediction]}0F`,
+              border: `1px solid ${CLASS_COLORS[localResult.prediction]}33`,
+              borderRadius: '8px', padding: '20px 24px', marginBottom: '20px',
+              display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px',
+            }}>
+              <div>
+                <p style={{ fontSize: '9px', color: 'rgba(255,255,255,0.3)', letterSpacing: '3px', marginBottom: '6px' }}>
+                  {isFr ? 'DIAGNOSTIC ILLUMADX' : 'ILLUMADX DIAGNOSIS'}
+                </p>
+                <h3 style={{
+                  fontFamily: "'Bebas Neue', sans-serif", fontSize: '32px', letterSpacing: '2px',
+                  color: CLASS_COLORS[localResult.prediction], margin: 0,
+                }}>
+                  {localResult.prediction.toUpperCase()}
+                </h3>
+              </div>
+              <div style={{ textAlign: 'right' }}>
+                <p style={{ fontSize: '9px', color: 'rgba(255,255,255,0.3)', letterSpacing: '3px', marginBottom: '6px' }}>
+                  {isFr ? 'CONFIANCE' : 'CONFIDENCE'}
+                </p>
+                <p style={{ fontSize: '40px', fontWeight: '900', color: '#10B981', margin: 0, letterSpacing: '-2px' }}>
+                  {(localResult.confidence * 100).toFixed(1)}%
+                </p>
+              </div>
+            </div>
+
+            {/* Confidence bars */}
+            <div style={{ marginBottom: '20px' }}>
+              <p style={{ fontSize: '9px', color: 'rgba(255,255,255,0.25)', letterSpacing: '3px', marginBottom: '12px', fontWeight: '600' }}>
+                {isFr ? 'DISTRIBUTION DE CONFIANCE' : 'CONFIDENCE DISTRIBUTION'}
+              </p>
+              {['glioma', 'meningioma', 'notumor', 'pituitary'].map(cls => {
+                const prob = localResult.probabilities[cls] || 0
+                const pct = (prob * 100).toFixed(1)
+                const isTop = cls === localResult.prediction
+                return (
+                  <div key={cls} style={{ marginBottom: '8px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
+                      <span style={{ fontSize: '10px', color: isTop ? CLASS_COLORS[cls] : 'rgba(255,255,255,0.35)', fontWeight: isTop ? '700' : '400', textTransform: 'uppercase', letterSpacing: '1px' }}>{cls}</span>
+                      <span style={{ fontSize: '10px', color: isTop ? CLASS_COLORS[cls] : 'rgba(255,255,255,0.35)', fontWeight: isTop ? '700' : '400' }}>{pct}%</span>
+                    </div>
+                    <div style={{ height: '5px', background: 'rgba(255,255,255,0.05)', borderRadius: '3px', overflow: 'hidden' }}>
+                      <div style={{ height: '100%', width: `${pct}%`, background: isTop ? CLASS_COLORS[cls] : 'rgba(255,255,255,0.1)', borderRadius: '3px', transition: 'width 1s cubic-bezier(0.16,1,0.3,1)' }} />
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+
+            {/* Heatmaps */}
+            {localResult.heatmap_b && (
+              <div style={{ marginBottom: '20px' }}>
+                <p style={{ fontSize: '9px', color: 'rgba(255,255,255,0.25)', letterSpacing: '3px', marginBottom: '12px', fontWeight: '600' }}>
+                  {isFr ? 'ANALYSE GRADCAM++' : 'GRADCAM++ ANALYSIS'}
+                </p>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '8px' }}>
+                  {[
+                    { key: 'heatmap_b', label: isFr ? 'Groupe B — Basique ✓' : 'Group B — Basic ✓', color: '#10B981' },
+                    { key: 'heatmap_d', label: isFr ? 'Groupe D — Domaine' : 'Group D — Domain', color: '#FFB703' },
+                  ].map(({ key, label, color }) => (
+                    <div key={key} style={{ border: `1px solid ${color}33`, borderRadius: '6px', overflow: 'hidden' }}>
+                      <img src={`data:image/png;base64,${localResult[key]}`} alt={label} style={{ width: '100%', display: 'block' }} />
+                      <div style={{ padding: '6px 10px', background: `${color}0A` }}>
+                        <p style={{ fontSize: '9px', color, fontWeight: '700', margin: 0, letterSpacing: '0.5px' }}>{label}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div style={{ border: '1px solid rgba(0,180,216,0.3)', borderRadius: '6px', overflow: 'hidden' }}>
+                  <img src={`data:image/png;base64,${localResult.heatmap_consensus}`} alt="consensus" style={{ width: '100%', display: 'block' }} />
+                  <div style={{ padding: '8px 12px', background: 'rgba(0,180,216,0.06)' }}>
+                    <p style={{ fontSize: '9px', color: '#00B4D8', fontWeight: '700', margin: 0, letterSpacing: '0.5px' }}>
+                      {isFr ? '⬡ CONSENSUS B+D' : '⬡ CONSENSUS B+D — FINAL HEATMAP'}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Disclaimer + rescan */}
+            <div style={{ padding: '12px 16px', background: 'rgba(255,183,3,0.05)', border: '1px solid rgba(255,183,3,0.15)', borderRadius: '6px', marginBottom: '12px' }}>
+              <p style={{ fontSize: '10px', color: 'rgba(255,183,3,0.7)', margin: 0, lineHeight: '1.6' }}>
+                ⚠ {isFr ? 'Outil de recherche uniquement. Ne remplace pas le diagnostic clinique.' : 'Research tool only. Not a substitute for clinical diagnosis. Not approved by Health Canada.'}
+              </p>
+            </div>
+
+            <button onClick={() => { setScanPhase('idle'); setLocalResult(null) }} style={{
+              width: '100%', padding: '10px', background: 'rgba(0,180,216,0.08)',
+              border: '1px solid rgba(0,180,216,0.2)', color: '#00B4D8', borderRadius: '6px',
+              fontSize: '11px', fontWeight: '800', cursor: 'pointer', letterSpacing: '1px', fontFamily: 'inherit',
+            }}>
+              {isFr ? '← NOUVEAU SCAN' : '← RUN NEW SCAN'}
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// ─── UPLOAD MODAL ─────────────────────────────────────────────────────────────
 function UploadModal({ onClose, lang }) {
-  const [phase, setPhase] = useState('idle') // idle | loading | result | error | invalid
+  const [phase, setPhase] = useState('idle')
   const [result, setResult] = useState(null)
   const [preview, setPreview] = useState(null)
   const [dragOver, setDragOver] = useState(false)
@@ -149,7 +682,6 @@ function UploadModal({ onClose, lang }) {
         boxShadow: '0 40px 120px rgba(0,0,0,0.8)',
         transition: 'max-width 0.5s cubic-bezier(0.16,1,0.3,1)',
       }}>
-        {/* Close */}
         <button onClick={onClose} style={{
           position: 'absolute', top: '16px', right: '16px',
           background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
@@ -157,7 +689,6 @@ function UploadModal({ onClose, lang }) {
           cursor: 'pointer', fontSize: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center',
         }}>×</button>
 
-        {/* Header */}
         <div style={{ marginBottom: '28px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
             <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10B981', animation: 'ripple 2s infinite' }} />
@@ -173,7 +704,6 @@ function UploadModal({ onClose, lang }) {
           </p>
         </div>
 
-        {/* IDLE — drop zone */}
         {phase === 'idle' && (
           <div
             onDragOver={e => { e.preventDefault(); setDragOver(true) }}
@@ -202,7 +732,6 @@ function UploadModal({ onClose, lang }) {
           </div>
         )}
 
-        {/* LOADING */}
         {phase === 'loading' && (
           <div style={{ textAlign: 'center', padding: '60px 24px' }}>
             {preview && <img src={preview} alt="scan" style={{ width: '120px', height: '120px', objectFit: 'cover', borderRadius: '8px', marginBottom: '24px', opacity: 0.6, border: '1px solid rgba(0,180,216,0.3)' }} />}
@@ -216,7 +745,6 @@ function UploadModal({ onClose, lang }) {
           </div>
         )}
 
-        {/* NOT MRI */}
         {phase === 'not_mri' && (
           <div style={{ textAlign: 'center', padding: '48px 24px' }}>
             <div style={{ fontSize: '48px', marginBottom: '16px' }}>🧠</div>
@@ -224,9 +752,7 @@ function UploadModal({ onClose, lang }) {
               {lang === 'fr' ? 'PAS UNE IRM' : 'NOT A BRAIN MRI'}
             </h3>
             <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '13px', lineHeight: '1.7', maxWidth: '340px', margin: '0 auto 28px' }}>
-              {lang === 'fr'
-                ? 'Veuillez télécharger une IRM cérébrale valide en niveaux de gris.'
-                : 'This does not appear to be a brain MRI scan. Please upload a valid greyscale brain MRI.'}
+              {lang === 'fr' ? 'Veuillez télécharger une IRM cérébrale valide en niveaux de gris.' : 'This does not appear to be a brain MRI scan. Please upload a valid greyscale brain MRI.'}
             </p>
             <button onClick={reset} style={{ padding: '10px 24px', background: '#00B4D8', color: '#05080F', border: 'none', borderRadius: '4px', fontSize: '11px', fontWeight: '800', cursor: 'pointer', letterSpacing: '1px' }}>
               {lang === 'fr' ? 'RÉESSAYER' : 'TRY AGAIN'}
@@ -234,7 +760,6 @@ function UploadModal({ onClose, lang }) {
           </div>
         )}
 
-        {/* INVALID */}
         {phase === 'invalid' && (
           <div style={{ textAlign: 'center', padding: '48px 24px' }}>
             <div style={{ fontSize: '48px', marginBottom: '16px' }}>🛡</div>
@@ -242,9 +767,7 @@ function UploadModal({ onClose, lang }) {
               {lang === 'fr' ? 'SCAN INVALIDE' : 'INVALID SCAN'}
             </h3>
             <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '13px', lineHeight: '1.7', maxWidth: '340px', margin: '0 auto 28px' }}>
-              {lang === 'fr'
-                ? 'Confiance du modèle insuffisante. Veuillez télécharger une IRM cérébrale valide.'
-                : 'Model confidence below 60%. Please upload a valid brain MRI scan.'}
+              {lang === 'fr' ? 'Confiance du modèle insuffisante. Veuillez télécharger une IRM cérébrale valide.' : 'Model confidence below 60%. Please upload a valid brain MRI scan.'}
             </p>
             <button onClick={reset} style={{ padding: '10px 24px', background: '#00B4D8', color: '#05080F', border: 'none', borderRadius: '4px', fontSize: '11px', fontWeight: '800', cursor: 'pointer', letterSpacing: '1px' }}>
               {lang === 'fr' ? 'RÉESSAYER' : 'TRY AGAIN'}
@@ -252,7 +775,6 @@ function UploadModal({ onClose, lang }) {
           </div>
         )}
 
-        {/* ERROR */}
         {phase === 'error' && (
           <div style={{ textAlign: 'center', padding: '48px 24px' }}>
             <div style={{ fontSize: '48px', marginBottom: '16px' }}>⚠️</div>
@@ -268,10 +790,8 @@ function UploadModal({ onClose, lang }) {
           </div>
         )}
 
-        {/* RESULT */}
         {phase === 'result' && result && (
           <div>
-            {/* Top prediction */}
             <div style={{ background: 'rgba(16,185,129,0.06)', border: '1px solid rgba(16,185,129,0.25)', borderRadius: '8px', padding: '24px', marginBottom: '24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
               <div>
                 <p style={{ fontSize: '10px', color: 'rgba(255,255,255,0.3)', letterSpacing: '3px', marginBottom: '6px' }}>
@@ -291,7 +811,6 @@ function UploadModal({ onClose, lang }) {
               </div>
             </div>
 
-            {/* Confidence bar chart */}
             <div style={{ marginBottom: '28px' }}>
               <p style={{ fontSize: '10px', color: 'rgba(255,255,255,0.3)', letterSpacing: '3px', marginBottom: '14px' }}>
                 {lang === 'fr' ? 'DISTRIBUTION DE CONFIANCE' : 'CONFIDENCE DISTRIBUTION'}
@@ -314,7 +833,6 @@ function UploadModal({ onClose, lang }) {
               })}
             </div>
 
-            {/* Heatmaps */}
             <div>
               <p style={{ fontSize: '10px', color: 'rgba(255,255,255,0.3)', letterSpacing: '3px', marginBottom: '14px' }}>
                 {lang === 'fr' ? 'ANALYSE GRADCAM++' : 'GRADCAM++ ANALYSIS'}
@@ -332,7 +850,6 @@ function UploadModal({ onClose, lang }) {
                   </div>
                 ))}
               </div>
-              {/* Consensus — full width, biggest */}
               <div style={{ border: '1px solid rgba(0,180,216,0.35)', borderRadius: '8px', overflow: 'hidden' }}>
                 <img src={`data:image/png;base64,${result.heatmap_consensus}`} alt="consensus" style={{ width: '100%', display: 'block' }} />
                 <div style={{ padding: '10px 14px', background: 'rgba(0,180,216,0.06)' }}>
@@ -346,12 +863,9 @@ function UploadModal({ onClose, lang }) {
               </div>
             </div>
 
-            {/* Clinical disclaimer */}
             <div style={{ marginTop: '20px', padding: '12px 16px', background: 'rgba(255,183,3,0.05)', border: '1px solid rgba(255,183,3,0.15)', borderRadius: '6px' }}>
               <p style={{ fontSize: '10px', color: 'rgba(255,183,3,0.7)', margin: 0, lineHeight: '1.6' }}>
-                ⚠ {lang === 'fr'
-                  ? 'Outil de recherche uniquement. Ne remplace pas le diagnostic clinique. Non approuvé par Santé Canada.'
-                  : 'Research tool only. Not a substitute for clinical diagnosis. Not approved by Health Canada.'}
+                ⚠ {lang === 'fr' ? 'Outil de recherche uniquement. Ne remplace pas le diagnostic clinique. Non approuvé par Santé Canada.' : 'Research tool only. Not a substitute for clinical diagnosis. Not approved by Health Canada.'}
               </p>
             </div>
 
@@ -365,6 +879,7 @@ function UploadModal({ onClose, lang }) {
   )
 }
 
+// ─── MAIN APP ─────────────────────────────────────────────────────────────────
 export default function App() {
   const [scrollY, setScrollY] = useState(0)
   const [loaded, setLoaded] = useState(false)
@@ -376,6 +891,7 @@ export default function App() {
   const [lang, setLang] = useState('en')
   const [isMobile, setIsMobile] = useState(false)
   const [showUpload, setShowUpload] = useState(false)
+  const [activePage, setActivePage] = useState(null) // null | 'patients'
 
   const t = translations[lang]
 
@@ -398,6 +914,11 @@ export default function App() {
     return () => window.removeEventListener('mousemove', fn)
   }, [])
 
+  const handleNavClick = (item) => {
+    if (item.label === 'System') setShowUpload(true)
+    else if (item.label === 'Patient Records') setActivePage('patients')
+  }
+
   const stats = [
     { value: '99.69%', label: t.peakAcc, color: '#10B981' },
     { value: '33×', label: t.lossGap, color: '#E63946' },
@@ -416,14 +937,28 @@ export default function App() {
         @keyframes scrollline { 0%, 100% { opacity: 0.2; } 50% { opacity: 0.7; } }
         @keyframes subtleGlow { 0%, 100% { text-shadow: 0 0 60px rgba(230,57,70,0.2); } 50% { text-shadow: 0 0 100px rgba(230,57,70,0.5); } }
         @keyframes fadeSlideIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideInRight { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         .nav-btn:hover .nav-tooltip { opacity: 1 !important; transform: translateX(-50%) translateY(0px) !important; }
+        input:focus { border-color: rgba(0,180,216,0.5) !important; }
+        ::-webkit-scrollbar { width: 4px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: rgba(0,180,216,0.2); border-radius: 2px; }
       `}</style>
 
+      {/* Overlays */}
       <div style={{ position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none', backgroundImage: `linear-gradient(rgba(0,180,216,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(0,180,216,0.025) 1px, transparent 1px)`, backgroundSize: '80px 80px' }} />
       <div style={{ position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none', background: `radial-gradient(800px circle at ${50 + mouseX * 0.4}% ${50 + mouseY * 0.4}%, rgba(0,180,216,0.065), transparent 60%)` }} />
 
       {showUpload && <UploadModal onClose={() => setShowUpload(false)} lang={lang} />}
+
+      {activePage === 'patients' && (
+        <PatientRecordsPage
+          lang={lang}
+          onClose={() => setActivePage(null)}
+          onRunScan={(patient, callback) => {
+            // callback is called with result from PatientDetail
+          }}
+        />
+      )}
 
       {/* NAV */}
       <nav style={{
@@ -437,7 +972,7 @@ export default function App() {
         opacity: loaded ? 1 : 0,
         animation: loaded ? 'fadeSlideIn 0.8s ease 0.2s both' : 'none',
       }}>
-        <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: isMobile ? '22px' : '26px', letterSpacing: '2px', cursor: 'pointer', flexShrink: 0 }}>
+        <div onClick={() => setActivePage(null)} style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: isMobile ? '22px' : '26px', letterSpacing: '2px', cursor: 'pointer', flexShrink: 0 }}>
           <span style={{ color: '#fff' }}>Illuma</span><span style={{ color: '#00B4D8' }}>DX</span>
         </div>
 
@@ -446,7 +981,7 @@ export default function App() {
             <div key={item.label} className="nav-btn"
               onMouseEnter={() => setHoveredNav(i)}
               onMouseLeave={() => setHoveredNav(null)}
-              onClick={() => { if (item.label === 'System') setShowUpload(true) }}
+              onClick={() => handleNavClick(item)}
               style={{ position: 'relative', cursor: 'pointer' }}>
               <div style={{
                 display: 'flex', alignItems: 'center', gap: isMobile ? '4px' : '6px',
@@ -457,7 +992,7 @@ export default function App() {
               }}>
                 <span style={{ fontSize: isMobile ? '11px' : '12px' }}>{item.icon}</span>
                 <span style={{
-                  fontSize: isMobile ? '11px' : '15px', fontWeight: '600',
+                  fontSize: isMobile ? '11px' : '14px', fontWeight: '600',
                   color: hoveredNav === i ? item.color : 'rgba(255,255,255,0.5)',
                   transition: 'color 0.2s', whiteSpace: 'nowrap'
                 }}>
@@ -585,8 +1120,11 @@ export default function App() {
           {features.map((f, i) => (
             <FadeUp key={f.title} delay={i * 0.07}>
               <div onMouseEnter={() => setHoveredFeature(i)} onMouseLeave={() => setHoveredFeature(null)}
-                onClick={() => { if (f.title === 'Live MRI Upload') setShowUpload(true) }}
-                style={{ padding: '28px 26px', border: `1px solid ${hoveredFeature === i ? f.color + '40' : 'rgba(255,255,255,0.05)'}`, borderRadius: '8px', background: hoveredFeature === i ? f.color + '08' : 'rgba(255,255,255,0.015)', transition: 'all 0.35s cubic-bezier(0.16,1,0.3,1)', transform: hoveredFeature === i ? 'translateY(-5px)' : 'translateY(0)', cursor: f.title === 'Live MRI Upload' ? 'pointer' : 'default', height: '100%' }}>
+                onClick={() => {
+                  if (f.title === 'Live MRI Upload') setShowUpload(true)
+                  else if (f.title === 'EHR Integration') setActivePage('patients')
+                }}
+                style={{ padding: '28px 26px', border: `1px solid ${hoveredFeature === i ? f.color + '40' : 'rgba(255,255,255,0.05)'}`, borderRadius: '8px', background: hoveredFeature === i ? f.color + '08' : 'rgba(255,255,255,0.015)', transition: 'all 0.35s cubic-bezier(0.16,1,0.3,1)', transform: hoveredFeature === i ? 'translateY(-5px)' : 'translateY(0)', cursor: (f.title === 'Live MRI Upload' || f.title === 'EHR Integration') ? 'pointer' : 'default', height: '100%' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '14px' }}>
                   <span style={{ fontSize: '26px' }}>{f.icon}</span>
                   <span style={{ fontSize: '9px', fontWeight: '700', color: f.color, border: `1px solid ${f.color}44`, padding: '3px 8px', borderRadius: '20px', letterSpacing: '1px' }}>{lang === 'fr' ? f.tagFr : f.tag}</span>
