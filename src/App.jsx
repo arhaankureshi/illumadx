@@ -111,11 +111,10 @@ function UploadModal({ onClose, lang }) {
       const formData = new FormData()
       formData.append('file', file)
       const res = await fetch(`${API_URL}/predict`, { method: 'POST', body: formData })
-      if (!res.ok) throw new Error('API error')
       const data = await res.json()
-      if (data.confidence < 0.6) {
-        setPhase('invalid')
-        return
+      if (!res.ok) {
+        if (data.error === 'not_mri') { setPhase('not_mri'); return }
+        setPhase('invalid'); return
       }
       setResult(data)
       setPhase('result')
@@ -214,6 +213,24 @@ function UploadModal({ onClose, lang }) {
             <p style={{ color: 'rgba(255,255,255,0.25)', fontSize: '11px', marginTop: '8px' }}>
               {lang === 'fr' ? 'GradCAM++ génère les cartes de chaleur' : 'GradCAM++ generating heatmaps'}
             </p>
+          </div>
+        )}
+
+        {/* NOT MRI */}
+        {phase === 'not_mri' && (
+          <div style={{ textAlign: 'center', padding: '48px 24px' }}>
+            <div style={{ fontSize: '48px', marginBottom: '16px' }}>🧠</div>
+            <h3 style={{ color: '#E63946', fontSize: '18px', fontWeight: '800', marginBottom: '12px', letterSpacing: '1px' }}>
+              {lang === 'fr' ? 'PAS UNE IRM' : 'NOT A BRAIN MRI'}
+            </h3>
+            <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '13px', lineHeight: '1.7', maxWidth: '340px', margin: '0 auto 28px' }}>
+              {lang === 'fr'
+                ? 'Veuillez télécharger une IRM cérébrale valide en niveaux de gris.'
+                : 'This does not appear to be a brain MRI scan. Please upload a valid greyscale brain MRI.'}
+            </p>
+            <button onClick={reset} style={{ padding: '10px 24px', background: '#00B4D8', color: '#05080F', border: 'none', borderRadius: '4px', fontSize: '11px', fontWeight: '800', cursor: 'pointer', letterSpacing: '1px' }}>
+              {lang === 'fr' ? 'RÉESSAYER' : 'TRY AGAIN'}
+            </button>
           </div>
         )}
 
@@ -334,7 +351,7 @@ function UploadModal({ onClose, lang }) {
               <p style={{ fontSize: '10px', color: 'rgba(255,183,3,0.7)', margin: 0, lineHeight: '1.6' }}>
                 ⚠ {lang === 'fr'
                   ? 'Outil de recherche uniquement. Ne remplace pas le diagnostic clinique. Non approuvé par Santé Canada.'
-                  : 'Research tool only. Not a substitute for clinical diagnosis. Seeking approval by Health Canada.'}
+                  : 'Research tool only. Not a substitute for clinical diagnosis. Not approved by Health Canada.'}
               </p>
             </div>
 
