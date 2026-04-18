@@ -334,7 +334,7 @@ function UploadModal({ onClose, lang }) {
               <p style={{ fontSize: '10px', color: 'rgba(255,183,3,0.7)', margin: 0, lineHeight: '1.6' }}>
                 ⚠ {lang === 'fr'
                   ? 'Outil de recherche uniquement. Ne remplace pas le diagnostic clinique. Non approuvé par Santé Canada.'
-                  : 'Research tool only. Not a substitute for clinical diagnosis. Not approved by Health Canada.'}
+                  : 'Research tool only. Not a substitute for clinical diagnosis. Seeking approval by Health Canada.'}
               </p>
             </div>
 
