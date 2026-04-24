@@ -103,6 +103,517 @@ const BASE_CSS = `
   input:focus,textarea:focus{border-color:rgba(0,180,216,0.5)!important;outline:none}
 `
 
+const LANDING_CSS = `
+  .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-variant-numeric:tabular-nums}
+  .tnum{font-variant-numeric:tabular-nums}
+  .nav-link{position:relative;display:inline-block}
+  .nav-link::after{content:'';position:absolute;left:0;right:0;bottom:-5px;height:1px;background:currentColor;transform:scaleX(0);transform-origin:left;transition:transform .32s cubic-bezier(0.16,1,0.3,1)}
+  .nav-link:hover::after{transform:scaleX(1)}
+  .feat-card{position:relative;overflow:hidden;isolation:isolate;transition:border-color .45s cubic-bezier(0.16,1,0.3,1),background .45s cubic-bezier(0.16,1,0.3,1),transform .45s cubic-bezier(0.16,1,0.3,1)}
+  .feat-card::before{content:'';position:absolute;inset:0;background:radial-gradient(220px circle at var(--mx,50%) var(--my,50%),var(--tint,rgba(0,180,216,0.22)),transparent 55%);opacity:0;transition:opacity .35s;pointer-events:none;z-index:0}
+  .feat-card::after{content:'';position:absolute;top:0;left:0;width:0;height:1px;background:var(--ac);transition:width .55s cubic-bezier(0.16,1,0.3,1);z-index:2}
+  .feat-card:hover{transform:translateY(-2px)}
+  .feat-card:hover::before{opacity:1}
+  .feat-card:hover::after{width:100%}
+  .feat-card > *{position:relative;z-index:1}
+  .grp-card{position:relative;overflow:hidden;isolation:isolate}
+  .grp-card::before{content:'';position:absolute;inset:0;background:radial-gradient(200px circle at var(--mx,50%) var(--my,50%),var(--tint,rgba(0,180,216,0.18)),transparent 55%);opacity:0;transition:opacity .35s;pointer-events:none;z-index:0}
+  .grp-card:hover::before{opacity:1}
+  .grp-card > *{position:relative;z-index:1}
+  .cta-primary{position:relative;overflow:hidden;isolation:isolate;transition:transform .25s ease,box-shadow .25s ease}
+  .cta-primary::before{content:'';position:absolute;inset:0;background:radial-gradient(110px circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,0.42),transparent 55%);opacity:0;transition:opacity .22s;pointer-events:none;z-index:0}
+  .cta-primary:hover::before{opacity:1}
+  .cta-primary:hover{box-shadow:0 0 56px rgba(0,180,216,0.55)}
+  .cta-primary:active{transform:scale(0.96)!important}
+  .cta-primary > *{position:relative;z-index:1}
+  .cta-ghost{position:relative;overflow:hidden;isolation:isolate;transition:color .25s ease,border-color .25s ease,background .25s ease}
+  .cta-ghost::before{content:'';position:absolute;inset:0;background:radial-gradient(160px circle at var(--mx,50%) var(--my,50%),rgba(0,180,216,0.22),transparent 60%);opacity:0;transition:opacity .3s;pointer-events:none;z-index:0}
+  .cta-ghost:hover::before{opacity:1}
+  .cta-ghost:hover{color:#fff;border-color:rgba(255,255,255,0.28)}
+  .cta-ghost:active{transform:scale(0.98)}
+  .cta-ghost > *{position:relative;z-index:1}
+  .cta-hero{animation:heroGlow 3.8s ease-in-out infinite}
+  .cta-hero::after{content:'';position:absolute;top:0;left:-55%;width:36%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.28),transparent);animation:shimmerSweep 4.2s ease-in-out 1.2s infinite;pointer-events:none;z-index:0}
+  .cta-hero:hover{animation:none}
+  @keyframes heroGlow{0%,100%{box-shadow:0 0 28px rgba(0,180,216,0.22)}50%{box-shadow:0 0 60px rgba(0,180,216,0.58)}}
+  @keyframes shimmerSweep{0%{left:-55%}55%{left:120%}100%{left:120%}}
+  .stat-col{position:relative}
+  .stat-col + .stat-col::before{content:'';position:absolute;left:0;top:14%;bottom:14%;width:1px;background:rgba(255,255,255,0.07)}
+  @media(max-width:640px){.stat-col:nth-child(3)::before{display:none}}
+  .wm-letter{display:inline-block;opacity:0;will-change:transform,opacity}
+  .wm-letter.in{animation:letterUp 0.95s cubic-bezier(0.16,1,0.3,1) forwards}
+  .wm-letter.in.glow{animation:letterUp 0.95s cubic-bezier(0.16,1,0.3,1) forwards, dxGlow 5s ease-in-out 1.6s infinite}
+  @keyframes letterUp{from{opacity:0;transform:translateY(38px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes dxGlow{0%,100%{text-shadow:0 0 32px rgba(0,180,216,0.22)}50%{text-shadow:0 0 72px rgba(0,180,216,0.55)}}
+  @keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+  .lang-pill{display:flex;align-items:center;border:1px solid rgba(255,255,255,0.08);border-radius:3px;overflow:hidden;background:rgba(255,255,255,0.02)}
+  .lang-pill button{padding:6px 10px;border:none;cursor:pointer;font-size:10px;font-weight:800;letter-spacing:1.8px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;transition:all .2s}
+  .footer-link{cursor:pointer;font-size:12px;color:rgba(255,255,255,0.65);text-decoration:none;transition:color .2s,transform .2s;display:inline-flex;align-items:center;gap:6px;font-weight:400}
+  .footer-link:hover{color:#00B4D8}
+  .scan-intro{position:fixed;left:0;right:0;top:-4px;height:2px;background:linear-gradient(90deg,transparent 0%,rgba(0,180,216,0.3) 20%,#00B4D8 45%,#B0F4FF 50%,#00B4D8 55%,rgba(0,180,216,0.3) 80%,transparent 100%);box-shadow:0 0 24px #00B4D8,0 0 48px rgba(0,180,216,0.5);z-index:400;pointer-events:none;animation:scanIntro 1.8s cubic-bezier(0.65,0,0.35,1) 0.15s forwards;will-change:transform,opacity;mix-blend-mode:screen}
+  @keyframes scanIntro{0%{transform:translateY(0);opacity:0}10%{opacity:1}90%{opacity:1}100%{transform:translateY(100vh);opacity:0}}
+  .scroll-progress{position:fixed;top:0;left:0;right:0;height:2px;z-index:300;pointer-events:none;background:rgba(255,255,255,0.03)}
+  .scroll-progress > span{display:block;height:100%;background:linear-gradient(90deg,#00B4D8 0%,#10B981 100%);box-shadow:0 0 8px rgba(0,180,216,0.6);transition:width .08s linear}
+  @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important}.scan-intro{display:none}}
+`
+
+const Icon = ({ name, size = 16, stroke = 1.5 }) => {
+  const common = { width:size, height:size, viewBox:'0 0 24 24', fill:'none', stroke:'currentColor', strokeWidth:stroke, strokeLinecap:'round', strokeLinejoin:'round', style:{ flexShrink:0, display:'block' } }
+  switch (name) {
+    case 'upload':   return <svg {...common}><path d="M12 19V5"/><path d="M5 12l7-7 7 7"/><path d="M4 21h16"/></svg>
+    case 'brain':    return <svg {...common}><path d="M12 5a3 3 0 0 0-5.9-.5A3 3 0 0 0 4 9.5a3 3 0 0 0 .5 5.5A3 3 0 0 0 9 19a3 3 0 0 0 3-1"/><path d="M12 5a3 3 0 0 1 5.9-.5A3 3 0 0 1 20 9.5a3 3 0 0 1-.5 5.5A3 3 0 0 1 15 19a3 3 0 0 1-3-1"/><path d="M12 5v14"/></svg>
+    case 'file':     return <svg {...common}><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h6"/></svg>
+    case 'folder':   return <svg {...common}><path d="M3 7a2 2 0 0 1 2-2h4l2 3h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/></svg>
+    case 'shield':   return <svg {...common}><path d="M12 3l8 3v6c0 4.5-3.2 8.3-8 9-4.8-.7-8-4.5-8-9V6l8-3z"/><path d="M9 12l2 2 4-4"/></svg>
+    case 'scale':    return <svg {...common}><path d="M12 3v18"/><path d="M6 6h12"/><path d="M4 21h16"/><path d="M6 6l-3 7h6l-3-7z"/><path d="M18 6l-3 7h6l-3-7z"/></svg>
+    case 'arrow':    return <svg {...common}><path d="M5 12h14"/><path d="M13 5l7 7-7 7"/></svg>
+    default: return null
+  }
+}
+
+const FEATURE_ICONS = ['upload','brain','file','folder','shield','scale']
+
+function NodeNetwork() {
+  const canvasRef = useRef(null)
+  const parallaxRef = useRef({ x: 0, y: 0 })
+
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const dpr = Math.min(window.devicePixelRatio || 1, 2)
+    let w = 0, h = 0, raf = 0
+
+    const resize = () => {
+      w = window.innerWidth; h = window.innerHeight
+      canvas.width = w * dpr; canvas.height = h * dpr
+      canvas.style.width = w + 'px'; canvas.style.height = h + 'px'
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+    }
+    resize()
+    window.addEventListener('resize', resize)
+
+    const onMove = (e) => {
+      parallaxRef.current.x = (e.clientX / window.innerWidth - 0.5) * 2
+      parallaxRef.current.y = (e.clientY / window.innerHeight - 0.5) * 2
+    }
+    window.addEventListener('mousemove', onMove, { passive: true })
+
+    const mobile = window.innerWidth < 768
+    // 3 depth layers: 0=far, 1=mid, 2=near
+    const depthProps = [
+      { size:[0.6,1.1], speed:0.09, opacity:0.4,  linkDist:130, parallax:-6, count:mobile?10:22 },
+      { size:[1.0,1.6], speed:0.16, opacity:0.7,  linkDist:160, parallax:0,  count:mobile?14:26 },
+      { size:[1.6,2.5], speed:0.24, opacity:0.95, linkDist:175, parallax:12, count:mobile?8:12  },
+    ]
+    const layers = depthProps.map(p => Array.from({ length: p.count }, () => ({
+      x: Math.random() * w, y: Math.random() * h,
+      vx: (Math.random() - 0.5) * p.speed,
+      vy: (Math.random() - 0.5) * p.speed,
+      r: p.size[0] + Math.random() * (p.size[1] - p.size[0]),
+      p: Math.random() * Math.PI * 2,
+    })))
+
+    const waves = []; let lastWave = 0
+    const packets = []; let lastPacket = 0
+    const beams = []; let lastBeam = 0
+
+    const frame = (tt) => {
+      ctx.clearRect(0, 0, w, h)
+      const px = parallaxRef.current.x
+      const py = parallaxRef.current.y
+
+      // cross-screen bright beam between two far-apart near-layer nodes (~every 9s)
+      if (!reduced && tt - lastBeam > 8500 && Math.random() > 0.3) {
+        const near = layers[2]
+        const a = near[Math.floor(Math.random() * near.length)]
+        let b = null, far = 0
+        for (const n of near) {
+          if (n === a) continue
+          const dx = n.x - a.x, dy = n.y - a.y
+          const d2 = dx*dx + dy*dy
+          if (d2 > far) { far = d2; b = n }
+        }
+        if (b) beams.push({ a, b, t: 0 })
+        lastBeam = tt
+      }
+      for (let i = beams.length - 1; i >= 0; i--) {
+        const bm = beams[i]
+        bm.t += 0.02
+        if (bm.t >= 1) { beams.splice(i, 1); continue }
+        const ax = bm.a.x + px * depthProps[2].parallax, ay = bm.a.y + py * depthProps[2].parallax
+        const bx = bm.b.x + px * depthProps[2].parallax, by = bm.b.y + py * depthProps[2].parallax
+        // Grow then fade
+        const grow = Math.min(1, bm.t * 2.5)
+        const fade = bm.t < 0.4 ? 1 : 1 - (bm.t - 0.4) / 0.6
+        const tx = ax + (bx - ax) * grow, ty = ay + (by - ay) * grow
+        ctx.strokeStyle = `rgba(120,230,255,${0.7 * fade})`
+        ctx.lineWidth = 1.4
+        ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(tx, ty); ctx.stroke()
+        // outer glow
+        ctx.strokeStyle = `rgba(0,180,216,${0.25 * fade})`
+        ctx.lineWidth = 4
+        ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(tx, ty); ctx.stroke()
+        // leading dot
+        ctx.beginPath(); ctx.arc(tx, ty, 3, 0, Math.PI * 2)
+        ctx.fillStyle = `rgba(160,240,255,${fade})`; ctx.fill()
+      }
+
+      // spawn pulse waves from a near-layer node
+      if (!reduced && tt - lastWave > 2400 && Math.random() > 0.4) {
+        const near = layers[2]
+        const o = near[Math.floor(Math.random() * near.length)]
+        waves.push({ x: o.x + px * depthProps[2].parallax, y: o.y + py * depthProps[2].parallax, r: 0, life: 1 })
+        lastWave = tt
+      }
+      for (let i = waves.length - 1; i >= 0; i--) {
+        const wv = waves[i]
+        wv.r += 1.6; wv.life -= 0.01
+        if (wv.life <= 0) { waves.splice(i, 1); continue }
+        ctx.beginPath()
+        ctx.arc(wv.x, wv.y, wv.r, 0, Math.PI * 2)
+        ctx.strokeStyle = `rgba(0,180,216,${wv.life * 0.28})`
+        ctx.lineWidth = 0.9
+        ctx.stroke()
+      }
+
+      // spawn data packet along a nearby link (mid or near layer)
+      if (!reduced && tt - lastPacket > 650 && Math.random() > 0.3) {
+        const li = Math.random() > 0.5 ? 1 : 2
+        const layer = layers[li]
+        const a = layer[Math.floor(Math.random() * layer.length)]
+        let b = null, best = Infinity
+        for (const n of layer) {
+          if (n === a) continue
+          const dx = n.x - a.x, dy = n.y - a.y
+          const d2 = dx*dx + dy*dy
+          if (d2 < best && d2 < 220*220) { best = d2; b = n }
+        }
+        if (b) packets.push({ a, b, li, t: 0 })
+        lastPacket = tt
+      }
+      for (let i = packets.length - 1; i >= 0; i--) {
+        const pk = packets[i]
+        pk.t += 0.022
+        if (pk.t >= 1) { packets.splice(i, 1); continue }
+        const px2 = depthProps[pk.li].parallax
+        const ax = pk.a.x + px * px2, ay = pk.a.y + py * px2
+        const bx = pk.b.x + px * px2, by = pk.b.y + py * px2
+        const nx = ax + (bx - ax) * pk.t, ny = ay + (by - ay) * pk.t
+        ctx.beginPath(); ctx.arc(nx, ny, 6, 0, Math.PI * 2)
+        ctx.fillStyle = 'rgba(0,180,216,0.22)'; ctx.fill()
+        ctx.beginPath(); ctx.arc(nx, ny, 2.4, 0, Math.PI * 2)
+        ctx.fillStyle = 'rgba(120,230,255,0.9)'; ctx.fill()
+      }
+
+      // draw each layer back-to-front with its own parallax offset
+      layers.forEach((layer, li) => {
+        const prop = depthProps[li]
+        const ox = px * prop.parallax
+        const oy = py * prop.parallax
+        // advance
+        for (const n of layer) {
+          n.x += n.vx; n.y += n.vy; n.p += 0.014
+          if (n.x < 0 || n.x > w) n.vx *= -1
+          if (n.y < 0 || n.y > h) n.vy *= -1
+        }
+        // links within layer
+        const ld = prop.linkDist
+        for (let i = 0; i < layer.length; i++) {
+          for (let j = i + 1; j < layer.length; j++) {
+            const dx = layer[i].x - layer[j].x
+            const dy = layer[i].y - layer[j].y
+            const d2 = dx*dx + dy*dy
+            if (d2 < ld*ld) {
+              const dist = Math.sqrt(d2)
+              const a = (1 - dist / ld) * 0.2 * prop.opacity
+              ctx.strokeStyle = `rgba(0,180,216,${a})`
+              ctx.lineWidth = 0.4 + li * 0.22
+              ctx.beginPath()
+              ctx.moveTo(layer[i].x + ox, layer[i].y + oy)
+              ctx.lineTo(layer[j].x + ox, layer[j].y + oy)
+              ctx.stroke()
+            }
+          }
+        }
+        // nodes
+        for (const n of layer) {
+          const pulse = 0.6 + 0.35 * Math.sin(n.p)
+          ctx.beginPath()
+          ctx.arc(n.x + ox, n.y + oy, n.r, 0, Math.PI * 2)
+          ctx.fillStyle = `rgba(0,180,216,${pulse * prop.opacity})`
+          ctx.fill()
+          // near-layer halo
+          if (li === 2) {
+            ctx.beginPath()
+            ctx.arc(n.x + ox, n.y + oy, n.r * 2.6, 0, Math.PI * 2)
+            ctx.fillStyle = `rgba(0,180,216,${pulse * 0.08})`
+            ctx.fill()
+          }
+        }
+      })
+
+      if (!reduced) raf = requestAnimationFrame(frame)
+    }
+    frame(0)
+
+    return () => {
+      cancelAnimationFrame(raf)
+      window.removeEventListener('resize', resize)
+      window.removeEventListener('mousemove', onMove)
+    }
+  }, [])
+  return <canvas ref={canvasRef} style={{ position:'fixed', inset:0, zIndex:0, pointerEvents:'none', opacity:0.78 }} />
+}
+
+const tintMove = (e) => {
+  const r = e.currentTarget.getBoundingClientRect()
+  e.currentTarget.style.setProperty('--mx', (e.clientX - r.left) + 'px')
+  e.currentTarget.style.setProperty('--my', (e.clientY - r.top) + 'px')
+}
+
+const TELEMETRY = [
+  { label:'BACKEND',          labelFr:'BACKEND',             value:'HuggingFace Spaces' },
+  { label:'MODEL',            labelFr:'MODÈLE',              value:'ResNet-18 · PyTorch' },
+  { label:'INTERPRETABILITY', labelFr:'INTERPRÉTABILITÉ',   value:'GradCAM++ Heatmaps' },
+  { label:'CLASSES',          labelFr:'CLASSES',             value:'Glioma · Meningioma · Pituitary · Notumor' },
+  { label:'CONFIDENCE GATE',  labelFr:'SEUIL DE CONFIANCE',  value:'≥ 60% threshold' },
+  { label:'VALIDATION',       labelFr:'VALIDATION',          value:'4 augmentation strategies' },
+]
+
+function Telemetry({ isFr }) {
+  const [i, setI] = useState(0)
+  const [shown, setShown] = useState(true)
+  useEffect(() => {
+    const id = setInterval(() => {
+      setShown(false)
+      setTimeout(() => { setI(prev => (prev + 1) % TELEMETRY.length); setShown(true) }, 260)
+    }, 3400)
+    return () => clearInterval(id)
+  }, [])
+  const item = TELEMETRY[i]
+  return (
+    <div className="mono" style={{ display:'inline-flex', alignItems:'center', gap:'14px', fontSize:'10px', letterSpacing:'2px', textTransform:'uppercase', whiteSpace:'nowrap', padding:'8px 16px', border:'1px solid rgba(0,180,216,0.14)', borderRadius:'3px', background:'rgba(0,180,216,0.03)' }}>
+      <span style={{ width:'6px', height:'6px', borderRadius:'50%', background:'#10B981', animation:'ripple 2s infinite', flexShrink:0 }} />
+      <span style={{ opacity:shown?1:0, transform:shown?'translateY(0)':'translateY(3px)', transition:'opacity .26s cubic-bezier(0.16,1,0.3,1), transform .26s cubic-bezier(0.16,1,0.3,1)' }}>
+        <span style={{ color:'rgba(255,255,255,0.4)' }}>{isFr?item.labelFr:item.label}</span>
+        <span style={{ color:'rgba(255,255,255,0.2)', margin:'0 10px' }}>·</span>
+        <span style={{ color:'#00B4D8' }}>{item.value}</span>
+      </span>
+    </div>
+  )
+}
+
+function CornerMark({ pos, color = '#00B4D8', offset = 20 }) {
+  const paths = { tl:'M0 12V0h12', tr:'M0 0h12v12', bl:'M0 0v12h12', br:'M12 0v12H0' }
+  const p = { tl:{top:offset,left:offset}, tr:{top:offset,right:offset}, bl:{bottom:offset,left:offset}, br:{bottom:offset,right:offset} }[pos]
+  return (
+    <svg width="14" height="14" viewBox="0 0 12 12" aria-hidden="true" style={{ position:'absolute', ...p, opacity:0.32, pointerEvents:'none', zIndex:2 }}>
+      <path d={paths[pos]} stroke={color} strokeWidth="1" fill="none" />
+    </svg>
+  )
+}
+
+function HeroOrbital({ isMobile }) {
+  const size = isMobile ? 380 : 640
+  const r = size / 2 - 24
+  const r2 = r - 56
+  const outer = Array.from({ length: 12 })
+  const inner = Array.from({ length: 6 })
+  return (
+    <div aria-hidden="true" style={{ position:'absolute', top:'50%', left:'50%', width:`${size}px`, height:`${size}px`, transform:'translate(-50%,-50%)', pointerEvents:'none', zIndex:0, opacity:0.9 }}>
+      <svg viewBox={`${-size/2} ${-size/2} ${size} ${size}`} style={{ width:'100%', height:'100%' }}>
+        <circle r={r} fill="none" stroke="rgba(0,180,216,0.08)" strokeWidth="1" strokeDasharray="1.5 5" style={{ transformOrigin:'center', animation:'spin 90s linear infinite' }} />
+        <circle r={r2} fill="none" stroke="rgba(0,180,216,0.05)" strokeWidth="1" />
+        <circle r={r - 18} fill="none" stroke="rgba(0,180,216,0.03)" strokeWidth="1" strokeDasharray="0.5 7" style={{ transformOrigin:'center', animation:'spin 140s linear infinite reverse' }} />
+        <g style={{ transformOrigin:'center', animation:'spin 55s linear infinite' }}>
+          {outer.map((_, i) => {
+            const a = (i / outer.length) * Math.PI * 2
+            const big = i % 4 === 0
+            return <circle key={i} cx={Math.cos(a) * r} cy={Math.sin(a) * r} r={big ? 3 : 1.8} fill="#00B4D8" opacity={big ? 0.75 : 0.35} />
+          })}
+        </g>
+        <g style={{ transformOrigin:'center', animation:'spin 38s linear infinite reverse' }}>
+          {inner.map((_, i) => {
+            const a = (i / inner.length) * Math.PI * 2 + 0.4
+            return <circle key={i} cx={Math.cos(a) * r2} cy={Math.sin(a) * r2} r={1.6} fill="#00B4D8" opacity={0.55} />
+          })}
+        </g>
+      </svg>
+    </div>
+  )
+}
+
+function CustomCursor() {
+  const dotRef = useRef(null)
+  const ringRef = useRef(null)
+  const stateRef = useRef({ x:-100, y:-100, rx:-100, ry:-100, hover:false, visible:false, down:false })
+
+  useEffect(() => {
+    if (window.matchMedia('(hover: none), (pointer: coarse)').matches) return
+    const s = stateRef.current
+    let raf
+
+    const onMove = (e) => {
+      s.x = e.clientX; s.y = e.clientY
+      if (!s.visible) { s.visible = true; if (ringRef.current) ringRef.current.style.opacity = '1'; if (dotRef.current) dotRef.current.style.opacity = '1' }
+    }
+    const onOut = (e) => { if (!e.relatedTarget) { s.visible = false; if (ringRef.current) ringRef.current.style.opacity = '0'; if (dotRef.current) dotRef.current.style.opacity = '0' } }
+    const onOver = (e) => {
+      const t = e.target
+      if (!t || !t.closest) { s.hover = false; return }
+      const interactive = t.closest('button,a,[role="button"],.nav-btn,.nav-link,.feat-card,.grp-card,.footer-link,input,textarea,select,label[for]')
+      s.hover = !!interactive
+    }
+    const onDown = () => { s.down = true }
+    const onUp = () => { s.down = false }
+
+    window.addEventListener('mousemove', onMove, { passive: true })
+    window.addEventListener('mouseout', onOut)
+    window.addEventListener('mouseover', onOver)
+    window.addEventListener('mousedown', onDown)
+    window.addEventListener('mouseup', onUp)
+
+    const loop = () => {
+      s.rx += (s.x - s.rx) * 0.18
+      s.ry += (s.y - s.ry) * 0.18
+      if (dotRef.current) dotRef.current.style.transform = `translate3d(${s.x}px,${s.y}px,0)`
+      if (ringRef.current) {
+        const scale = s.down ? 0.8 : (s.hover ? 1.75 : 1)
+        ringRef.current.style.transform = `translate3d(${s.rx}px,${s.ry}px,0) scale(${scale})`
+        ringRef.current.style.borderColor = s.hover ? 'rgba(0,180,216,0.9)' : 'rgba(0,180,216,0.45)'
+      }
+      raf = requestAnimationFrame(loop)
+    }
+    loop()
+
+    return () => {
+      cancelAnimationFrame(raf)
+      window.removeEventListener('mousemove', onMove)
+      window.removeEventListener('mouseout', onOut)
+      window.removeEventListener('mouseover', onOver)
+      window.removeEventListener('mousedown', onDown)
+      window.removeEventListener('mouseup', onUp)
+    }
+  }, [])
+
+  return (
+    <>
+      <div ref={ringRef} style={{ position:'fixed', top:0, left:0, width:'30px', height:'30px', marginLeft:'-15px', marginTop:'-15px', border:'1px solid rgba(0,180,216,0.45)', borderRadius:'50%', pointerEvents:'none', zIndex:9999, opacity:0, transition:'border-color .25s, background .25s', backdropFilter:'invert(4%)', mixBlendMode:'normal', willChange:'transform' }} />
+      <div ref={dotRef} style={{ position:'fixed', top:0, left:0, width:'4px', height:'4px', marginLeft:'-2px', marginTop:'-2px', background:'#00B4D8', borderRadius:'50%', pointerEvents:'none', zIndex:9999, boxShadow:'0 0 10px rgba(0,180,216,0.9)', opacity:0, willChange:'transform' }} />
+    </>
+  )
+}
+
+function ClickBurst() {
+  const canvasRef = useRef(null)
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
+    const dpr = Math.min(window.devicePixelRatio || 1, 2)
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    let w = 0, h = 0, raf = 0
+    const particles = []
+
+    const resize = () => {
+      w = window.innerWidth; h = window.innerHeight
+      canvas.width = w * dpr; canvas.height = h * dpr
+      canvas.style.width = w + 'px'; canvas.style.height = h + 'px'
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+    }
+    resize()
+    window.addEventListener('resize', resize)
+
+    const onClick = (e) => {
+      if (reduced) return
+      const x = e.clientX, y = e.clientY
+      const n = 16
+      for (let i = 0; i < n; i++) {
+        const a = (i / n) * Math.PI * 2 + (Math.random() - 0.5) * 0.4
+        const sp = 2.2 + Math.random() * 2.8
+        particles.push({ x, y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp, life: 1, r: 1.2 + Math.random() * 1.4 })
+      }
+      // ring
+      particles.push({ ring: true, x, y, r: 4, life: 1 })
+    }
+    window.addEventListener('click', onClick)
+
+    const loop = () => {
+      ctx.clearRect(0, 0, w, h)
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i]
+        if (p.ring) {
+          p.r += 1.8
+          p.life -= 0.035
+          if (p.life <= 0) { particles.splice(i, 1); continue }
+          ctx.beginPath()
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2)
+          ctx.strokeStyle = `rgba(0,180,216,${p.life * 0.7})`
+          ctx.lineWidth = 1.2
+          ctx.stroke()
+        } else {
+          p.x += p.vx; p.y += p.vy
+          p.vx *= 0.93; p.vy *= 0.93
+          p.life -= 0.028
+          if (p.life <= 0) { particles.splice(i, 1); continue }
+          ctx.beginPath()
+          ctx.arc(p.x, p.y, p.r * 3, 0, Math.PI * 2)
+          ctx.fillStyle = `rgba(0,180,216,${p.life * 0.2})`
+          ctx.fill()
+          ctx.beginPath()
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2)
+          ctx.fillStyle = `rgba(160,240,255,${p.life})`
+          ctx.fill()
+        }
+      }
+      raf = requestAnimationFrame(loop)
+    }
+    loop()
+
+    return () => {
+      cancelAnimationFrame(raf)
+      window.removeEventListener('resize', resize)
+      window.removeEventListener('click', onClick)
+    }
+  }, [])
+  return <canvas ref={canvasRef} style={{ position:'fixed', inset:0, zIndex:9998, pointerEvents:'none' }} />
+}
+
+function Counter({ value, delay = 0 }) {
+  const [ref, inView] = useInView(0.15)
+  const match = String(value).match(/^([\d.]+)(.*)$/)
+  const end = match ? parseFloat(match[1]) : 0
+  const suffix = match ? match[2] : ''
+  const hasDec = match ? match[1].includes('.') : false
+  const [disp, setDisp] = useState(match ? (hasDec ? '0.00' : '0') + suffix : value)
+  const startedRef = useRef(false)
+
+  useEffect(() => {
+    if (!inView || !match || startedRef.current) return
+    startedRef.current = true
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (reduced) { setDisp(value); return }
+    let raf
+    const startId = setTimeout(() => {
+      const t0 = performance.now()
+      const dur = 1450
+      const tick = (t) => {
+        const p = Math.min(1, (t - t0) / dur)
+        const eased = 1 - Math.pow(1 - p, 3)
+        const n = end * eased
+        setDisp((hasDec ? n.toFixed(2) : Math.floor(n).toString()) + suffix)
+        if (p < 1) raf = requestAnimationFrame(tick)
+      }
+      raf = requestAnimationFrame(tick)
+    }, delay)
+    return () => { clearTimeout(startId); if (raf) cancelAnimationFrame(raf) }
+  }, [inView])
+
+  return <span ref={ref} className="tnum">{disp}</span>
+}
+
 function SubPageWrapper({ children, onClose, title, titleColor = '#00B4D8', lang }) {
   return (
     <div style={{ position:'fixed', inset:0, zIndex:500, background:'#05080F', display:'flex', flexDirection:'column', fontFamily:"'Inter',system-ui,sans-serif", animation:'slideUp 0.35s cubic-bezier(0.16,1,0.3,1)' }}>
@@ -961,7 +1472,6 @@ function PatientRecordsPage({ lang, onClose }) {
   const [selectedPatient, setSelectedPatient] = useState(null)
   const [patients, setPatients] = useState(INITIAL_PATIENTS)
   const [searchError, setSearchError] = useState(false)
-  const [hoveredRow, setHoveredRow] = useState(null)
   const isFr = lang === 'fr'
 
   const handleSearch = () => {
@@ -982,49 +1492,104 @@ function PatientRecordsPage({ lang, onClose }) {
     }))
   }
 
+  const doneCount = patients.filter(p => p.latestResult).length
+
   return (
     <div style={{ position:'fixed', inset:0, zIndex:500, background:'#05080F', display:'flex', flexDirection:'column', fontFamily:"'Inter',system-ui,sans-serif", animation:'slideUp 0.35s cubic-bezier(0.16,1,0.3,1)' }}>
-      <style>{BASE_CSS}</style>
-      <div style={{ background:'rgba(10,22,40,0.98)', borderBottom:'1px solid rgba(16,185,129,0.2)', padding:'0 24px', height:'60px', display:'flex', alignItems:'center', justifyContent:'space-between', backdropFilter:'blur(20px)', flexShrink:0 }}>
-        <div style={{ display:'flex', alignItems:'center', gap:'16px' }}>
-          <button onClick={onClose} style={{ background:'rgba(255,255,255,0.05)', border:'1px solid rgba(255,255,255,0.1)', color:'rgba(255,255,255,0.6)', borderRadius:'6px', width:'32px', height:'32px', cursor:'pointer', fontSize:'16px', display:'flex', alignItems:'center', justifyContent:'center', fontFamily:'inherit' }}>←</button>
-          <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'22px', letterSpacing:'2px' }}><span style={{ color:'#fff' }}>Illuma</span><span style={{ color:'#00B4D8' }}>DX</span></div>
-          <div style={{ width:'1px', height:'20px', background:'rgba(255,255,255,0.1)' }} />
-          <span style={{ fontSize:'11px', color:'#10B981', letterSpacing:'3px', fontWeight:'700' }}>{isFr?'DOSSIERS PATIENTS':'PATIENT RECORDS'}</span>
+      <style>{BASE_CSS + LANDING_CSS}</style>
+
+      {/* HEADER BAR */}
+      <div style={{ background:'rgba(10,22,40,0.94)', borderBottom:'1px solid rgba(16,185,129,0.22)', padding:'0 24px', height:'66px', display:'flex', alignItems:'center', justifyContent:'space-between', backdropFilter:'blur(24px) saturate(140%)', WebkitBackdropFilter:'blur(24px) saturate(140%)', flexShrink:0, position:'relative' }}>
+        <CornerMark pos="tl" offset={10} color="#10B981" /><CornerMark pos="tr" offset={10} color="#10B981" />
+        <div style={{ display:'flex', alignItems:'center', gap:'16px', flexShrink:0, minWidth:0 }}>
+          <button onClick={onClose} onMouseMove={tintMove} className="cta-ghost" style={{ background:'rgba(255,255,255,0.04)', border:'1px solid rgba(255,255,255,0.08)', color:'rgba(255,255,255,0.6)', borderRadius:'6px', width:'34px', height:'34px', cursor:'pointer', fontSize:'14px', display:'flex', alignItems:'center', justifyContent:'center', fontFamily:'inherit', flexShrink:0 }}>←</button>
+          <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'24px', letterSpacing:'2px', lineHeight:1, flexShrink:0 }}><span style={{ color:'#fff' }}>Illuma</span><span style={{ color:'#00B4D8' }}>DX</span></div>
+          <div style={{ width:'1px', height:'20px', background:'rgba(255,255,255,0.12)' }} />
+          <span className="mono" style={{ fontSize:'10px', color:'#10B981', letterSpacing:'2.5px', fontWeight:'700', textTransform:'uppercase', whiteSpace:'nowrap' }}>{isFr?'Dossiers Patients':'Patient Records'}</span>
+          <span style={{ width:'14px', height:'1px', background:'rgba(255,255,255,0.12)' }} />
+          <span className="mono" style={{ fontSize:'9px', color:'rgba(255,255,255,0.45)', letterSpacing:'2px', textTransform:'uppercase', whiteSpace:'nowrap' }}>§ 00 · EHR · Connect Care</span>
         </div>
-        <div style={{ display:'flex', alignItems:'center', gap:'8px' }}>
-          <div style={{ width:'7px', height:'7px', borderRadius:'50%', background:'#10B981', animation:'ripple 2s infinite' }} />
-          <span style={{ fontSize:'10px', color:'rgba(255,255,255,0.25)', letterSpacing:'2px' }}>NORTHERN LIGHTS REGIONAL · CONNECT CARE</span>
+        <div style={{ display:'flex', alignItems:'center', gap:'10px', flexShrink:0 }}>
+          <div style={{ width:'6px', height:'6px', borderRadius:'50%', background:'#10B981', animation:'ripple 2s infinite' }} />
+          <span className="mono" style={{ fontSize:'9px', color:'rgba(255,255,255,0.5)', letterSpacing:'2px', textTransform:'uppercase' }}>Northern Lights Regional</span>
         </div>
       </div>
+
       <div style={{ display:'flex', flex:1, overflow:'hidden' }}>
-        <div style={{ width:'300px', borderRight:'1px solid rgba(255,255,255,0.06)', display:'flex', flexDirection:'column', flexShrink:0, background:'rgba(5,8,15,0.6)' }}>
-          <div style={{ padding:'16px', borderBottom:'1px solid rgba(255,255,255,0.05)', flexShrink:0 }}>
-            <p style={{ fontSize:'8px', color:'rgba(255,255,255,0.25)', letterSpacing:'3px', marginBottom:'8px', fontWeight:'600' }}>{isFr?'CHERCHER PAR ID':'SEARCH BY ID'}</p>
+        {/* LEFT SIDEBAR */}
+        <div style={{ width:'320px', borderRight:'1px solid rgba(255,255,255,0.06)', display:'flex', flexDirection:'column', flexShrink:0, background:'rgba(5,8,15,0.55)' }}>
+          {/* Search */}
+          <div style={{ padding:'20px 18px 16px', borderBottom:'1px solid rgba(255,255,255,0.05)', flexShrink:0 }}>
+            <p className="mono" style={{ fontSize:'9px', color:'rgba(255,255,255,0.4)', letterSpacing:'2.5px', marginBottom:'12px', fontWeight:'700', textTransform:'uppercase' }}>{isFr?'Chercher par ID':'Search by ID'}</p>
             <div style={{ display:'flex', gap:'6px' }}>
-              <input value={searchId} onChange={e=>{setSearchId(e.target.value);setSearchError(false)}} onKeyDown={e=>e.key==='Enter'&&handleSearch()} placeholder="AHS-10042" style={{ flex:1, background:'rgba(255,255,255,0.04)', border:`1px solid ${searchError?'#E63946':'rgba(255,255,255,0.1)'}`, borderRadius:'5px', padding:'8px 12px', color:'#fff', fontSize:'12px', fontFamily:'inherit' }} />
-              <button onClick={handleSearch} style={{ padding:'8px 12px', background:'#10B981', color:'#05080F', border:'none', borderRadius:'5px', cursor:'pointer', fontSize:'10px', fontWeight:'800', fontFamily:'inherit' }}>GO</button>
+              <input value={searchId} onChange={e=>{setSearchId(e.target.value);setSearchError(false)}} onKeyDown={e=>e.key==='Enter'&&handleSearch()} placeholder="AHS-10042" className="mono" style={{ flex:1, background:'rgba(255,255,255,0.03)', border:`1px solid ${searchError?'#E63946':'rgba(255,255,255,0.1)'}`, borderRadius:'5px', padding:'9px 12px', color:'#fff', fontSize:'12px', letterSpacing:'0.5px', fontFamily:'ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace', outline:'none', transition:'border-color .2s' }} />
+              <button onClick={handleSearch} onMouseMove={tintMove} className="cta-primary" style={{ padding:'9px 14px', background:'#10B981', color:'#05080F', border:'none', borderRadius:'5px', cursor:'pointer', fontSize:'10px', fontWeight:'800', fontFamily:'inherit', letterSpacing:'1.8px' }}>GO</button>
             </div>
-            {searchError && <p style={{ fontSize:'10px', color:'#E63946', marginTop:'6px' }}>{isFr?'Aucun patient trouvé.':'No patient found.'}</p>}
+            {searchError && <p className="mono" style={{ fontSize:'10px', color:'#E63946', marginTop:'8px', letterSpacing:'1px', textTransform:'uppercase' }}>{isFr?'Aucun patient trouvé':'No patient found'}</p>}
           </div>
-          <div style={{ flex:1, overflowY:'auto', padding:'8px' }}>
-            <p style={{ fontSize:'8px', color:'rgba(255,255,255,0.2)', letterSpacing:'3px', margin:'8px 8px 10px', fontWeight:'600' }}>{patients.length} {isFr?'DOSSIERS':'ACTIVE RECORDS'}</p>
-            {patients.map((p,i)=>(
-              <div key={p.id} onClick={()=>{setSelectedPatient(p);setSearchError(false)}} onMouseEnter={()=>setHoveredRow(i)} onMouseLeave={()=>setHoveredRow(null)}
-                style={{ padding:'12px 14px', borderRadius:'7px', cursor:'pointer', marginBottom:'3px', background:selectedPatient?.id===p.id?'rgba(16,185,129,0.08)':hoveredRow===i?'rgba(255,255,255,0.03)':'transparent', border:`1px solid ${selectedPatient?.id===p.id?'rgba(16,185,129,0.25)':'rgba(255,255,255,0.04)'}`, transition:'all 0.15s' }}>
-                <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:'4px' }}>
-                  <div><p style={{ fontSize:'13px', fontWeight:'700', color:'#fff', marginBottom:'1px' }}>{p.name}</p><p style={{ fontSize:'9px', color:'rgba(255,255,255,0.3)', letterSpacing:'1px' }}>{p.id}</p></div>
-                  <span style={{ fontSize:'7px', fontWeight:'800', color:p.statusColor, border:`1px solid ${p.statusColor}44`, padding:'2px 6px', borderRadius:'3px', letterSpacing:'0.5px', whiteSpace:'nowrap', marginLeft:'6px', flexShrink:0 }}>{p.status==='Scan Complete'?(isFr?'TERMINÉ':'DONE'):(isFr?'EN ATTENTE':'AWAITING')}</span>
+
+          {/* List header */}
+          <div style={{ padding:'14px 18px 8px', display:'flex', justifyContent:'space-between', alignItems:'center', flexShrink:0 }}>
+            <span className="mono" style={{ fontSize:'9px', color:'rgba(255,255,255,0.4)', letterSpacing:'2.5px', fontWeight:'700', textTransform:'uppercase' }}>{isFr?'Dossiers actifs':'Active records'}</span>
+            <span className="mono tnum" style={{ fontSize:'9px', color:'rgba(16,185,129,0.75)', letterSpacing:'1.5px', fontWeight:'800', background:'rgba(16,185,129,0.08)', padding:'2px 7px', borderRadius:'3px', border:'1px solid rgba(16,185,129,0.2)' }}>{doneCount}/{patients.length}</span>
+          </div>
+
+          {/* Patient rows */}
+          <div style={{ flex:1, overflowY:'auto', padding:'4px 10px 16px' }}>
+            {patients.map((p, i) => {
+              const active = selectedPatient?.id === p.id
+              return (
+                <div key={p.id} onClick={()=>{setSelectedPatient(p);setSearchError(false)}} onMouseMove={tintMove}
+                  style={{ position:'relative', padding:'13px 14px', borderRadius:'7px', cursor:'pointer', marginBottom:'4px', background:active?'rgba(16,185,129,0.1)':'transparent', border:`1px solid ${active?'rgba(16,185,129,0.3)':'rgba(255,255,255,0.04)'}`, transition:'all 0.2s', overflow:'hidden', '--mx':'50%', '--my':'50%' }}
+                  onMouseEnter={e=>{if(!active)e.currentTarget.style.background='rgba(255,255,255,0.025)';if(!active)e.currentTarget.style.borderColor='rgba(16,185,129,0.14)'}}
+                  onMouseLeave={e=>{if(!active)e.currentTarget.style.background='transparent';if(!active)e.currentTarget.style.borderColor='rgba(255,255,255,0.04)'}}>
+                  <div style={{ position:'absolute', inset:0, background:'radial-gradient(160px circle at var(--mx,50%) var(--my,50%),rgba(16,185,129,0.12),transparent 55%)', opacity:active?0.9:0, transition:'opacity .3s', pointerEvents:'none' }} />
+                  <div style={{ position:'relative' }}>
+                    <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:'5px', gap:'8px' }}>
+                      <div style={{ flex:1, minWidth:0 }}>
+                        <p style={{ fontSize:'13px', fontWeight:'700', color:'#fff', marginBottom:'3px', letterSpacing:'-0.1px' }}>{p.name}</p>
+                        <p className="mono" style={{ fontSize:'9px', color:'rgba(255,255,255,0.4)', letterSpacing:'1.5px' }}>{p.id}</p>
+                      </div>
+                      <span className="mono" style={{ fontSize:'8px', fontWeight:'800', color:p.statusColor, border:`1px solid ${p.statusColor}55`, padding:'2px 6px', borderRadius:'2px', letterSpacing:'1.2px', whiteSpace:'nowrap', flexShrink:0 }}>{p.status==='Scan Complete'?(isFr?'TERMINÉ':'DONE'):(isFr?'EN ATTENTE':'PENDING')}</span>
+                    </div>
+                    <div style={{ display:'flex', gap:'12px', flexWrap:'wrap', alignItems:'center' }}>
+                      <span className="mono" style={{ fontSize:'10px', color:'rgba(255,255,255,0.45)' }}>{p.age}Y · {p.sex[0]}</span>
+                      <span className="mono" style={{ fontSize:'10px', color:'rgba(255,255,255,0.3)', letterSpacing:'1px', textTransform:'uppercase' }}>{p.dept}</span>
+                    </div>
+                    {p.latestResult && (
+                      <div style={{ marginTop:'8px', display:'flex', alignItems:'center', gap:'6px', paddingTop:'8px', borderTop:'1px solid rgba(255,255,255,0.05)' }}>
+                        <div style={{ width:'5px', height:'5px', borderRadius:'50%', background:CLASS_COLORS[p.latestResult.prediction], flexShrink:0, boxShadow:`0 0 6px ${CLASS_COLORS[p.latestResult.prediction]}` }} />
+                        <span className="mono" style={{ fontSize:'9px', color:CLASS_COLORS[p.latestResult.prediction], fontWeight:'800', textTransform:'uppercase', letterSpacing:'1.3px' }}>{p.latestResult.prediction}</span>
+                        <span className="mono tnum" style={{ fontSize:'9px', color:'rgba(255,255,255,0.5)', marginLeft:'auto' }}>{(p.latestResult.confidence*100).toFixed(1)}%</span>
+                      </div>
+                    )}
+                  </div>
                 </div>
-                <div style={{ display:'flex', gap:'10px' }}><span style={{ fontSize:'10px', color:'rgba(255,255,255,0.25)' }}>{p.age}y · {p.sex}</span><span style={{ fontSize:'10px', color:'rgba(255,255,255,0.2)' }}>{p.dept}</span></div>
-                {p.latestResult && <div style={{ marginTop:'5px', display:'flex', alignItems:'center', gap:'5px' }}><div style={{ width:'5px', height:'5px', borderRadius:'50%', background:CLASS_COLORS[p.latestResult.prediction] }} /><span style={{ fontSize:'9px', color:CLASS_COLORS[p.latestResult.prediction], fontWeight:'700', textTransform:'uppercase' }}>{p.latestResult.prediction} · {(p.latestResult.confidence*100).toFixed(0)}%</span></div>}
-              </div>
-            ))}
+              )
+            })}
           </div>
         </div>
+
+        {/* MAIN */}
         {selectedPatient
           ? <PatientDetail key={selectedPatient.id} patient={selectedPatient} lang={lang} onScanComplete={r=>handleScanComplete(selectedPatient.id,r)} />
-          : <div style={{ flex:1, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:'10px' }}><div style={{ fontSize:'48px', opacity:0.1 }}>🗂</div><p style={{ fontSize:'11px', color:'rgba(255,255,255,0.18)', letterSpacing:'3px' }}>{isFr?'SÉLECTIONNER UN PATIENT':'SELECT A PATIENT'}</p></div>
+          : (
+            <div style={{ flex:1, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:'18px', padding:'20px', textAlign:'center', position:'relative' }}>
+              <CornerMark pos="tl" offset={24} color="#10B981" /><CornerMark pos="tr" offset={24} color="#10B981" />
+              <CornerMark pos="bl" offset={24} color="#10B981" /><CornerMark pos="br" offset={24} color="#10B981" />
+              <div style={{ display:'inline-flex', color:'rgba(16,185,129,0.55)', padding:'18px', border:'1px solid rgba(16,185,129,0.2)', borderRadius:'50%', background:'rgba(16,185,129,0.03)' }}>
+                <Icon name="folder" size={30} stroke={1.4} />
+              </div>
+              <div style={{ maxWidth:'320px' }}>
+                <p className="mono" style={{ fontSize:'10px', color:'rgba(255,255,255,0.5)', letterSpacing:'3px', textTransform:'uppercase', fontWeight:'700', marginBottom:'10px' }}>{isFr?'Sélectionner un patient':'Select a patient'}</p>
+                <p style={{ fontSize:'12px', color:'rgba(255,255,255,0.36)', lineHeight:'1.75', fontWeight:'300' }}>{isFr?'Choisissez un dossier dans la liste pour visualiser l\'historique clinique et lancer une analyse IA.':'Choose a record from the list to view clinical history and run AI analysis.'}</p>
+              </div>
+              <div style={{ display:'flex', gap:'10px', marginTop:'4px' }}>
+                <span className="mono tnum" style={{ fontSize:'9px', color:'rgba(255,255,255,0.4)', letterSpacing:'1.5px', padding:'4px 10px', border:'1px solid rgba(255,255,255,0.08)', borderRadius:'3px', textTransform:'uppercase' }}>{patients.length} {isFr?'patients':'patients'}</span>
+                <span className="mono tnum" style={{ fontSize:'9px', color:'rgba(16,185,129,0.7)', letterSpacing:'1.5px', padding:'4px 10px', border:'1px solid rgba(16,185,129,0.25)', borderRadius:'3px', textTransform:'uppercase', background:'rgba(16,185,129,0.05)' }}>{doneCount} {isFr?'scannés':'scanned'}</span>
+              </div>
+            </div>
+          )
         }
       </div>
     </div>
@@ -1052,86 +1617,144 @@ function PatientDetail({ patient, lang, onScanComplete }) {
     } catch { setScanPhase('error') }
   }
 
-  const tabs=[{id:'overview',l:isFr?'Aperçu':'Overview'},{id:'history',l:isFr?'Historique':'Scan History',cnt:patient.scanHistory.length},{id:'scan',l:isFr?'Analyse IA':'AI Scan',done:!!localResult}]
+  const tabs=[{id:'overview',l:isFr?'Aperçu':'Overview',num:'01'},{id:'history',l:isFr?'Historique':'Scan History',num:'02',cnt:patient.scanHistory.length},{id:'scan',l:isFr?'Analyse IA':'AI Scan',num:'03',done:!!localResult}]
+
+  const REJ = {
+    not_mri: { title:isFr?'PAS UNE IRM CÉRÉBRALE':'NOT A BRAIN MRI',  code:isFr?'ERR · SCAN_INVALIDE':'ERR · NON_BRAIN_SCAN', icon:'brain',  color:'#E63946', desc:isFr?'Cette image n\'a pas été reconnue comme une IRM cérébrale valide.':'This image was not recognized as a valid brain MRI scan.' },
+    invalid: { title:isFr?'CONFIANCE INSUFFISANTE':'LOW CONFIDENCE', code:isFr?'ERR · SEUIL_60%':'ERR · CONF_GATE_<60%',   icon:'shield', color:'#E63946', desc:isFr?'La confiance du modèle est inférieure au seuil de sécurité de 60%.':'Model confidence fell below the 60% safety threshold.' },
+    error:   { title:isFr?'ERREUR DE CONNEXION':'CONNECTION ERROR',  code:'ERR · NETWORK',                                icon:'file',   color:'#FFB703', desc:isFr?'Impossible de joindre le serveur d\'inférence. Réessayez.':'Could not reach the inference server. Try again.' },
+  }
 
   return (
-    <div style={{ flex:1, display:'flex', flexDirection:'column', overflow:'hidden', animation:'fadeIn 0.25s ease' }}>
-      <div style={{ padding:'18px 24px', borderBottom:'1px solid rgba(255,255,255,0.05)', background:'rgba(10,22,40,0.4)', flexShrink:0 }}>
-        <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', flexWrap:'wrap', gap:'10px' }}>
-          <div>
-            <div style={{ display:'flex', alignItems:'center', gap:'10px', marginBottom:'3px' }}>
-              <h2 style={{ fontSize:'20px', fontWeight:'800', color:'#fff' }}>{patient.name}</h2>
-              <span style={{ fontSize:'7px', fontWeight:'800', color:patient.statusColor, border:`1px solid ${patient.statusColor}44`, padding:'3px 8px', borderRadius:'3px', letterSpacing:'1px' }}>{patient.status==='Scan Complete'?(isFr?'TERMINÉ':'COMPLETE'):(isFr?'EN ATTENTE':'AWAITING')}</span>
+    <div style={{ flex:1, display:'flex', flexDirection:'column', overflow:'hidden', animation:'fadeIn 0.25s ease', position:'relative' }}>
+      {/* PATIENT HEADER */}
+      <div style={{ padding:'24px 28px 0', borderBottom:'1px solid rgba(255,255,255,0.06)', background:'rgba(10,22,40,0.3)', flexShrink:0 }}>
+        <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', flexWrap:'wrap', gap:'14px', marginBottom:'20px' }}>
+          <div style={{ flex:1, minWidth:'280px' }}>
+            <div style={{ display:'flex', alignItems:'center', gap:'12px', marginBottom:'8px', flexWrap:'wrap' }}>
+              <h2 style={{ fontSize:'22px', fontWeight:'800', color:'#fff', letterSpacing:'-0.4px', lineHeight:1 }}>{patient.name}</h2>
+              <span className="mono" style={{ fontSize:'8px', fontWeight:'800', color:patient.statusColor, border:`1px solid ${patient.statusColor}55`, padding:'3px 8px', borderRadius:'2px', letterSpacing:'1.5px' }}>{patient.status==='Scan Complete'?(isFr?'TERMINÉ':'COMPLETE'):(isFr?'EN ATTENTE':'AWAITING')}</span>
             </div>
-            <p style={{ fontSize:'10px', color:'#10B981', letterSpacing:'2px', fontWeight:'700', marginBottom:'8px' }}>{patient.id}</p>
-            <div style={{ display:'flex', gap:'18px', flexWrap:'wrap' }}>
-              {[[isFr?'ÂGE':'AGE',`${patient.age}y · ${patient.sex}`],[isFr?'MÉDECIN':'PHYSICIAN',patient.physician],[isFr?'SERVICE':'DEPT',patient.dept],['SCAN',patient.scanDate],['BLOOD',patient.bloodType]].map(([l,v])=>(
-                <div key={l}><p style={{ fontSize:'7px', color:'rgba(255,255,255,0.2)', letterSpacing:'2px', marginBottom:'2px' }}>{l}</p><p style={{ fontSize:'12px', fontWeight:'600', color:'rgba(255,255,255,0.75)' }}>{v}</p></div>
+            <p className="mono" style={{ fontSize:'10px', color:'#10B981', letterSpacing:'2px', fontWeight:'700', marginBottom:'18px', textTransform:'uppercase' }}>{patient.id} · {patient.facility}</p>
+            <div style={{ display:'flex', gap:'26px', flexWrap:'wrap' }}>
+              {[[isFr?'Âge / Sexe':'Age / Sex',`${patient.age}Y · ${patient.sex}`],[isFr?'Médecin':'Physician',patient.physician],[isFr?'Service':'Dept',patient.dept],[isFr?'Scan':'Scan date',patient.scanDate],[isFr?'Groupe':'Blood type',patient.bloodType]].map(([l,v])=>(
+                <div key={l}>
+                  <p className="mono" style={{ fontSize:'8px', color:'rgba(255,255,255,0.38)', letterSpacing:'2px', marginBottom:'5px', textTransform:'uppercase', fontWeight:'700' }}>{l}</p>
+                  <p className="mono" style={{ fontSize:'12px', fontWeight:'600', color:'rgba(255,255,255,0.82)', letterSpacing:'0.2px' }}>{v}</p>
+                </div>
               ))}
             </div>
           </div>
-          {localResult && <button onClick={()=>printPatientReport(patient,localResult,lang)} style={{ padding:'9px 18px', background:'rgba(255,183,3,0.1)', border:'1px solid rgba(255,183,3,0.35)', color:'#FFB703', borderRadius:'6px', cursor:'pointer', fontSize:'11px', fontWeight:'800', letterSpacing:'1px', fontFamily:'inherit', transition:'all 0.2s' }} onMouseEnter={e=>e.currentTarget.style.background='rgba(255,183,3,0.18)'} onMouseLeave={e=>e.currentTarget.style.background='rgba(255,183,3,0.1)'}>📄 PDF</button>}
+          {localResult && (
+            <button onClick={()=>printPatientReport(patient,localResult,lang)} onMouseMove={tintMove} className="cta-ghost" style={{ display:'inline-flex', alignItems:'center', gap:'10px', padding:'10px 18px', background:'rgba(255,183,3,0.06)', border:'1px solid rgba(255,183,3,0.3)', color:'#FFB703', borderRadius:'5px', cursor:'pointer', fontSize:'10px', fontWeight:'800', letterSpacing:'1.6px', fontFamily:'inherit', textTransform:'uppercase', flexShrink:0 }}>
+              <span style={{ display:'inline-flex', alignItems:'center', gap:'9px' }}><Icon name="file" size={12} stroke={1.8} />{isFr?'Export PDF':'Export PDF'}</span>
+            </button>
+          )}
         </div>
-        <div style={{ display:'flex', gap:'4px', marginTop:'14px' }}>
-          {tabs.map(t=>(
-            <button key={t.id} onClick={()=>setActiveTab(t.id)} style={{ padding:'6px 14px', background:activeTab===t.id?'rgba(0,180,216,0.15)':'transparent', border:`1px solid ${activeTab===t.id?'rgba(0,180,216,0.4)':'rgba(255,255,255,0.08)'}`, borderRadius:'5px', color:activeTab===t.id?'#00B4D8':'rgba(255,255,255,0.4)', fontSize:'11px', fontWeight:'700', cursor:'pointer', transition:'all 0.15s', fontFamily:'inherit', display:'flex', alignItems:'center', gap:'5px' }}>
+
+        {/* TABS */}
+        <div style={{ display:'flex', gap:'30px', marginTop:'8px' }}>
+          {tabs.map(t => (
+            <button key={t.id} onClick={()=>setActiveTab(t.id)} style={{ padding:'0 0 14px', background:'transparent', border:'none', color:activeTab===t.id?'#fff':'rgba(255,255,255,0.42)', fontSize:'11px', fontWeight:activeTab===t.id?'700':'600', letterSpacing:'1.8px', textTransform:'uppercase', cursor:'pointer', position:'relative', fontFamily:'inherit', display:'inline-flex', alignItems:'center', gap:'8px', transition:'color .2s' }}
+              onMouseEnter={e=>{if(activeTab!==t.id)e.currentTarget.style.color='rgba(255,255,255,0.75)'}}
+              onMouseLeave={e=>{if(activeTab!==t.id)e.currentTarget.style.color='rgba(255,255,255,0.42)'}}>
+              <span className="mono" style={{ fontSize:'9px', color:activeTab===t.id?'#00B4D8':'rgba(255,255,255,0.32)', letterSpacing:'1.2px' }}>{t.num}</span>
               {t.l}
-              {t.cnt && <span style={{ fontSize:'9px', background:'rgba(255,255,255,0.08)', color:'rgba(255,255,255,0.35)', padding:'1px 5px', borderRadius:'8px' }}>{t.cnt}</span>}
-              {t.done && <span style={{ fontSize:'8px', background:'#10B981', color:'#05080F', padding:'1px 5px', borderRadius:'3px', fontWeight:'800' }}>✓</span>}
+              {t.cnt!=null && <span className="mono tnum" style={{ fontSize:'9px', color:activeTab===t.id?'#00B4D8':'rgba(255,255,255,0.38)', background:activeTab===t.id?'rgba(0,180,216,0.1)':'rgba(255,255,255,0.04)', padding:'2px 6px', borderRadius:'2px', letterSpacing:'0.5px', fontWeight:'700' }}>{t.cnt}</span>}
+              {t.done && <span className="mono" style={{ fontSize:'9px', fontWeight:'800', color:'#10B981', background:'rgba(16,185,129,0.12)', padding:'2px 6px', borderRadius:'2px', letterSpacing:'0.5px' }}>✓</span>}
+              {activeTab===t.id && <span style={{ position:'absolute', left:0, right:0, bottom:-1, height:'2px', background:'#00B4D8', borderRadius:'1px' }} />}
             </button>
           ))}
         </div>
       </div>
 
-      <div style={{ flex:1, overflowY:'auto', padding:'22px 24px' }}>
+      {/* TAB CONTENT */}
+      <div style={{ flex:1, overflowY:'auto', padding:'26px 28px' }}>
+
+        {/* OVERVIEW */}
         {activeTab==='overview' && (
-          <div style={{ animation:'fadeIn 0.2s ease' }}>
-            <div style={{ background:'rgba(10,22,40,0.5)', border:'1px solid rgba(255,255,255,0.05)', borderRadius:'8px', padding:'18px', marginBottom:'12px' }}>
-              <p style={{ fontSize:'8px', color:'rgba(255,255,255,0.2)', letterSpacing:'3px', marginBottom:'10px', fontWeight:'600' }}>{isFr?'HISTORIQUE CLINIQUE':'CLINICAL HISTORY'}</p>
-              <p style={{ fontSize:'13px', color:'rgba(255,255,255,0.6)', lineHeight:'1.85' }}>{patient.history}</p>
+          <div style={{ animation:'fadeIn 0.25s ease' }}>
+            <div style={{ border:'1px solid rgba(255,255,255,0.06)', borderRadius:'8px', padding:'20px 22px', marginBottom:'12px', background:'rgba(10,22,40,0.4)' }}>
+              <p className="mono" style={{ fontSize:'9px', color:'rgba(255,255,255,0.4)', letterSpacing:'2.5px', marginBottom:'12px', fontWeight:'700', textTransform:'uppercase' }}>§ 01 · {isFr?'Historique clinique':'Clinical history'}</p>
+              <p style={{ fontSize:'13px', color:'rgba(255,255,255,0.68)', lineHeight:'1.85', fontWeight:'300' }}>{patient.history}</p>
             </div>
+
             <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'10px', marginBottom:'12px' }}>
-              {[['ALLERGIES',patient.allergies,'#E63946'],[isFr?'MÉDICAMENTS':'MEDICATIONS',patient.medications,'#00B4D8']].map(([title,items,color])=>(
-                <div key={title} style={{ background:'rgba(10,22,40,0.5)', border:'1px solid rgba(255,255,255,0.05)', borderRadius:'8px', padding:'16px' }}>
-                  <p style={{ fontSize:'8px', color:'rgba(255,255,255,0.2)', letterSpacing:'3px', marginBottom:'10px', fontWeight:'600' }}>{title}</p>
-                  {items.map((a,i)=><div key={i} style={{ display:'flex', alignItems:'center', gap:'8px', marginBottom:'6px' }}><div style={{ width:'5px', height:'5px', borderRadius:'50%', background:color, flexShrink:0 }}/><span style={{ fontSize:'12px', color:'rgba(255,255,255,0.55)' }}>{a}</span></div>)}
+              {[[isFr?'Allergies':'Allergies',patient.allergies,'#E63946'],[isFr?'Médications':'Medications',patient.medications,'#00B4D8']].map(([title,items,color])=>(
+                <div key={title} style={{ border:'1px solid rgba(255,255,255,0.06)', borderRadius:'8px', padding:'18px 20px', background:'rgba(10,22,40,0.4)' }}>
+                  <p className="mono" style={{ fontSize:'9px', color, letterSpacing:'2.5px', marginBottom:'12px', fontWeight:'700', textTransform:'uppercase' }}>{title}</p>
+                  {items.map((a,i)=>(
+                    <div key={i} style={{ display:'flex', alignItems:'center', gap:'10px', marginBottom:'7px' }}>
+                      <div style={{ width:'4px', height:'4px', borderRadius:'50%', background:color, flexShrink:0 }} />
+                      <span style={{ fontSize:'12px', color:'rgba(255,255,255,0.7)', fontWeight:'400' }}>{a}</span>
+                    </div>
+                  ))}
                 </div>
               ))}
             </div>
-            {localResult
-              ? <div style={{ background:`${CLASS_COLORS[localResult.prediction]}0A`, border:`1px solid ${CLASS_COLORS[localResult.prediction]}33`, borderRadius:'8px', padding:'16px', display:'flex', justifyContent:'space-between', alignItems:'center', flexWrap:'wrap', gap:'10px' }}>
-                  <div><p style={{ fontSize:'8px', color:'rgba(255,255,255,0.25)', letterSpacing:'3px', marginBottom:'4px' }}>{isFr?'DERNIER RÉSULTAT':'LATEST RESULT'}</p><p style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'22px', color:CLASS_COLORS[localResult.prediction], letterSpacing:'2px' }}>{localResult.prediction.toUpperCase()}</p></div>
-                  <div style={{ display:'flex', gap:'12px', alignItems:'center' }}>
-                    <div style={{ textAlign:'right' }}><p style={{ fontSize:'8px', color:'rgba(255,255,255,0.25)', letterSpacing:'2px', marginBottom:'4px' }}>{isFr?'CONFIANCE':'CONFIDENCE'}</p><p style={{ fontSize:'26px', fontWeight:'900', color:'#10B981' }}>{(localResult.confidence*100).toFixed(1)}%</p></div>
-                    <button onClick={()=>setActiveTab('scan')} style={{ padding:'7px 14px', background:'rgba(0,180,216,0.1)', border:'1px solid rgba(0,180,216,0.25)', color:'#00B4D8', borderRadius:'5px', cursor:'pointer', fontSize:'10px', fontWeight:'800', fontFamily:'inherit' }}>{isFr?'HEATMAPS →':'HEATMAPS →'}</button>
+
+            {localResult ? (
+              <div style={{ position:'relative', border:`1px solid ${CLASS_COLORS[localResult.prediction]}44`, borderRadius:'8px', padding:'18px 22px', display:'flex', justifyContent:'space-between', alignItems:'center', flexWrap:'wrap', gap:'14px', background:`linear-gradient(180deg,${CLASS_COLORS[localResult.prediction]}0D,transparent)`, overflow:'hidden' }}>
+                <div style={{ position:'absolute', top:0, left:0, right:0, height:'1px', background:`linear-gradient(90deg,transparent,${CLASS_COLORS[localResult.prediction]},transparent)` }} />
+                <div>
+                  <p className="mono" style={{ fontSize:'9px', color:'rgba(255,255,255,0.4)', letterSpacing:'2.5px', marginBottom:'6px', textTransform:'uppercase', fontWeight:'700' }}>{isFr?'Dernier résultat IllumaDX':'Latest IllumaDX result'}</p>
+                  <h3 style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'30px', color:CLASS_COLORS[localResult.prediction], letterSpacing:'2px', margin:0, lineHeight:1, textTransform:'uppercase' }}>{localResult.prediction}</h3>
+                </div>
+                <div style={{ display:'flex', gap:'20px', alignItems:'center', flexWrap:'wrap' }}>
+                  <div style={{ textAlign:'right' }}>
+                    <p className="mono" style={{ fontSize:'9px', color:'rgba(255,255,255,0.4)', letterSpacing:'2.5px', marginBottom:'4px', textTransform:'uppercase', fontWeight:'700' }}>{isFr?'Confiance':'Confidence'}</p>
+                    <p className="tnum" style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'36px', color:'#10B981', margin:0, lineHeight:1, letterSpacing:'-0.5px' }}>{(localResult.confidence*100).toFixed(1)}<span style={{ fontSize:'0.5em', marginLeft:'2px' }}>%</span></p>
                   </div>
+                  <button onClick={()=>setActiveTab('scan')} onMouseMove={tintMove} className="cta-ghost" style={{ padding:'10px 18px', background:'rgba(0,180,216,0.06)', border:'1px solid rgba(0,180,216,0.25)', color:'#00B4D8', borderRadius:'5px', cursor:'pointer', fontSize:'10px', fontWeight:'800', fontFamily:'inherit', letterSpacing:'1.6px', display:'inline-flex', alignItems:'center', gap:'8px', textTransform:'uppercase' }}>
+                    <span style={{ display:'inline-flex', alignItems:'center', gap:'8px' }}>{isFr?'Heatmaps':'Heatmaps'}<Icon name="arrow" size={11} stroke={2.4} /></span>
+                  </button>
                 </div>
-              : <div style={{ background:'rgba(0,180,216,0.03)', border:'1px dashed rgba(0,180,216,0.2)', borderRadius:'8px', padding:'18px', textAlign:'center' }}>
-                  <p style={{ fontSize:'12px', color:'rgba(255,255,255,0.28)', marginBottom:'12px' }}>{isFr?"Aucune analyse IA effectuée pour ce patient.":"No AI analysis run yet for this patient."}</p>
-                  <button onClick={()=>setActiveTab('scan')} style={{ padding:'8px 20px', background:'#00B4D8', color:'#05080F', border:'none', borderRadius:'5px', cursor:'pointer', fontSize:'11px', fontWeight:'800', fontFamily:'inherit' }}>⚡ {isFr?'LANCER SCAN':'RUN SCAN'}</button>
-                </div>
-            }
+              </div>
+            ) : (
+              <div style={{ border:'1px dashed rgba(0,180,216,0.22)', borderRadius:'8px', padding:'28px 24px', textAlign:'center', background:'rgba(0,180,216,0.02)' }}>
+                <div style={{ display:'inline-flex', color:'#00B4D8', padding:'12px', border:'1px solid rgba(0,180,216,0.3)', borderRadius:'50%', background:'rgba(0,180,216,0.05)', marginBottom:'16px' }}><Icon name="upload" size={20} stroke={1.5} /></div>
+                <p className="mono" style={{ fontSize:'10px', color:'#00B4D8', letterSpacing:'2.5px', textTransform:'uppercase', fontWeight:'700', marginBottom:'8px' }}>{isFr?'Aucune analyse IA':'No AI analysis yet'}</p>
+                <p style={{ fontSize:'12px', color:'rgba(255,255,255,0.4)', marginBottom:'20px', fontWeight:'300' }}>{isFr?'Lancez une analyse GradCAM++ pour ce patient.':'Run a GradCAM++ analysis for this patient.'}</p>
+                <button onClick={()=>setActiveTab('scan')} onMouseMove={tintMove} className="cta-primary" style={{ display:'inline-flex', alignItems:'center', gap:'10px', padding:'11px 24px', background:'#00B4D8', color:'#05080F', border:'none', borderRadius:'5px', cursor:'pointer', fontSize:'10px', fontWeight:'800', fontFamily:'inherit', letterSpacing:'1.8px', textTransform:'uppercase', boxShadow:'0 0 28px rgba(0,180,216,0.25)' }}>
+                  <span style={{ display:'inline-flex', alignItems:'center', gap:'10px' }}>{isFr?'Lancer scan':'Run scan'}<Icon name="arrow" size={11} stroke={2.4} /></span>
+                </button>
+              </div>
+            )}
           </div>
         )}
 
+        {/* HISTORY */}
         {activeTab==='history' && (
-          <div style={{ animation:'fadeIn 0.2s ease' }}>
-            <p style={{ fontSize:'8px', color:'rgba(255,255,255,0.2)', letterSpacing:'3px', marginBottom:'16px', fontWeight:'600' }}>{patient.scanHistory.length} {isFr?'ENTRÉES':'ENTRIES'} — {isFr?'RÉCENT EN PREMIER':'MOST RECENT FIRST'}</p>
+          <div style={{ animation:'fadeIn 0.25s ease' }}>
+            <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:'20px', flexWrap:'wrap', gap:'8px' }}>
+              <p className="mono" style={{ fontSize:'9px', color:'rgba(255,255,255,0.42)', letterSpacing:'2.5px', fontWeight:'700', textTransform:'uppercase' }}>§ 02 · {patient.scanHistory.length} {isFr?'entrées':'entries'}</p>
+              <p className="mono" style={{ fontSize:'9px', color:'rgba(255,255,255,0.3)', letterSpacing:'2px', fontWeight:'700', textTransform:'uppercase' }}>{isFr?'Plus récent → plus ancien':'Most recent → oldest'}</p>
+            </div>
             <div style={{ position:'relative' }}>
-              <div style={{ position:'absolute', left:'15px', top:0, bottom:0, width:'1px', background:'rgba(255,255,255,0.06)' }} />
-              {patient.scanHistory.map((s,i)=>{
-                const isAI=s.provider==='IllumaDX AI System'
-                const dc=isAI?'#00B4D8':i===0?'#10B981':'rgba(255,255,255,0.18)'
+              <div style={{ position:'absolute', left:'15px', top:8, bottom:8, width:'1px', background:'linear-gradient(180deg,rgba(0,180,216,0.3),rgba(255,255,255,0.04))' }} />
+              {patient.scanHistory.map((s, i) => {
+                const isAI = s.provider === 'IllumaDX AI System'
+                const dc = isAI ? '#00B4D8' : i === 0 ? '#10B981' : 'rgba(255,255,255,0.22)'
                 return (
                   <div key={i} style={{ display:'flex', gap:'14px', marginBottom:'14px', position:'relative' }}>
-                    <div style={{ width:'31px', flexShrink:0, display:'flex', justifyContent:'center' }}><div style={{ width:'10px', height:'10px', borderRadius:'50%', background:dc, border:`2px solid ${dc}`, marginTop:'5px', flexShrink:0, boxShadow:i===0?`0 0 10px ${dc}55`:undefined }} /></div>
-                    <div style={{ flex:1, background:isAI?'rgba(0,180,216,0.04)':'rgba(10,22,40,0.4)', border:`1px solid ${isAI?'rgba(0,180,216,0.18)':'rgba(255,255,255,0.04)'}`, borderRadius:'7px', padding:'12px 14px' }}>
-                      <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:'5px', flexWrap:'wrap', gap:'5px' }}>
-                        <div><p style={{ fontSize:'13px', fontWeight:'700', color:'#fff', marginBottom:'2px' }}>{s.result}</p><p style={{ fontSize:'10px', color:'rgba(255,255,255,0.28)' }}>{s.type} · {s.provider}</p></div>
-                        <span style={{ fontSize:'10px', color:i===0?'#10B981':'rgba(255,255,255,0.25)', fontWeight:i===0?'700':'400', background:i===0?'rgba(16,185,129,0.08)':'transparent', padding:'2px 7px', borderRadius:'3px', border:i===0?'1px solid rgba(16,185,129,0.18)':'none', whiteSpace:'nowrap' }}>{s.date}</span>
+                    <div style={{ width:'31px', flexShrink:0, display:'flex', justifyContent:'center', alignItems:'flex-start', paddingTop:'14px' }}>
+                      <div style={{ width:'12px', height:'12px', borderRadius:'50%', background:dc, flexShrink:0, boxShadow:i===0?`0 0 0 3px ${dc}22, 0 0 18px ${dc}77`:'none', position:'relative', zIndex:1 }} />
+                    </div>
+                    <div style={{ flex:1, background:isAI?'rgba(0,180,216,0.04)':'rgba(10,22,40,0.4)', border:`1px solid ${isAI?'rgba(0,180,216,0.22)':'rgba(255,255,255,0.05)'}`, borderRadius:'7px', padding:'14px 18px', transition:'all 0.2s' }}>
+                      <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:'8px', flexWrap:'wrap', gap:'8px' }}>
+                        <div style={{ flex:1, minWidth:'200px' }}>
+                          <p style={{ fontSize:'13px', fontWeight:'700', color:'#fff', marginBottom:'4px', letterSpacing:'-0.1px' }}>{s.result}</p>
+                          <p className="mono" style={{ fontSize:'10px', color:'rgba(255,255,255,0.38)', letterSpacing:'0.5px', textTransform:'uppercase' }}>{s.type} · {s.provider}</p>
+                        </div>
+                        <span className="mono tnum" style={{ fontSize:'10px', color:i===0?'#10B981':'rgba(255,255,255,0.4)', fontWeight:i===0?'700':'600', background:i===0?'rgba(16,185,129,0.1)':'transparent', padding:'3px 8px', borderRadius:'3px', border:i===0?'1px solid rgba(16,185,129,0.22)':'none', whiteSpace:'nowrap', letterSpacing:'0.3px' }}>{s.date}</span>
                       </div>
-                      <p style={{ fontSize:'11px', color:'rgba(255,255,255,0.38)', lineHeight:'1.65' }}>{s.notes}</p>
-                      {isAI && <div style={{ marginTop:'7px', display:'flex', gap:'5px', alignItems:'center' }}><div style={{ width:'5px', height:'5px', borderRadius:'50%', background:'#00B4D8' }}/><span style={{ fontSize:'9px', color:'#00B4D8', fontWeight:'700', letterSpacing:'1px' }}>ILLUMADX AI · GRADCAM++ VERIFIED</span></div>}
+                      <p style={{ fontSize:'12px', color:'rgba(255,255,255,0.5)', lineHeight:'1.75', fontWeight:'300' }}>{s.notes}</p>
+                      {isAI && (
+                        <div style={{ marginTop:'10px', display:'flex', alignItems:'center', gap:'8px' }}>
+                          <div style={{ width:'5px', height:'5px', borderRadius:'50%', background:'#00B4D8', boxShadow:'0 0 6px #00B4D8' }} />
+                          <span className="mono" style={{ fontSize:'9px', color:'#00B4D8', fontWeight:'800', letterSpacing:'1.5px', textTransform:'uppercase' }}>IllumaDX · GradCAM++ {isFr?'vérifié':'verified'}</span>
+                        </div>
+                      )}
                     </div>
                   </div>
                 )
@@ -1140,77 +1763,135 @@ function PatientDetail({ patient, lang, onScanComplete }) {
           </div>
         )}
 
+        {/* AI SCAN */}
         {activeTab==='scan' && (
-          <div style={{ animation:'fadeIn 0.2s ease' }}>
-            <div style={{ background:'rgba(0,180,216,0.03)', border:'1px solid rgba(0,180,216,0.14)', borderRadius:'10px', padding:'22px' }}>
-              <div style={{ display:'flex', alignItems:'center', gap:'8px', marginBottom:'16px' }}>
-                <div style={{ width:'6px', height:'6px', borderRadius:'50%', background:'#00B4D8', animation:'ripple 2s infinite' }} />
-                <span style={{ fontSize:'10px', color:'#00B4D8', letterSpacing:'3px', fontWeight:'700' }}>{isFr?'ANALYSE ILLUMADX':'ILLUMADX ANALYSIS'}</span>
+          <div style={{ animation:'fadeIn 0.25s ease' }}>
+            <p className="mono" style={{ fontSize:'9px', color:'rgba(255,255,255,0.42)', letterSpacing:'2.5px', marginBottom:'14px', fontWeight:'700', textTransform:'uppercase' }}>§ 03 · {isFr?'Analyse IllumaDX':'IllumaDX analysis'}</p>
+
+            {scanPhase==='idle' && (
+              <div style={{ border:'1px solid rgba(0,180,216,0.2)', borderRadius:'10px', padding:'44px 30px', textAlign:'center', background:'rgba(0,180,216,0.02)', position:'relative', overflow:'hidden' }}>
+                <div style={{ position:'absolute', inset:0, backgroundImage:'linear-gradient(rgba(0,180,216,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(0,180,216,0.05) 1px,transparent 1px)', backgroundSize:'40px 40px', maskImage:'radial-gradient(circle at 50% 50%,black 0%,transparent 78%)', WebkitMaskImage:'radial-gradient(circle at 50% 50%,black 0%,transparent 78%)', pointerEvents:'none' }} />
+                <div style={{ position:'relative' }}>
+                  <div style={{ display:'inline-flex', color:'#00B4D8', padding:'14px', border:'1px solid rgba(0,180,216,0.3)', borderRadius:'50%', background:'rgba(0,180,216,0.04)', marginBottom:'18px' }}><Icon name="upload" size={26} stroke={1.4} /></div>
+                  <p className="mono" style={{ fontSize:'11px', color:'#00B4D8', letterSpacing:'2.5px', fontWeight:'700', textTransform:'uppercase', marginBottom:'10px' }}>{isFr?'Téléverser IRM':'Upload MRI scan'}</p>
+                  <p style={{ fontSize:'12px', color:'rgba(255,255,255,0.42)', lineHeight:'1.7', marginBottom:'26px', fontWeight:'300', maxWidth:'420px', marginLeft:'auto', marginRight:'auto' }}>{isFr?"Téléversez l'IRM de ce patient pour lancer l'analyse IA en temps réel avec GradCAM++.":"Upload this patient's MRI scan to run real-time AI analysis with GradCAM++."}</p>
+                  <input ref={fileRef} type="file" accept="image/*" style={{ display:'none' }} onChange={e=>handleFile(e.target.files[0])} />
+                  <button onClick={()=>fileRef.current.click()} onMouseMove={tintMove} className="cta-primary" style={{ display:'inline-flex', alignItems:'center', gap:'10px', padding:'12px 28px', background:'#00B4D8', color:'#05080F', border:'none', borderRadius:'5px', cursor:'pointer', fontSize:'11px', fontWeight:'800', letterSpacing:'1.8px', fontFamily:'inherit', textTransform:'uppercase', boxShadow:'0 0 32px rgba(0,180,216,0.28)' }}>
+                    <span style={{ display:'inline-flex', alignItems:'center', gap:'10px' }}>{isFr?'Lancer scan':'Run IllumaDX scan'}<Icon name="arrow" size={11} stroke={2.4} /></span>
+                  </button>
+                </div>
               </div>
+            )}
 
-              {scanPhase==='idle' && (
-                <div>
-                  <p style={{ fontSize:'13px', color:'rgba(255,255,255,0.38)', marginBottom:'14px', lineHeight:'1.75' }}>{isFr?"Téléchargez l'IRM pour lancer l'analyse IA avec GradCAM++.":"Upload this patient's MRI scan to run real-time AI analysis with GradCAM++."}</p>
-                  <input ref={fileRef} type="file" accept="image/*" style={{ display:'none' }} onChange={e=>handleFile(e.target.files[0])} />
-                  <button onClick={()=>fileRef.current.click()} style={{ padding:'12px 28px', background:'#00B4D8', color:'#05080F', border:'none', borderRadius:'6px', cursor:'pointer', fontSize:'11px', fontWeight:'800', letterSpacing:'1px', fontFamily:'inherit' }}>⚡ {isFr?'LANCER SCAN':'RUN ILLUMADX SCAN'}</button>
-                </div>
-              )}
+            {scanPhase==='loading' && (
+              <div style={{ textAlign:'center', padding:'52px 20px', border:'1px solid rgba(0,180,216,0.15)', borderRadius:'10px', background:'rgba(0,180,216,0.02)' }}>
+                <div style={{ width:'44px', height:'44px', border:'2px solid rgba(0,180,216,0.15)', borderTop:'2px solid #00B4D8', borderRadius:'50%', animation:'spin 0.9s linear infinite', margin:'0 auto 18px' }} />
+                <p className="mono" style={{ color:'#00B4D8', fontSize:'11px', fontWeight:'700', letterSpacing:'3.5px', textTransform:'uppercase', marginBottom:'10px' }}>{isFr?'Analyse en cours':'Analyzing scan'}</p>
+                <p className="mono" style={{ color:'rgba(255,255,255,0.4)', fontSize:'9px', letterSpacing:'2.2px', textTransform:'uppercase' }}>GroupB ResNet-18 · GradCAM++ · 60% {isFr?'seuil':'gate'}</p>
+              </div>
+            )}
 
-              {scanPhase==='loading' && (
-                <div style={{ textAlign:'center', padding:'28px' }}>
-                  <div style={{ width:'40px', height:'40px', border:'3px solid rgba(0,180,216,0.2)', borderTop:'3px solid #00B4D8', borderRadius:'50%', animation:'spin 1s linear infinite', margin:'0 auto 14px' }} />
-                  <p style={{ color:'#00B4D8', fontSize:'12px', letterSpacing:'2px', fontWeight:'700' }}>{isFr?'ANALYSE...':'ANALYSING...'}</p>
-                </div>
-              )}
-
-              {(scanPhase==='not_mri'||scanPhase==='invalid'||scanPhase==='error') && (
-                <div style={{ textAlign:'center', padding:'20px' }}>
-                  <p style={{ color:'#E63946', fontWeight:'800', fontSize:'14px', marginBottom:'7px' }}>{scanPhase==='not_mri'?(isFr?'PAS UNE IRM':'NOT A BRAIN MRI'):(isFr?'CONFIANCE INSUFFISANTE':'LOW CONFIDENCE')}</p>
-                  <input ref={fileRef} type="file" accept="image/*" style={{ display:'none' }} onChange={e=>handleFile(e.target.files[0])} />
-                  <button onClick={()=>fileRef.current.click()} style={{ marginTop:'8px', padding:'8px 18px', background:'rgba(0,180,216,0.1)', color:'#00B4D8', border:'1px solid rgba(0,180,216,0.3)', borderRadius:'4px', cursor:'pointer', fontSize:'11px', fontWeight:'700', fontFamily:'inherit' }}>{isFr?'RÉESSAYER':'TRY AGAIN'}</button>
-                </div>
-              )}
-
-              {scanPhase==='done' && localResult && (
-                <div>
-                  <div style={{ background:`${CLASS_COLORS[localResult.prediction]}0F`, border:`1px solid ${CLASS_COLORS[localResult.prediction]}33`, borderRadius:'8px', padding:'16px 20px', marginBottom:'14px', display:'flex', justifyContent:'space-between', alignItems:'center', flexWrap:'wrap', gap:'8px' }}>
-                    <div><p style={{ fontSize:'8px', color:'rgba(255,255,255,0.28)', letterSpacing:'3px', marginBottom:'3px' }}>{isFr?'DIAGNOSTIC':'DIAGNOSIS'}</p><h3 style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'28px', color:CLASS_COLORS[localResult.prediction], letterSpacing:'2px', margin:0 }}>{localResult.prediction.toUpperCase()}</h3></div>
-                    <div style={{ textAlign:'right' }}><p style={{ fontSize:'8px', color:'rgba(255,255,255,0.28)', letterSpacing:'3px', marginBottom:'3px' }}>{isFr?'CONFIANCE':'CONFIDENCE'}</p><p style={{ fontSize:'32px', fontWeight:'900', color:'#10B981', letterSpacing:'-1px' }}>{(localResult.confidence*100).toFixed(1)}%</p></div>
+            {(scanPhase==='not_mri'||scanPhase==='invalid'||scanPhase==='error') && (()=>{
+              const r = REJ[scanPhase]
+              return (
+                <div style={{ textAlign:'center', padding:'38px 24px', border:`1px solid ${r.color}33`, borderRadius:'10px', background:`${r.color}08` }}>
+                  <div style={{ display:'inline-flex', color:r.color, padding:'13px', border:`1px solid ${r.color}55`, borderRadius:'50%', background:`${r.color}0D`, marginBottom:'18px' }}>
+                    <Icon name={r.icon} size={24} stroke={1.4} />
                   </div>
-                  <div style={{ marginBottom:'14px' }}>
-                    {['glioma','meningioma','notumor','pituitary'].map(cls=>{
-                      const p=(localResult.probabilities[cls]||0)*100; const isTop=cls===localResult.prediction
-                      return (<div key={cls} style={{ marginBottom:'6px' }}>
-                        <div style={{ display:'flex', justifyContent:'space-between', marginBottom:'2px' }}><span style={{ fontSize:'10px', color:isTop?CLASS_COLORS[cls]:'rgba(255,255,255,0.3)', fontWeight:isTop?'700':'400', textTransform:'uppercase', letterSpacing:'1px' }}>{cls}</span><span style={{ fontSize:'10px', color:isTop?CLASS_COLORS[cls]:'rgba(255,255,255,0.3)', fontWeight:isTop?'700':'400' }}>{p.toFixed(1)}%</span></div>
-                        <div style={{ height:'4px', background:'rgba(255,255,255,0.05)', borderRadius:'2px', overflow:'hidden' }}><div style={{ height:'100%', width:`${p}%`, background:isTop?CLASS_COLORS[cls]:'rgba(255,255,255,0.08)', borderRadius:'2px', transition:'width 1s cubic-bezier(0.16,1,0.3,1)' }} /></div>
-                      </div>)
-                    })}
-                  </div>
-                  {localResult.heatmap_b && (
-                    <div style={{ marginBottom:'12px' }}>
-                      <p style={{ fontSize:'8px', color:'rgba(255,255,255,0.2)', letterSpacing:'3px', marginBottom:'8px', fontWeight:'600' }}>GRADCAM++</p>
-                      <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'6px', marginBottom:'6px' }}>
-                        {[{k:'heatmap_b',l:'Group B — Basic ✓',c:'#10B981'},{k:'heatmap_d',l:'Group D — Domain',c:'#FFB703'}].map(({k,l,c})=>(
-                          <div key={k} style={{ border:`1px solid ${c}33`, borderRadius:'5px', overflow:'hidden' }}>
-                            <img src={`data:image/png;base64,${localResult[k]}`} alt={l} style={{ width:'100%', display:'block' }} />
-                            <div style={{ padding:'5px 8px', background:`${c}0A` }}><p style={{ fontSize:'8px', color:c, fontWeight:'700', margin:0 }}>{l}</p></div>
-                          </div>
-                        ))}
+                  <p className="mono" style={{ color:r.color, fontSize:'9px', letterSpacing:'3px', fontWeight:'700', textTransform:'uppercase', marginBottom:'10px', opacity:0.82 }}>{r.code}</p>
+                  <h3 style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'24px', color:r.color, letterSpacing:'2.5px', marginBottom:'14px', lineHeight:1 }}>{r.title}</h3>
+                  <p style={{ color:'rgba(255,255,255,0.52)', fontSize:'12px', maxWidth:'380px', margin:'0 auto 22px', lineHeight:'1.7', fontWeight:'300' }}>{r.desc}</p>
+                  <input ref={fileRef} type="file" accept="image/*" style={{ display:'none' }} onChange={e=>handleFile(e.target.files[0])} />
+                  <button onClick={()=>fileRef.current.click()} onMouseMove={tintMove} className="cta-primary" style={{ display:'inline-flex', alignItems:'center', gap:'10px', padding:'10px 24px', background:'#00B4D8', color:'#05080F', border:'none', borderRadius:'4px', cursor:'pointer', fontSize:'10px', fontWeight:'800', fontFamily:'inherit', letterSpacing:'1.8px', textTransform:'uppercase' }}>
+                    <span style={{ display:'inline-flex', alignItems:'center', gap:'10px' }}>{isFr?'Réessayer':'Try again'}<Icon name="arrow" size={11} stroke={2.4} /></span>
+                  </button>
+                </div>
+              )
+            })()}
+
+            {scanPhase==='done' && localResult && (()=>{
+              const predColor = CLASS_COLORS[localResult.prediction] || '#10B981'
+              const confPct = localResult.confidence * 100
+              return (
+                <div style={{ animation:'fadeIn 0.4s ease' }}>
+                  {/* Diagnosis card */}
+                  <div style={{ position:'relative', border:`1px solid ${predColor}44`, borderRadius:'10px', padding:'20px 24px', marginBottom:'18px', background:`linear-gradient(180deg,${predColor}0D,transparent)`, overflow:'hidden' }}>
+                    <div style={{ position:'absolute', top:0, left:0, right:0, height:'1px', background:`linear-gradient(90deg,transparent,${predColor},transparent)` }} />
+                    <div style={{ display:'grid', gridTemplateColumns:'1.3fr 1fr', gap:'24px', alignItems:'center' }}>
+                      <div>
+                        <p className="mono" style={{ fontSize:'9px', color:'rgba(255,255,255,0.4)', letterSpacing:'2.5px', marginBottom:'8px', textTransform:'uppercase', fontWeight:'700' }}>{isFr?'Diagnostic':'Diagnosis'}</p>
+                        <h3 style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'40px', letterSpacing:'2.5px', color:predColor, margin:0, lineHeight:1, textTransform:'uppercase' }}>{localResult.prediction}</h3>
+                        <div style={{ display:'flex', gap:'6px', marginTop:'14px', flexWrap:'wrap' }}>
+                          <span className="mono" style={{ fontSize:'9px', padding:'3px 8px', border:`1px solid ${predColor}55`, borderRadius:'2px', color:predColor, letterSpacing:'1.3px', fontWeight:'800' }}>GROUPB</span>
+                          <span className="mono" style={{ fontSize:'9px', padding:'3px 8px', border:'1px solid rgba(255,255,255,0.1)', borderRadius:'2px', color:'rgba(255,255,255,0.55)', letterSpacing:'1.3px', fontWeight:'700' }}>RESNET-18</span>
+                          <span className="mono" style={{ fontSize:'9px', padding:'3px 8px', border:'1px solid rgba(255,255,255,0.1)', borderRadius:'2px', color:'rgba(255,255,255,0.55)', letterSpacing:'1.3px', fontWeight:'700' }}>GRADCAM++</span>
+                        </div>
                       </div>
-                      <div style={{ border:'1px solid rgba(0,180,216,0.3)', borderRadius:'5px', overflow:'hidden' }}>
-                        <img src={`data:image/png;base64,${localResult.heatmap_consensus}`} alt="consensus" style={{ width:'100%', display:'block' }} />
-                        <div style={{ padding:'6px 10px', background:'rgba(0,180,216,0.06)' }}><p style={{ fontSize:'9px', color:'#00B4D8', fontWeight:'700', margin:0 }}>⬡ CONSENSUS B+D</p></div>
+                      <div style={{ textAlign:'right' }}>
+                        <p className="mono" style={{ fontSize:'9px', color:'rgba(255,255,255,0.4)', letterSpacing:'2.5px', marginBottom:'6px', textTransform:'uppercase', fontWeight:'700' }}>{isFr?'Confiance':'Confidence'}</p>
+                        <p className="tnum" style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'50px', color:'#10B981', margin:0, letterSpacing:'-1px', lineHeight:1 }}>{confPct.toFixed(1)}<span style={{ fontSize:'0.5em', marginLeft:'2px' }}>%</span></p>
+                        <div style={{ height:'3px', background:'rgba(255,255,255,0.06)', borderRadius:'2px', marginTop:'12px', overflow:'hidden' }}>
+                          <div style={{ height:'100%', width:`${confPct}%`, background:'linear-gradient(90deg,#10B981,#00B4D8)', borderRadius:'2px' }} />
+                        </div>
                       </div>
                     </div>
-                  )}
-                  <div style={{ display:'flex', gap:'7px' }}>
-                    <button onClick={()=>printPatientReport(patient,localResult,lang)} style={{ flex:1, padding:'9px', background:'rgba(255,183,3,0.1)', border:'1px solid rgba(255,183,3,0.3)', color:'#FFB703', borderRadius:'5px', cursor:'pointer', fontSize:'10px', fontWeight:'800', fontFamily:'inherit' }}>📄 PDF</button>
+                  </div>
+
+                  {/* Heatmaps */}
+                  {localResult.heatmap_b && (<>
+                    <p className="mono" style={{ fontSize:'9px', color:'rgba(255,255,255,0.42)', letterSpacing:'2.5px', marginBottom:'10px', textTransform:'uppercase', fontWeight:'700' }}>{isFr?'Cartes GradCAM++':'GradCAM++ heatmaps'}</p>
+                    <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'7px', marginBottom:'7px' }}>
+                      {[{k:'heatmap_b',l:isFr?'Groupe B · Basique':'Group B · Basic',sub:isFr?'✓ Gagnant':'✓ Winner',c:'#10B981'},{k:'heatmap_d',l:isFr?'Groupe D · Domaine':'Group D · Domain',sub:isFr?'Rejeté':'Rejected',c:'#FFB703'}].map(({k,l,sub,c})=>(
+                        <div key={k} style={{ border:`1px solid ${c}33`, borderRadius:'6px', overflow:'hidden', background:`${c}04` }}>
+                          <img src={`data:image/png;base64,${localResult[k]}`} alt={l} style={{ width:'100%', display:'block' }} />
+                          <div style={{ padding:'7px 10px', borderTop:`1px solid ${c}22`, display:'flex', justifyContent:'space-between', alignItems:'center' }}>
+                            <p className="mono" style={{ fontSize:'9px', color:c, fontWeight:'700', margin:0, letterSpacing:'1.2px', textTransform:'uppercase' }}>{l}</p>
+                            <span className="mono" style={{ fontSize:'8px', color:`${c}cc`, letterSpacing:'1px', textTransform:'uppercase' }}>{sub}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    <div style={{ border:'1px solid rgba(0,180,216,0.4)', borderRadius:'6px', overflow:'hidden', background:'rgba(0,180,216,0.04)', boxShadow:'0 0 28px rgba(0,180,216,0.08)' }}>
+                      <img src={`data:image/png;base64,${localResult.heatmap_consensus}`} alt="consensus" style={{ width:'100%', display:'block' }} />
+                      <div style={{ padding:'10px 14px', borderTop:'1px solid rgba(0,180,216,0.25)', display:'flex', justifyContent:'space-between', alignItems:'center', flexWrap:'wrap', gap:'8px' }}>
+                        <p className="mono" style={{ fontSize:'9px', color:'#00B4D8', fontWeight:'800', margin:0, letterSpacing:'1.5px', textTransform:'uppercase', display:'inline-flex', alignItems:'center', gap:'7px' }}><span style={{ width:'5px', height:'5px', background:'#00B4D8', borderRadius:'50%' }} />{isFr?'Consensus B+D':'Consensus B+D'}</p>
+                        <span className="mono" style={{ fontSize:'8px', color:'rgba(0,180,216,0.65)', letterSpacing:'1.2px', textTransform:'uppercase' }}>{isFr?'Carte finale':'Final heatmap'}</span>
+                      </div>
+                    </div>
+                  </>)}
+
+                  {/* Probabilities */}
+                  <p className="mono" style={{ fontSize:'9px', color:'rgba(255,255,255,0.42)', letterSpacing:'2.5px', margin:'22px 0 10px', textTransform:'uppercase', fontWeight:'700' }}>{isFr?'Distribution des probabilités':'Probability distribution'}</p>
+                  <div style={{ border:'1px solid rgba(255,255,255,0.05)', borderRadius:'8px', padding:'16px 18px', marginBottom:'18px', background:'rgba(255,255,255,0.012)' }}>
+                    {['glioma','meningioma','notumor','pituitary'].map(cls=>{
+                      const p=(localResult.probabilities[cls]||0)*100; const isTop=cls===localResult.prediction
+                      return (
+                        <div key={cls} style={{ marginBottom:'12px' }}>
+                          <div style={{ display:'flex', justifyContent:'space-between', alignItems:'baseline', marginBottom:'5px' }}>
+                            <span className="mono" style={{ fontSize:'10px', color:isTop?CLASS_COLORS[cls]:'rgba(255,255,255,0.5)', fontWeight:isTop?'800':'600', textTransform:'uppercase', letterSpacing:'1.6px' }}>{cls}</span>
+                            <span className="mono tnum" style={{ fontSize:'10px', color:isTop?CLASS_COLORS[cls]:'rgba(255,255,255,0.45)', fontWeight:isTop?'800':'600' }}>{p.toFixed(2)}%</span>
+                          </div>
+                          <div style={{ height:'4px', background:'rgba(255,255,255,0.05)', borderRadius:'2px', overflow:'hidden' }}>
+                            <div style={{ height:'100%', width:`${p}%`, background:isTop?CLASS_COLORS[cls]:'rgba(255,255,255,0.12)', borderRadius:'2px', transition:'width 1.1s cubic-bezier(0.16,1,0.3,1)', boxShadow:isTop?`0 0 12px ${CLASS_COLORS[cls]}88`:'none' }} />
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+
+                  {/* Actions */}
+                  <div style={{ display:'flex', gap:'8px' }}>
+                    <button onClick={()=>printPatientReport(patient,localResult,lang)} onMouseMove={tintMove} className="cta-ghost" style={{ flex:1, padding:'12px', background:'rgba(255,183,3,0.05)', border:'1px solid rgba(255,183,3,0.3)', color:'#FFB703', borderRadius:'5px', cursor:'pointer', fontSize:'10px', fontWeight:'800', fontFamily:'inherit', letterSpacing:'1.6px', display:'inline-flex', alignItems:'center', justifyContent:'center', gap:'9px', textTransform:'uppercase' }}>
+                      <span style={{ display:'inline-flex', alignItems:'center', gap:'9px' }}><Icon name="file" size={12} stroke={1.8} />{isFr?'Export PDF':'Export PDF'}</span>
+                    </button>
                     <input ref={fileRef} type="file" accept="image/*" style={{ display:'none' }} onChange={e=>handleFile(e.target.files[0])} />
-                    <button onClick={()=>fileRef.current.click()} style={{ flex:1, padding:'9px', background:'rgba(0,180,216,0.07)', border:'1px solid rgba(0,180,216,0.18)', color:'#00B4D8', borderRadius:'5px', cursor:'pointer', fontSize:'10px', fontWeight:'800', fontFamily:'inherit' }}>↺ {isFr?'NOUVEAU':'NEW SCAN'}</button>
+                    <button onClick={()=>fileRef.current.click()} onMouseMove={tintMove} className="cta-ghost" style={{ flex:1, padding:'12px', background:'rgba(0,180,216,0.05)', border:'1px solid rgba(0,180,216,0.22)', color:'#00B4D8', borderRadius:'5px', cursor:'pointer', fontSize:'10px', fontWeight:'800', fontFamily:'inherit', letterSpacing:'1.6px', display:'inline-flex', alignItems:'center', justifyContent:'center', gap:'9px', textTransform:'uppercase' }}>
+                      <span style={{ display:'inline-flex', alignItems:'center', gap:'9px' }}><Icon name="upload" size={12} stroke={1.8} />{isFr?'Nouveau scan':'New scan'}</span>
+                    </button>
                   </div>
                 </div>
-              )}
-            </div>
+              )
+            })()}
           </div>
         )}
       </div>
@@ -1226,6 +1907,7 @@ function UploadModal({ onClose, lang }) {
   const [preview, setPreview] = useState(null)
   const fileRef = useRef(null)
   const isFr = lang === 'fr'
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
 
   const handleFile = async (file) => {
     if (!file||!file.type.startsWith('image/')) return
@@ -1241,75 +1923,208 @@ function UploadModal({ onClose, lang }) {
 
   const reset = () => { setPhase('idle'); setResult(null); setPreview(null) }
 
+  const REJECTS = {
+    not_mri: { color:'#E63946', icon:'brain', title:isFr?'PAS UNE IRM CÉRÉBRALE':'NOT A BRAIN MRI', code:isFr?'ERR · SCAN_INVALIDE':'ERR · NON_BRAIN_SCAN', desc:isFr?'Cette image n\'a pas été reconnue comme une IRM cérébrale valide. Veuillez téléverser une IRM cérébrale en niveaux de gris.':'This image was not recognized as a valid brain MRI. Please upload a greyscale brain MRI scan.' },
+    invalid: { color:'#E63946', icon:'shield',  title:isFr?'CONFIANCE INSUFFISANTE':'LOW CONFIDENCE', code:isFr?'ERR · SEUIL_60%':'ERR · CONF_GATE_<60%',   desc:isFr?'La confiance du modèle est inférieure au seuil de sécurité de 60%. Le scan n\'a pas pu être classifié de manière fiable.':'Model confidence fell below the 60% safety threshold. The scan could not be classified reliably.' },
+    error:   { color:'#FFB703', icon:'file',    title:isFr?'ERREUR DE CONNEXION':'CONNECTION ERROR', code:'ERR · NETWORK',                                desc:isFr?'Impossible de joindre le serveur d\'inférence. Vérifiez votre connexion puis réessayez.':'Could not reach the inference server. Check your connection and try again.' },
+  }
+
   return (
-    <div onClick={onClose} style={{ position:'fixed', inset:0, zIndex:1000, background:'rgba(5,8,15,0.92)', backdropFilter:'blur(20px)', display:'flex', alignItems:'center', justifyContent:'center', padding:'20px' }}>
-      <div onClick={e=>e.stopPropagation()} style={{ background:'#0A1628', border:'1px solid rgba(0,180,216,0.2)', borderRadius:'12px', width:'100%', maxWidth:phase==='result'?'900px':'520px', maxHeight:'90vh', overflowY:'auto', padding:'36px', position:'relative', boxShadow:'0 40px 120px rgba(0,0,0,0.8)', transition:'max-width 0.5s cubic-bezier(0.16,1,0.3,1)' }}>
-        <style>{`@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}@keyframes ripple{0%{box-shadow:0 0 0 0 rgba(16,185,129,0.5)}70%{box-shadow:0 0 0 14px rgba(16,185,129,0)}100%{box-shadow:0 0 0 0 rgba(16,185,129,0)}}@keyframes fadeIn{from{opacity:0}to{opacity:1}}`}</style>
-        <button onClick={onClose} style={{ position:'absolute', top:'16px', right:'16px', background:'rgba(255,255,255,0.05)', border:'1px solid rgba(255,255,255,0.1)', color:'rgba(255,255,255,0.5)', borderRadius:'6px', width:'32px', height:'32px', cursor:'pointer', fontSize:'16px', display:'flex', alignItems:'center', justifyContent:'center' }}>×</button>
-        <div style={{ marginBottom:'24px' }}>
-          <div style={{ display:'flex', alignItems:'center', gap:'8px', marginBottom:'8px' }}><div style={{ width:'6px', height:'6px', borderRadius:'50%', background:'#10B981', animation:'ripple 2s infinite' }}/><span style={{ fontSize:'9px', color:'#10B981', letterSpacing:'3px', fontWeight:'700' }}>{isFr?'SYSTÈME EN DIRECT':'LIVE SYSTEM'}</span></div>
-          <h2 style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'32px', color:'#fff', letterSpacing:'2px', margin:0 }}>Illuma<span style={{ color:'#00B4D8' }}>DX</span> {isFr?'ANALYSE':'ANALYSIS'}</h2>
-          <p style={{ color:'rgba(255,255,255,0.3)', fontSize:'12px', marginTop:'6px' }}>{isFr?'Téléchargez une IRM pour une analyse en temps réel':'Upload a brain MRI scan for real-time AI analysis'}</p>
+    <div onClick={onClose} style={{ position:'fixed', inset:0, zIndex:1000, background:'rgba(5,8,15,0.72)', backdropFilter:'blur(26px) saturate(130%)', WebkitBackdropFilter:'blur(26px) saturate(130%)', display:'flex', alignItems:'center', justifyContent:'center', padding:isMobile?'12px':'24px', animation:'fadeIn 0.3s ease' }}>
+      <div onClick={e=>e.stopPropagation()} style={{ background:'linear-gradient(180deg,rgba(10,22,40,0.98) 0%,rgba(7,14,28,0.98) 100%)', border:'1px solid rgba(0,180,216,0.18)', borderRadius:'14px', width:'100%', maxWidth:phase==='result'?'980px':'620px', maxHeight:'92vh', overflowY:'auto', position:'relative', boxShadow:'0 40px 120px rgba(0,0,0,0.7), 0 0 0 1px rgba(0,180,216,0.04), 0 0 80px rgba(0,180,216,0.06)', transition:'max-width 0.5s cubic-bezier(0.16,1,0.3,1)', animation:'modalSlide 0.45s cubic-bezier(0.16,1,0.3,1)' }}>
+        <style>{`
+          @keyframes modalSlide{from{opacity:0;transform:translateY(24px) scale(0.985)}to{opacity:1;transform:translateY(0) scale(1)}}
+          @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+          @keyframes ripple{0%{box-shadow:0 0 0 0 rgba(16,185,129,0.5)}70%{box-shadow:0 0 0 14px rgba(16,185,129,0)}100%{box-shadow:0 0 0 0 rgba(16,185,129,0)}}
+          @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+          @keyframes scanSweep{0%{top:-10%;opacity:0}10%{opacity:1}90%{opacity:1}100%{top:110%;opacity:0}}
+          @keyframes barIn{from{width:0}}
+          @keyframes mapReveal{from{opacity:0;clip-path:inset(0 100% 0 0)}to{opacity:1;clip-path:inset(0 0 0 0)}}
+        `}</style>
+
+        <CornerMark pos="tl" offset={14} /><CornerMark pos="tr" offset={14} />
+        <CornerMark pos="bl" offset={14} /><CornerMark pos="br" offset={14} />
+
+        {/* HEADER */}
+        <div style={{ padding:isMobile?'24px 22px 22px':'28px 32px 24px', borderBottom:'1px solid rgba(255,255,255,0.05)', display:'flex', justifyContent:'space-between', alignItems:'flex-start', gap:'14px' }}>
+          <div style={{ flex:1, minWidth:0 }}>
+            <div style={{ display:'flex', alignItems:'center', gap:'10px', marginBottom:'12px', flexWrap:'wrap' }}>
+              <div style={{ width:'6px', height:'6px', borderRadius:'50%', background:'#10B981', animation:'ripple 2s infinite', flexShrink:0 }} />
+              <span className="mono" style={{ fontSize:'9px', color:'#10B981', letterSpacing:'3px', fontWeight:'700', textTransform:'uppercase' }}>{isFr?'IA Clinique · en direct':'Live Clinical AI'}</span>
+              <span style={{ width:'18px', height:'1px', background:'rgba(255,255,255,0.12)' }} />
+              <span className="mono" style={{ fontSize:'9px', color:'rgba(255,255,255,0.42)', letterSpacing:'2.5px', fontWeight:'700', textTransform:'uppercase' }}>§ 00 · {isFr?'Inférence':'Inference'}</span>
+            </div>
+            <h2 style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:isMobile?'26px':'34px', color:'#fff', letterSpacing:'2px', margin:0, lineHeight:1 }}>
+              <span>Illuma</span><span style={{ color:'#00B4D8' }}>DX</span>{' '}
+              <span style={{ color:'rgba(255,255,255,0.5)', fontWeight:'400' }}>· {isFr?'ANALYSE IRM':'MRI ANALYSIS'}</span>
+            </h2>
+            <p style={{ color:'rgba(255,255,255,0.45)', fontSize:'12px', marginTop:'10px', fontWeight:'300', lineHeight:'1.65' }}>
+              {isFr?'Téléversez une IRM cérébrale · ResNet-18 + interprétabilité GradCAM++':'Upload a brain MRI · ResNet-18 + GradCAM++ interpretability'}
+            </p>
+          </div>
+          <button onClick={onClose} onMouseMove={tintMove} style={{ background:'rgba(255,255,255,0.04)', border:'1px solid rgba(255,255,255,0.08)', color:'rgba(255,255,255,0.55)', borderRadius:'6px', width:'34px', height:'34px', cursor:'pointer', fontSize:'14px', display:'flex', alignItems:'center', justifyContent:'center', fontFamily:'inherit', transition:'all 0.2s', flexShrink:0 }}
+            onMouseEnter={e=>{e.currentTarget.style.background='rgba(230,57,70,0.1)';e.currentTarget.style.borderColor='rgba(230,57,70,0.35)';e.currentTarget.style.color='#E63946'}}
+            onMouseLeave={e=>{e.currentTarget.style.background='rgba(255,255,255,0.04)';e.currentTarget.style.borderColor='rgba(255,255,255,0.08)';e.currentTarget.style.color='rgba(255,255,255,0.55)'}}>
+            ✕
+          </button>
         </div>
 
-        {phase==='idle' && (
-          <div onDragOver={e=>{e.preventDefault();setDragOver(true)}} onDragLeave={()=>setDragOver(false)} onDrop={e=>{e.preventDefault();setDragOver(false);handleFile(e.dataTransfer.files[0])}} onClick={()=>fileRef.current.click()}
-            style={{ border:`2px dashed ${dragOver?'#00B4D8':'rgba(0,180,216,0.25)'}`, borderRadius:'8px', padding:'60px 24px', textAlign:'center', cursor:'pointer', background:dragOver?'rgba(0,180,216,0.05)':'rgba(0,180,216,0.02)', transition:'all 0.2s' }}>
-            <input ref={fileRef} type="file" accept="image/*" style={{ display:'none' }} onChange={e=>handleFile(e.target.files[0])} />
-            <div style={{ fontSize:'48px', marginBottom:'16px' }}>🧠</div>
-            <p style={{ color:'#00B4D8', fontSize:'14px', fontWeight:'700', marginBottom:'8px' }}>{isFr?'Glissez une IRM ici':'Drop MRI scan here'}</p>
-            <p style={{ color:'rgba(255,255,255,0.25)', fontSize:'12px', marginBottom:'24px' }}>{isFr?'ou cliquez pour parcourir':'or click to browse'} · PNG, JPG, JPEG</p>
-            <div style={{ display:'inline-block', padding:'10px 20px', background:'#00B4D8', color:'#05080F', borderRadius:'4px', fontSize:'11px', fontWeight:'800', letterSpacing:'1px' }}>{isFr?'CHOISIR FICHIER':'CHOOSE FILE'}</div>
-          </div>
-        )}
+        {/* BODY */}
+        <div style={{ padding:isMobile?'24px 22px 26px':'28px 32px 30px' }}>
 
-        {phase==='loading' && (
-          <div style={{ textAlign:'center', padding:'60px 24px' }}>
-            {preview && <img src={preview} alt="scan" style={{ width:'120px', height:'120px', objectFit:'cover', borderRadius:'8px', marginBottom:'20px', opacity:0.6, border:'1px solid rgba(0,180,216,0.3)' }} />}
-            <div style={{ width:'48px', height:'48px', border:'3px solid rgba(0,180,216,0.2)', borderTop:'3px solid #00B4D8', borderRadius:'50%', animation:'spin 1s linear infinite', margin:'0 auto 18px' }} />
-            <p style={{ color:'#00B4D8', fontSize:'13px', fontWeight:'700', letterSpacing:'2px' }}>{isFr?'ANALYSE EN COURS...':'ANALYSING SCAN...'}</p>
-          </div>
-        )}
-
-        {phase==='not_mri' && <div style={{ textAlign:'center', padding:'48px 24px' }}><div style={{ fontSize:'48px', marginBottom:'14px' }}>🧠</div><h3 style={{ color:'#E63946', fontSize:'18px', fontWeight:'800', marginBottom:'10px' }}>{isFr?'PAS UNE IRM':'NOT A BRAIN MRI'}</h3><p style={{ color:'rgba(255,255,255,0.4)', fontSize:'13px', maxWidth:'340px', margin:'0 auto 24px' }}>{isFr?'IRM cérébrale valide requise.':'Please upload a valid greyscale brain MRI.'}</p><button onClick={reset} style={{ padding:'10px 24px', background:'#00B4D8', color:'#05080F', border:'none', borderRadius:'4px', fontSize:'11px', fontWeight:'800', cursor:'pointer' }}>{isFr?'RÉESSAYER':'TRY AGAIN'}</button></div>}
-        {phase==='invalid' && <div style={{ textAlign:'center', padding:'48px 24px' }}><div style={{ fontSize:'48px', marginBottom:'14px' }}>🛡</div><h3 style={{ color:'#E63946', fontSize:'18px', fontWeight:'800', marginBottom:'10px' }}>{isFr?'SCAN INVALIDE':'INVALID SCAN'}</h3><p style={{ color:'rgba(255,255,255,0.4)', fontSize:'13px', maxWidth:'340px', margin:'0 auto 24px' }}>{isFr?'Confiance < 60%.':'Model confidence below 60%.'}</p><button onClick={reset} style={{ padding:'10px 24px', background:'#00B4D8', color:'#05080F', border:'none', borderRadius:'4px', fontSize:'11px', fontWeight:'800', cursor:'pointer' }}>{isFr?'RÉESSAYER':'TRY AGAIN'}</button></div>}
-        {phase==='error' && <div style={{ textAlign:'center', padding:'48px 24px' }}><div style={{ fontSize:'48px', marginBottom:'14px' }}>⚠️</div><h3 style={{ color:'#E63946', fontSize:'18px', fontWeight:'800', marginBottom:'10px' }}>{isFr?'ERREUR':'CONNECTION ERROR'}</h3><button onClick={reset} style={{ padding:'10px 24px', background:'#00B4D8', color:'#05080F', border:'none', borderRadius:'4px', fontSize:'11px', fontWeight:'800', cursor:'pointer' }}>{isFr?'RÉESSAYER':'TRY AGAIN'}</button></div>}
-
-        {phase==='result' && result && (
-          <div style={{ animation:'fadeIn 0.4s ease' }}>
-            <div style={{ background:'rgba(16,185,129,0.06)', border:'1px solid rgba(16,185,129,0.25)', borderRadius:'8px', padding:'22px', marginBottom:'20px', display:'flex', alignItems:'center', justifyContent:'space-between', flexWrap:'wrap', gap:'10px' }}>
-              <div><p style={{ fontSize:'10px', color:'rgba(255,255,255,0.3)', letterSpacing:'3px', marginBottom:'5px' }}>{isFr?'PRÉDICTION':'PREDICTION'}</p><h3 style={{ fontSize:'28px', fontFamily:"'Bebas Neue',sans-serif", letterSpacing:'2px', color:CLASS_COLORS[result.prediction]||'#10B981', margin:0 }}>{result.prediction.toUpperCase()}</h3></div>
-              <div style={{ textAlign:'right' }}><p style={{ fontSize:'10px', color:'rgba(255,255,255,0.3)', letterSpacing:'3px', marginBottom:'5px' }}>{isFr?'CONFIANCE':'CONFIDENCE'}</p><p style={{ fontSize:'36px', fontWeight:'900', color:'#10B981', margin:0, letterSpacing:'-1px' }}>{(result.confidence*100).toFixed(1)}%</p></div>
+          {/* IDLE — dropzone */}
+          {phase==='idle' && (<>
+            <div onDragOver={e=>{e.preventDefault();setDragOver(true)}} onDragLeave={()=>setDragOver(false)} onDrop={e=>{e.preventDefault();setDragOver(false);handleFile(e.dataTransfer.files[0])}} onClick={()=>fileRef.current.click()} onMouseMove={tintMove}
+              style={{ position:'relative', border:`1px solid ${dragOver?'#00B4D8':'rgba(0,180,216,0.22)'}`, borderRadius:'10px', padding:isMobile?'52px 20px 42px':'64px 28px 52px', textAlign:'center', cursor:'pointer', background:dragOver?'rgba(0,180,216,0.05)':'rgba(0,180,216,0.012)', transition:'all 0.3s cubic-bezier(0.16,1,0.3,1)', overflow:'hidden', boxShadow:dragOver?'0 0 40px rgba(0,180,216,0.2) inset':'none' }}>
+              <input ref={fileRef} type="file" accept="image/*" style={{ display:'none' }} onChange={e=>handleFile(e.target.files[0])} />
+              {/* grid overlay */}
+              <div style={{ position:'absolute', inset:0, backgroundImage:'linear-gradient(rgba(0,180,216,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(0,180,216,0.05) 1px,transparent 1px)', backgroundSize:'36px 36px', maskImage:'radial-gradient(circle at 50% 50%,black 0%,transparent 78%)', WebkitMaskImage:'radial-gradient(circle at 50% 50%,black 0%,transparent 78%)', pointerEvents:'none' }} />
+              {/* cursor-tracked glow */}
+              <div style={{ position:'absolute', inset:0, background:`radial-gradient(220px circle at var(--mx,50%) var(--my,50%),rgba(0,180,216,${dragOver?0.22:0.1}),transparent 55%)`, pointerEvents:'none', transition:'background 0.3s' }} />
+              {/* inner corner brackets */}
+              <svg width="14" height="14" viewBox="0 0 12 12" style={{ position:'absolute', top:14, left:14, opacity:0.5 }}><path d="M0 12V0h12" stroke="#00B4D8" strokeWidth="1" fill="none" /></svg>
+              <svg width="14" height="14" viewBox="0 0 12 12" style={{ position:'absolute', top:14, right:14, opacity:0.5 }}><path d="M0 0h12v12" stroke="#00B4D8" strokeWidth="1" fill="none" /></svg>
+              <svg width="14" height="14" viewBox="0 0 12 12" style={{ position:'absolute', bottom:14, left:14, opacity:0.5 }}><path d="M0 0v12h12" stroke="#00B4D8" strokeWidth="1" fill="none" /></svg>
+              <svg width="14" height="14" viewBox="0 0 12 12" style={{ position:'absolute', bottom:14, right:14, opacity:0.5 }}><path d="M12 0v12H0" stroke="#00B4D8" strokeWidth="1" fill="none" /></svg>
+              <div style={{ position:'relative' }}>
+                <div style={{ display:'inline-flex', color:'#00B4D8', padding:'14px', border:'1px solid rgba(0,180,216,0.25)', borderRadius:'50%', background:'rgba(0,180,216,0.04)', marginBottom:'20px' }}>
+                  <Icon name="upload" size={28} stroke={1.4} />
+                </div>
+                <p className="mono" style={{ color:'#00B4D8', fontSize:'11px', fontWeight:'700', letterSpacing:'2.5px', textTransform:'uppercase', marginBottom:'8px' }}>{isFr?'Glissez une IRM ici':'Drop brain MRI here'}</p>
+                <p style={{ color:'rgba(255,255,255,0.4)', fontSize:'12px', fontWeight:'300', marginBottom:'26px' }}>{isFr?'ou cliquez pour parcourir les fichiers':'or click to browse your files'}</p>
+                <div className="mono" style={{ display:'inline-flex', alignItems:'center', gap:'10px', padding:'11px 22px', background:'#00B4D8', color:'#05080F', borderRadius:'4px', fontSize:'10px', fontWeight:'800', letterSpacing:'1.8px', textTransform:'uppercase', boxShadow:'0 0 24px rgba(0,180,216,0.28)' }}>
+                  {isFr?'Choisir fichier':'Choose file'}
+                  <Icon name="arrow" size={11} stroke={2.4} />
+                </div>
+              </div>
             </div>
-            <div style={{ marginBottom:'24px' }}>
-              {['glioma','meningioma','notumor','pituitary'].map(cls=>{
-                const p=(result.probabilities[cls]||0)*100; const isTop=cls===result.prediction
-                return (<div key={cls} style={{ marginBottom:'9px' }}>
-                  <div style={{ display:'flex', justifyContent:'space-between', marginBottom:'3px' }}><span style={{ fontSize:'11px', color:isTop?CLASS_COLORS[cls]:'rgba(255,255,255,0.38)', fontWeight:isTop?'700':'400', textTransform:'uppercase', letterSpacing:'1px' }}>{cls}</span><span style={{ fontSize:'11px', color:isTop?CLASS_COLORS[cls]:'rgba(255,255,255,0.38)', fontWeight:isTop?'700':'400' }}>{p.toFixed(1)}%</span></div>
-                  <div style={{ height:'5px', background:'rgba(255,255,255,0.05)', borderRadius:'3px', overflow:'hidden' }}><div style={{ height:'100%', width:`${p}%`, background:isTop?CLASS_COLORS[cls]:'rgba(255,255,255,0.1)', borderRadius:'3px', transition:'width 1s cubic-bezier(0.16,1,0.3,1)' }} /></div>
-                </div>)
-              })}
+            <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginTop:'18px', flexWrap:'wrap', gap:'10px' }}>
+              <span className="mono" style={{ fontSize:'9px', color:'rgba(255,255,255,0.38)', letterSpacing:'2px', textTransform:'uppercase' }}>{isFr?'Formats · PNG · JPG · JPEG':'Accepted · PNG · JPG · JPEG'}</span>
+              <span className="mono" style={{ fontSize:'9px', color:'rgba(255,255,255,0.38)', letterSpacing:'2px', textTransform:'uppercase' }}>{isFr?'Aucune donnée patient stockée':'No patient data stored'}</span>
             </div>
-            <div>
-              <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'8px', marginBottom:'8px' }}>
-                {[{k:'heatmap_b',l:isFr?'Groupe B ✓':'Group B — Basic ✓',c:'#10B981'},{k:'heatmap_d',l:isFr?'Groupe D':'Group D — Domain',c:'#FFB703'}].map(({k,l,c})=>(
-                  <div key={k} style={{ border:`1px solid ${c}33`, borderRadius:'7px', overflow:'hidden' }}>
-                    <img src={`data:image/png;base64,${result[k]}`} alt={l} style={{ width:'100%', display:'block' }} />
-                    <div style={{ padding:'7px 10px', background:`${c}0A` }}><p style={{ fontSize:'10px', color:c, fontWeight:'700', margin:0 }}>{l}</p></div>
+          </>)}
+
+          {/* LOADING */}
+          {phase==='loading' && (
+            <div style={{ textAlign:'center', padding:isMobile?'24px 12px':'36px 20px' }}>
+              {preview && (
+                <div style={{ position:'relative', width:'180px', height:'180px', margin:'0 auto 28px', borderRadius:'10px', overflow:'hidden', border:'1px solid rgba(0,180,216,0.35)', boxShadow:'0 0 48px rgba(0,180,216,0.18)' }}>
+                  <img src={preview} alt="scan" style={{ width:'100%', height:'100%', objectFit:'cover', opacity:0.7, display:'block' }} />
+                  <div style={{ position:'absolute', left:0, right:0, top:'-10%', height:'3px', background:'linear-gradient(90deg,transparent,#00B4D8 40%,#B0F4FF 50%,#00B4D8 60%,transparent)', boxShadow:'0 0 20px rgba(0,180,216,0.9),0 0 40px rgba(0,180,216,0.5)', animation:'scanSweep 1.8s ease-in-out infinite' }} />
+                  <svg width="12" height="12" viewBox="0 0 12 12" style={{ position:'absolute', top:8, left:8 }}><path d="M0 12V0h12" stroke="#00B4D8" strokeWidth="1" fill="none" /></svg>
+                  <svg width="12" height="12" viewBox="0 0 12 12" style={{ position:'absolute', top:8, right:8 }}><path d="M0 0h12v12" stroke="#00B4D8" strokeWidth="1" fill="none" /></svg>
+                  <svg width="12" height="12" viewBox="0 0 12 12" style={{ position:'absolute', bottom:8, left:8 }}><path d="M0 0v12h12" stroke="#00B4D8" strokeWidth="1" fill="none" /></svg>
+                  <svg width="12" height="12" viewBox="0 0 12 12" style={{ position:'absolute', bottom:8, right:8 }}><path d="M12 0v12H0" stroke="#00B4D8" strokeWidth="1" fill="none" /></svg>
+                </div>
+              )}
+              <div style={{ width:'42px', height:'42px', border:'2px solid rgba(0,180,216,0.15)', borderTop:'2px solid #00B4D8', borderRadius:'50%', animation:'spin 0.9s linear infinite', margin:'0 auto 18px' }} />
+              <p className="mono" style={{ color:'#00B4D8', fontSize:'11px', fontWeight:'700', letterSpacing:'3.5px', textTransform:'uppercase', marginBottom:'10px' }}>{isFr?'Analyse en cours':'Analyzing scan'}</p>
+              <p className="mono" style={{ color:'rgba(255,255,255,0.4)', fontSize:'9px', letterSpacing:'2.2px', textTransform:'uppercase' }}>{isFr?'GroupB ResNet-18 · GradCAM++ · Seuil 60%':'GroupB ResNet-18 · GradCAM++ · 60% gate'}</p>
+            </div>
+          )}
+
+          {/* REJECT SCREENS */}
+          {(phase==='not_mri'||phase==='invalid'||phase==='error') && (()=> {
+            const r = REJECTS[phase]
+            return (
+              <div style={{ textAlign:'center', padding:isMobile?'28px 16px':'40px 24px' }}>
+                <div style={{ display:'inline-flex', color:r.color, padding:'14px', border:`1px solid ${r.color}55`, borderRadius:'50%', background:`${r.color}0D`, marginBottom:'22px' }}>
+                  <Icon name={r.icon} size={28} stroke={1.4} />
+                </div>
+                <p className="mono" style={{ color:r.color, fontSize:'9px', letterSpacing:'3px', fontWeight:'700', textTransform:'uppercase', marginBottom:'10px', opacity:0.8 }}>{r.code}</p>
+                <h3 style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'28px', color:r.color, letterSpacing:'2.5px', marginBottom:'14px', lineHeight:1 }}>{r.title}</h3>
+                <p style={{ color:'rgba(255,255,255,0.52)', fontSize:'13px', maxWidth:'420px', margin:'0 auto 28px', lineHeight:'1.75', fontWeight:'300' }}>{r.desc}</p>
+                <button onClick={reset} onMouseMove={tintMove} className="cta-primary" style={{ display:'inline-flex', alignItems:'center', gap:'10px', padding:'11px 26px', background:'#00B4D8', color:'#05080F', border:'none', borderRadius:'4px', fontSize:'11px', fontWeight:'800', cursor:'pointer', letterSpacing:'1.8px', fontFamily:'inherit', boxShadow:'0 0 28px rgba(0,180,216,0.25)' }}>
+                  <span style={{ display:'inline-flex', alignItems:'center', gap:'10px' }}>{isFr?'Réessayer':'Try again'}<Icon name="arrow" size={11} stroke={2.4} /></span>
+                </button>
+              </div>
+            )
+          })()}
+
+          {/* RESULT */}
+          {phase==='result' && result && (()=> {
+            const predColor = CLASS_COLORS[result.prediction] || '#10B981'
+            const confPct = result.confidence * 100
+            const confLabel = confPct >= 90 ? (isFr?'CONFIANCE ÉLEVÉE':'HIGH CONFIDENCE') : (isFr?'CONFIANCE MODÉRÉE':'MODERATE CONFIDENCE')
+            return (
+              <div style={{ animation:'fadeIn 0.4s ease' }}>
+                {/* PREDICTION CARD */}
+                <div style={{ position:'relative', border:`1px solid ${predColor}44`, borderRadius:'10px', padding:isMobile?'22px 18px':'26px 28px', marginBottom:'22px', background:`linear-gradient(180deg,${predColor}0D,transparent)`, overflow:'hidden' }}>
+                  <div style={{ position:'absolute', top:0, left:0, right:0, height:'1px', background:`linear-gradient(90deg,transparent,${predColor},transparent)` }} />
+                  <div style={{ display:'grid', gridTemplateColumns:isMobile?'1fr':'1.3fr 1fr', gap:isMobile?'18px':'28px', alignItems:'center' }}>
+                    <div>
+                      <p className="mono" style={{ fontSize:'9px', color:'rgba(255,255,255,0.4)', letterSpacing:'3px', marginBottom:'8px', textTransform:'uppercase', fontWeight:'700' }}>{isFr?'Prédiction':'Prediction'} · {confLabel}</p>
+                      <h3 style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:isMobile?'38px':'52px', letterSpacing:'3px', color:predColor, margin:0, lineHeight:1, textTransform:'uppercase' }}>{result.prediction}</h3>
+                      <div style={{ display:'flex', alignItems:'center', gap:'8px', marginTop:'12px', flexWrap:'wrap' }}>
+                        <span className="mono" style={{ fontSize:'9px', padding:'3px 9px', border:`1px solid ${predColor}66`, borderRadius:'2px', color:predColor, letterSpacing:'1.5px', fontWeight:'800' }}>GROUPB · RESNET-18</span>
+                        <span className="mono" style={{ fontSize:'9px', padding:'3px 9px', border:'1px solid rgba(255,255,255,0.1)', borderRadius:'2px', color:'rgba(255,255,255,0.55)', letterSpacing:'1.5px', fontWeight:'700' }}>GRADCAM++</span>
+                      </div>
+                    </div>
+                    <div style={{ textAlign:isMobile?'left':'right' }}>
+                      <p className="mono" style={{ fontSize:'9px', color:'rgba(255,255,255,0.4)', letterSpacing:'3px', marginBottom:'6px', textTransform:'uppercase', fontWeight:'700' }}>{isFr?'Confiance':'Confidence'}</p>
+                      <p className="tnum" style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:isMobile?'48px':'64px', color:'#10B981', margin:0, letterSpacing:'-1px', lineHeight:1 }}>{confPct.toFixed(1)}<span style={{ fontSize:'0.5em', marginLeft:'4px' }}>%</span></p>
+                      <div style={{ height:'3px', background:'rgba(255,255,255,0.06)', borderRadius:'2px', marginTop:'12px', overflow:'hidden' }}>
+                        <div style={{ height:'100%', width:`${confPct}%`, background:'linear-gradient(90deg,#10B981,#00B4D8)', borderRadius:'2px', animation:'barIn 1.2s cubic-bezier(0.16,1,0.3,1)' }} />
+                      </div>
+                    </div>
                   </div>
-                ))}
+                </div>
+
+                {/* HEATMAPS */}
+                <p className="mono" style={{ fontSize:'9px', color:'rgba(255,255,255,0.4)', letterSpacing:'2.5px', marginBottom:'12px', textTransform:'uppercase', fontWeight:'700' }}>§ 01 · {isFr?'Cartes GradCAM++ · Interprétabilité':'GradCAM++ Heatmaps · Interpretability'}</p>
+                <div style={{ display:'grid', gridTemplateColumns:isMobile?'1fr':'1fr 1fr', gap:'8px', marginBottom:'8px' }}>
+                  {[{k:'heatmap_b',l:isFr?'Groupe B · Basique':'Group B · Basic',sub:isFr?'✓ Gagnant validé':'✓ Validated winner',c:'#10B981'},{k:'heatmap_d',l:isFr?'Groupe D · Domaine':'Group D · Domain',sub:isFr?'Hypothèse rejetée':'Hypothesis rejected',c:'#FFB703'}].map(({k,l,sub,c})=>(
+                    <div key={k} style={{ border:`1px solid ${c}33`, borderRadius:'8px', overflow:'hidden', background:`${c}04`, animation:'mapReveal 0.8s cubic-bezier(0.16,1,0.3,1)' }}>
+                      <img src={`data:image/png;base64,${result[k]}`} alt={l} style={{ width:'100%', display:'block' }} />
+                      <div style={{ padding:'9px 12px', borderTop:`1px solid ${c}22`, display:'flex', justifyContent:'space-between', alignItems:'center', gap:'8px' }}>
+                        <p className="mono" style={{ fontSize:'10px', color:c, fontWeight:'700', margin:0, letterSpacing:'1.2px', textTransform:'uppercase' }}>{l}</p>
+                        <span className="mono" style={{ fontSize:'8px', color:`${c}cc`, letterSpacing:'1px', textTransform:'uppercase' }}>{sub}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div style={{ border:'1px solid rgba(0,180,216,0.4)', borderRadius:'8px', overflow:'hidden', background:'rgba(0,180,216,0.04)', boxShadow:'0 0 32px rgba(0,180,216,0.08)', animation:'mapReveal 0.9s cubic-bezier(0.16,1,0.3,1) 0.1s both' }}>
+                  <img src={`data:image/png;base64,${result.heatmap_consensus}`} alt="consensus" style={{ width:'100%', display:'block' }} />
+                  <div style={{ padding:'11px 14px', borderTop:'1px solid rgba(0,180,216,0.25)', display:'flex', justifyContent:'space-between', alignItems:'center', gap:'8px', flexWrap:'wrap' }}>
+                    <p className="mono" style={{ fontSize:'10px', color:'#00B4D8', fontWeight:'800', margin:0, letterSpacing:'1.5px', textTransform:'uppercase', display:'inline-flex', alignItems:'center', gap:'8px' }}><span style={{ width:'6px', height:'6px', background:'#00B4D8', borderRadius:'50%' }} />{isFr?'Consensus B+D · Carte finale':'Consensus B+D · Final heatmap'}</p>
+                    <span className="mono" style={{ fontSize:'9px', color:'rgba(0,180,216,0.65)', letterSpacing:'1.2px', textTransform:'uppercase' }}>{isFr?'Superposition moyenne':'Average overlay'}</span>
+                  </div>
+                </div>
+
+                {/* PROBABILITY DISTRIBUTION */}
+                <p className="mono" style={{ fontSize:'9px', color:'rgba(255,255,255,0.4)', letterSpacing:'2.5px', margin:'26px 0 12px', textTransform:'uppercase', fontWeight:'700' }}>§ 02 · {isFr?'Distribution des probabilités':'Probability distribution'}</p>
+                <div style={{ border:'1px solid rgba(255,255,255,0.05)', borderRadius:'8px', padding:'18px 20px', background:'rgba(255,255,255,0.012)' }}>
+                  {['glioma','meningioma','notumor','pituitary'].map(cls=>{
+                    const p=(result.probabilities[cls]||0)*100; const isTop=cls===result.prediction
+                    return (
+                      <div key={cls} style={{ marginBottom:'14px' }}>
+                        <div style={{ display:'flex', justifyContent:'space-between', alignItems:'baseline', marginBottom:'5px' }}>
+                          <span className="mono" style={{ fontSize:'10px', color:isTop?CLASS_COLORS[cls]:'rgba(255,255,255,0.5)', fontWeight:isTop?'800':'600', textTransform:'uppercase', letterSpacing:'1.8px' }}>{cls}</span>
+                          <span className="mono tnum" style={{ fontSize:'11px', color:isTop?CLASS_COLORS[cls]:'rgba(255,255,255,0.45)', fontWeight:isTop?'800':'600' }}>{p.toFixed(2)}%</span>
+                        </div>
+                        <div style={{ height:'4px', background:'rgba(255,255,255,0.05)', borderRadius:'2px', overflow:'hidden' }}>
+                          <div style={{ height:'100%', width:`${p}%`, background:isTop?CLASS_COLORS[cls]:'rgba(255,255,255,0.14)', borderRadius:'2px', transition:'width 1.1s cubic-bezier(0.16,1,0.3,1)', boxShadow:isTop?`0 0 12px ${CLASS_COLORS[cls]}88`:'none' }} />
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+
+                {/* DISCLAIMER */}
+                <div style={{ marginTop:'18px', padding:'12px 16px', background:'rgba(255,183,3,0.04)', border:'1px solid rgba(255,183,3,0.18)', borderRadius:'6px', display:'flex', gap:'12px', alignItems:'flex-start' }}>
+                  <div style={{ color:'#FFB703', flexShrink:0, marginTop:'1px' }}><Icon name="shield" size={14} stroke={1.6} /></div>
+                  <p style={{ fontSize:'11px', color:'rgba(255,183,3,0.82)', margin:0, lineHeight:'1.65', fontWeight:'400' }}>{isFr?'Outil de recherche uniquement. Ne remplace pas un diagnostic clinique par un radiologue certifié.':'Research tool only. Not a substitute for clinical diagnosis by a certified radiologist.'}</p>
+                </div>
+
+                {/* RESET */}
+                <button onClick={reset} onMouseMove={tintMove} className="cta-ghost" style={{ marginTop:'18px', width:'100%', padding:'13px', background:'transparent', border:'1px solid rgba(0,180,216,0.22)', color:'#00B4D8', borderRadius:'5px', fontSize:'11px', fontWeight:'800', cursor:'pointer', letterSpacing:'1.8px', fontFamily:'inherit', display:'inline-flex', alignItems:'center', justifyContent:'center', gap:'10px' }}>
+                  <span style={{ display:'inline-flex', alignItems:'center', gap:'10px' }}><Icon name="upload" size={12} stroke={2.2} />{isFr?'Analyser un autre scan':'Analyze another scan'}</span>
+                </button>
               </div>
-              <div style={{ border:'1px solid rgba(0,180,216,0.35)', borderRadius:'7px', overflow:'hidden' }}>
-                <img src={`data:image/png;base64,${result.heatmap_consensus}`} alt="consensus" style={{ width:'100%', display:'block' }} />
-                <div style={{ padding:'9px 12px', background:'rgba(0,180,216,0.06)' }}><p style={{ fontSize:'10px', color:'#00B4D8', fontWeight:'700', margin:0 }}>⬡ {isFr?'CONSENSUS B+D':'CONSENSUS B+D — FINAL HEATMAP'}</p></div>
-              </div>
-            </div>
-            <div style={{ marginTop:'16px', padding:'10px 14px', background:'rgba(255,183,3,0.05)', border:'1px solid rgba(255,183,3,0.15)', borderRadius:'5px' }}>
-              <p style={{ fontSize:'10px', color:'rgba(255,183,3,0.7)', margin:0, lineHeight:'1.6' }}>⚠ {isFr?'Outil de recherche uniquement.':'Research tool only. Not a substitute for clinical diagnosis.'}</p>
-            </div>
-            <button onClick={reset} style={{ marginTop:'16px', width:'100%', padding:'11px', background:'rgba(0,180,216,0.08)', border:'1px solid rgba(0,180,216,0.2)', color:'#00B4D8', borderRadius:'5px', fontSize:'11px', fontWeight:'800', cursor:'pointer', letterSpacing:'1.5px' }}>{isFr?'← ANALYSER UN AUTRE SCAN':'← ANALYSE ANOTHER SCAN'}</button>
-          </div>
-        )}
+            )
+          })()}
+
+        </div>
       </div>
     </div>
   )
@@ -1321,20 +2136,41 @@ export default function App() {
   const [loaded, setLoaded] = useState(false)
   const [mouseX, setMouseX] = useState(0)
   const [mouseY, setMouseY] = useState(0)
-  const [hoveredStat, setHoveredStat] = useState(null)
   const [hoveredFeature, setHoveredFeature] = useState(null)
-  const [hoveredNav, setHoveredNav] = useState(null)
   const [lang, setLang] = useState('en')
   const [isMobile, setIsMobile] = useState(false)
   const [showUpload, setShowUpload] = useState(false)
   const [activePage, setActivePage] = useState(null)
+  const [heroMag, setHeroMag] = useState({ x: 0, y: 0 })
+  const [scrollPct, setScrollPct] = useState(0)
+  const [showIntro, setShowIntro] = useState(true)
+
+  const onHeroCtaMove = (e) => {
+    const r = e.currentTarget.getBoundingClientRect()
+    const dx = (e.clientX - (r.left + r.width / 2)) / r.width
+    const dy = (e.clientY - (r.top + r.height / 2)) / r.height
+    setHeroMag({ x: dx * 10, y: dy * 8 })
+    tintMove(e)
+  }
 
   const t = T[lang]
+  const isFr = lang === 'fr'
 
   useEffect(()=>{const c=()=>setIsMobile(window.innerWidth<768);c();window.addEventListener('resize',c);return()=>window.removeEventListener('resize',c)},[])
-  useEffect(()=>{const t2=setTimeout(()=>setLoaded(true),100);return()=>clearTimeout(t2)},[])
-  useEffect(()=>{const fn=()=>setScrollY(window.scrollY);window.addEventListener('scroll',fn,{passive:true});return()=>window.removeEventListener('scroll',fn)},[])
-  useEffect(()=>{const fn=e=>{setMouseX((e.clientX/window.innerWidth-0.5)*30);setMouseY((e.clientY/window.innerHeight-0.5)*30)};window.addEventListener('mousemove',fn,{passive:true});return()=>window.removeEventListener('mousemove',fn)},[])
+  useEffect(()=>{const t2=setTimeout(()=>setLoaded(true),80);return()=>clearTimeout(t2)},[])
+  useEffect(()=>{
+    const fn=()=>{
+      setScrollY(window.scrollY)
+      const max=document.documentElement.scrollHeight-window.innerHeight
+      setScrollPct(max>0?Math.min(100,(window.scrollY/max)*100):0)
+    }
+    fn()
+    window.addEventListener('scroll',fn,{passive:true})
+    window.addEventListener('resize',fn)
+    return()=>{window.removeEventListener('scroll',fn);window.removeEventListener('resize',fn)}
+  },[])
+  useEffect(()=>{const t=setTimeout(()=>setShowIntro(false),2100);return()=>clearTimeout(t)},[])
+  useEffect(()=>{const fn=e=>{setMouseX((e.clientX/window.innerWidth-0.5)*20);setMouseY((e.clientY/window.innerHeight-0.5)*20)};window.addEventListener('mousemove',fn,{passive:true});return()=>window.removeEventListener('mousemove',fn)},[])
 
   const handleNavClick = item => {
     if (item.id==='system') setShowUpload(true)
@@ -1345,20 +2181,28 @@ export default function App() {
   }
 
   const stats = [
-    { value:'99.69%', label:t.peakAcc, color:'#10B981' },
-    { value:'33×', label:t.lossGap, color:'#E63946' },
-    { value:'40', label:t.modelsTrained, color:'#00B4D8' },
-    { value:'300K+', label:t.patients, color:'#FFB703' },
+    { value:'99.69%', label:t.peakAcc,       color:'#10B981' },
+    { value:'33×',    label:t.lossGap,       color:'#E63946' },
+    { value:'40',     label:t.modelsTrained, color:'#00B4D8' },
+    { value:'300K+',  label:t.patients,      color:'#FFB703' },
   ]
 
   const visibleNav = isMobile ? NAV.filter(n=>n.mobile) : NAV
 
   return (
-    <div style={{ background:'#05080F', minHeight:'100vh', overflowX:'hidden', fontFamily:"'Inter',system-ui,sans-serif" }}>
-      <style>{BASE_CSS}</style>
+    <div style={{ background:'#05080F', minHeight:'100vh', overflowX:'hidden', fontFamily:"'Inter',system-ui,sans-serif", color:'#fff' }}>
+      <style>{BASE_CSS + LANDING_CSS}</style>
 
-      <div style={{ position:'fixed', inset:0, zIndex:0, pointerEvents:'none', backgroundImage:`linear-gradient(rgba(0,180,216,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,180,216,0.025) 1px,transparent 1px)`, backgroundSize:'80px 80px' }} />
-      <div style={{ position:'fixed', inset:0, zIndex:0, pointerEvents:'none', background:`radial-gradient(800px circle at ${50+mouseX*0.4}% ${50+mouseY*0.4}%,rgba(0,180,216,0.065),transparent 60%)` }} />
+      {/* AMBIENT BG — fading grid + node network + cursor-tracked glow */}
+      <div style={{ position:'fixed', inset:0, zIndex:0, pointerEvents:'none', backgroundImage:`linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px)`, backgroundSize:'96px 96px', maskImage:'radial-gradient(ellipse 85% 65% at 50% 25%,black 45%,transparent 92%)', WebkitMaskImage:'radial-gradient(ellipse 85% 65% at 50% 25%,black 45%,transparent 92%)' }} />
+      <NodeNetwork />
+      <div style={{ position:'fixed', inset:0, zIndex:0, pointerEvents:'none', background:`radial-gradient(720px circle at ${50+mouseX*0.5}% ${38+mouseY*0.4}%,rgba(0,180,216,0.08),transparent 60%)` }} />
+
+      {/* scroll progress + intro sweep + click burst + custom cursor */}
+      <div className="scroll-progress"><span style={{ width:`${scrollPct}%` }} /></div>
+      {showIntro && <div className="scan-intro" />}
+      <ClickBurst />
+      <CustomCursor />
 
       {showUpload && <UploadModal onClose={()=>setShowUpload(false)} lang={lang} />}
       {activePage==='patients' && <PatientRecordsPage lang={lang} onClose={()=>setActivePage(null)} />}
@@ -1366,158 +2210,286 @@ export default function App() {
       {activePage==='research' && <ResearchPage lang={lang} onClose={()=>setActivePage(null)} />}
       {activePage==='ethics' && <EthicsPage lang={lang} onClose={()=>setActivePage(null)} />}
 
-      {/* NAV */}
-      <nav style={{ position:'fixed', top:0, left:0, right:0, zIndex:100, padding:'0 24px', height:'60px', display:'flex', justifyContent:'space-between', alignItems:'center', background:scrollY>60?'rgba(5,8,15,0.94)':'rgba(5,8,15,0.6)', backdropFilter:'blur(24px)', borderBottom:'1px solid rgba(255,255,255,0.05)', transition:'background 0.4s', opacity:loaded?1:0, animation:loaded?'fadeSlideIn 0.8s ease 0.2s both':'none' }}>
-        <div onClick={()=>setActivePage(null)} style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:isMobile?'22px':'26px', letterSpacing:'2px', cursor:'pointer', flexShrink:0 }}>
-          <span style={{ color:'#fff' }}>Illuma</span><span style={{ color:'#00B4D8' }}>DX</span>
+      {/* NAV — floating */}
+      <nav style={{ position:'fixed', top:isMobile?0:'14px', left:isMobile?0:'16px', right:isMobile?0:'16px', zIndex:100, padding:isMobile?'0 16px':'0 24px', height:'66px', display:'flex', justifyContent:'space-between', alignItems:'center', background:scrollY>40?'rgba(5,8,15,0.82)':'rgba(5,8,15,0.5)', backdropFilter:'blur(22px) saturate(150%)', WebkitBackdropFilter:'blur(22px) saturate(150%)', border:`1px solid rgba(255,255,255,${scrollY>40?0.08:0.05})`, borderRadius:isMobile?0:'14px', boxShadow:isMobile?'none':(scrollY>40?'0 12px 40px rgba(0,0,0,0.5)':'0 6px 28px rgba(0,0,0,0.25)'), transition:'background 0.4s, border-color 0.4s, box-shadow 0.4s', opacity:loaded?1:0, animation:loaded?'fadeSlideIn 0.8s ease 0.1s both':'none' }}>
+        <div style={{ display:'flex', alignItems:'center', gap:isMobile?'10px':'16px', flexShrink:0 }}>
+          <div onClick={()=>setActivePage(null)} style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:isMobile?'22px':'26px', letterSpacing:'2px', cursor:'pointer', lineHeight:1 }}>
+            <span style={{ color:'#fff' }}>Illuma</span><span style={{ color:'#00B4D8' }}>DX</span>
+          </div>
+          {!isMobile && <>
+            <div style={{ width:'1px', height:'18px', background:'rgba(255,255,255,0.1)' }} />
+            <span className="mono" style={{ fontSize:'10px', color:'rgba(255,255,255,0.42)', letterSpacing:'1.5px', textTransform:'uppercase' }}>{isFr?'IA Clinique Diagnostique':'Clinical AI Diagnostic'}</span>
+          </>}
         </div>
-        <div style={{ display:'flex', gap:isMobile?'4px':'6px', alignItems:'center' }}>
-          {visibleNav.map((item,i)=>(
-            <div key={item.id} className="nav-btn" onMouseEnter={()=>setHoveredNav(i)} onMouseLeave={()=>setHoveredNav(null)} onClick={()=>handleNavClick(item)} style={{ position:'relative', cursor:'pointer' }}>
-              <div style={{ display:'flex', alignItems:'center', gap:isMobile?'4px':'6px', padding:isMobile?'6px 8px':'7px 14px', background:hoveredNav===i?item.bg:'transparent', border:`1px solid ${hoveredNav===i?item.border:'transparent'}`, borderRadius:'6px', transition:'all 0.2s' }}>
-                <span style={{ fontSize:isMobile?'11px':'12px' }}>{item.icon}</span>
-                <span style={{ fontSize:isMobile?'11px':'14px', fontWeight:'600', color:hoveredNav===i?item.color:'rgba(255,255,255,0.5)', transition:'color 0.2s', whiteSpace:'nowrap' }}>
-                  {isMobile?(lang==='fr'?item.labelFr:item.label).split(' ')[0]:(lang==='fr'?item.labelFr:item.label)}
-                </span>
-              </div>
-              {!isMobile && <div className="nav-tooltip" style={{ position:'absolute', top:'calc(100% + 8px)', left:'50%', transform:'translateX(-50%) translateY(4px)', background:'rgba(10,22,40,0.98)', border:`1px solid ${item.border}`, borderRadius:'5px', padding:'5px 10px', whiteSpace:'nowrap', fontSize:'10px', color:item.color, letterSpacing:'0.5px', opacity:0, transition:'opacity 0.2s,transform 0.2s', pointerEvents:'none', backdropFilter:'blur(12px)', zIndex:200 }}>{lang==='fr'?item.descFr:item.desc}</div>}
+        <div style={{ display:'flex', gap:isMobile?'12px':'30px', alignItems:'center' }}>
+          {visibleNav.map(item=>(
+            <div key={item.id} className="nav-btn" onClick={()=>handleNavClick(item)} style={{ position:'relative', cursor:'pointer' }}>
+              <span className="nav-link" style={{ display:'inline-block', fontSize:isMobile?'10px':'11px', fontWeight:'600', color:'rgba(255,255,255,0.55)', letterSpacing:'1.8px', textTransform:'uppercase', transition:'color .2s', whiteSpace:'nowrap' }}
+                onMouseEnter={e=>{e.currentTarget.style.color=item.color}}
+                onMouseLeave={e=>{e.currentTarget.style.color='rgba(255,255,255,0.55)'}}>
+                {isMobile?(lang==='fr'?item.labelFr:item.label).split(' ')[0]:(lang==='fr'?item.labelFr:item.label)}
+              </span>
+              {!isMobile && (
+                <div className="nav-tooltip" style={{ position:'absolute', top:'calc(100% + 14px)', left:'50%', transform:'translateX(-50%) translateY(6px)', background:'rgba(10,22,40,0.96)', border:`1px solid ${item.border}`, borderRadius:'4px', padding:'7px 12px', whiteSpace:'nowrap', fontSize:'9px', color:item.color, letterSpacing:'2px', fontFamily:'ui-monospace,SFMono-Regular,Menlo,monospace', fontWeight:'700', textTransform:'uppercase', opacity:0, transition:'opacity .25s cubic-bezier(0.16,1,0.3,1),transform .25s cubic-bezier(0.16,1,0.3,1)', pointerEvents:'none', backdropFilter:'blur(14px)', WebkitBackdropFilter:'blur(14px)', zIndex:200, boxShadow:`0 10px 28px rgba(0,0,0,0.5), 0 0 0 1px ${item.color}22, 0 0 20px ${item.color}18` }}>
+                  {lang==='fr' ? item.descFr : item.desc}
+                  <span style={{ position:'absolute', top:'-4px', left:'50%', transform:'translateX(-50%) rotate(45deg)', width:'7px', height:'7px', background:'rgba(10,22,40,0.96)', borderLeft:`1px solid ${item.border}`, borderTop:`1px solid ${item.border}` }} />
+                </div>
+              )}
             </div>
           ))}
         </div>
-        <button onClick={()=>setShowUpload(true)} style={{ padding:isMobile?'6px 12px':'8px 18px', background:'#00B4D8', color:'#05080F', border:'none', borderRadius:'4px', fontSize:isMobile?'10px':'11px', fontWeight:'800', cursor:'pointer', letterSpacing:'1px', transition:'all 0.2s', boxShadow:'0 0 20px rgba(0,180,216,0.2)', fontFamily:'inherit', flexShrink:0 }}
-          onMouseEnter={e=>{e.currentTarget.style.boxShadow='0 0 40px rgba(0,180,216,0.5)';e.currentTarget.style.transform='translateY(-1px)'}}
-          onMouseLeave={e=>{e.currentTarget.style.boxShadow='0 0 20px rgba(0,180,216,0.2)';e.currentTarget.style.transform='translateY(0)'}}>
-          {isMobile?'UPLOAD':t.upload}
+        <button onClick={()=>setShowUpload(true)} onMouseMove={tintMove} className="cta-primary" style={{ padding:isMobile?'7px 12px':'9px 18px', background:'#00B4D8', color:'#05080F', border:'none', borderRadius:'3px', fontSize:isMobile?'10px':'11px', fontWeight:'800', cursor:'pointer', letterSpacing:'1.6px', boxShadow:'0 0 24px rgba(0,180,216,0.22)', fontFamily:'inherit', flexShrink:0 }}>
+          <span>{isMobile?'UPLOAD':t.upload}</span>
         </button>
       </nav>
 
       {/* HERO */}
-      <section style={{ minHeight:'100vh', display:'flex', flexDirection:'column', justifyContent:'center', alignItems:'center', textAlign:'center', padding:isMobile?'80px 20px 40px':'80px 24px 40px', position:'relative', zIndex:1 }}>
-        <div style={{ display:'flex', alignItems:'center', gap:'8px', marginBottom:'28px', animation:loaded?'fadeSlideIn 0.8s ease 0.4s both':'none', opacity:0 }}>
-          <div style={{ width:'7px', height:'7px', borderRadius:'50%', background:'#10B981', animation:'ripple 2s infinite' }} />
-          <span style={{ fontSize:isMobile?'9px':'11px', color:'#10B981', letterSpacing:'3px', fontWeight:'700' }}>{t.live}</span>
+      <section style={{ minHeight:'100vh', display:'flex', flexDirection:'column', justifyContent:'center', alignItems:'center', textAlign:'center', padding:isMobile?'120px 20px 60px':'140px 32px 80px', position:'relative', zIndex:1 }}>
+        <HeroOrbital isMobile={isMobile} />
+        <CornerMark pos="tl" offset={28} /><CornerMark pos="tr" offset={28} />
+        <CornerMark pos="bl" offset={28} /><CornerMark pos="br" offset={28} />
+        {/* eyebrow */}
+        <div style={{ position:'relative', zIndex:1, display:'flex', alignItems:'center', gap:'12px', marginBottom:'44px', animation:loaded?'fadeSlideIn 0.8s ease 0.35s both':'none', opacity:0, flexWrap:'wrap', justifyContent:'center' }}>
+          <div style={{ display:'flex', alignItems:'center', gap:'10px' }}>
+            <div style={{ width:'6px', height:'6px', borderRadius:'50%', background:'#10B981', animation:'ripple 2s infinite', flexShrink:0 }} />
+            <span className="mono" style={{ fontSize:'10px', color:'#10B981', letterSpacing:'3px', fontWeight:'700', textTransform:'uppercase' }}>{t.live}</span>
+          </div>
+          <span style={{ width:'20px', height:'1px', background:'rgba(255,255,255,0.15)' }} />
+          <span className="mono" style={{ fontSize:'10px', color:'rgba(255,255,255,0.4)', letterSpacing:'2px' }}>CWSF 2026</span>
         </div>
-        <div style={{ animation:loaded?'fadeSlideIn 1s cubic-bezier(0.16,1,0.3,1) 0.5s both':'none', opacity:0 }}>
-          <h1 style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:isMobile?'clamp(72px,22vw,130px)':'clamp(80px,13vw,160px)', fontWeight:'400', letterSpacing:'6px', lineHeight:'0.9', margin:0, transform:`translate(${mouseX*0.15}px,${mouseY*0.1}px)`, transition:'transform 0.2s', userSelect:'none' }}>
-            <span style={{ color:'#fff' }}>Illuma</span><span style={{ color:'#00B4D8' }}>DX</span>
-          </h1>
+
+        {/* wordmark — letter-by-letter stagger + DX breathe */}
+        <h1 style={{ position:'relative', zIndex:1, fontFamily:"'Bebas Neue',sans-serif", fontSize:isMobile?'clamp(68px,20vw,120px)':'clamp(86px,13vw,168px)', fontWeight:'400', letterSpacing:isMobile?'4px':'8px', lineHeight:'0.9', margin:0, transform:`translate(${mouseX*0.1}px,${mouseY*0.08}px)`, transition:'transform 0.25s ease-out', userSelect:'none' }}>
+          {[...'Illuma'].map((c,i)=>(
+            <span key={'a'+i} className={`wm-letter${loaded?' in':''}`} style={{ color:'#fff', animationDelay:`${0.42 + i*0.055}s` }}>{c}</span>
+          ))}
+          {[...'DX'].map((c,i)=>(
+            <span key={'b'+i} className={`wm-letter glow${loaded?' in':''}`} style={{ color:'#00B4D8', animationDelay:`${0.42 + (6+i)*0.055}s` }}>{c}</span>
+          ))}
+        </h1>
+
+        {/* tagline + desc */}
+        <div style={{ position:'relative', zIndex:1, animation:loaded?'fadeSlideIn 0.8s ease 0.75s both':'none', opacity:0, marginTop:isMobile?'24px':'36px', maxWidth:'640px' }}>
+          <p className="mono" style={{ fontSize:isMobile?'10px':'11px', color:'#00B4D8', letterSpacing:isMobile?'2.5px':'4px', fontWeight:'600', marginBottom:'22px', textTransform:'uppercase' }}>{t.tagline}</p>
+          <p style={{ fontSize:isMobile?'14px':'16px', color:'rgba(255,255,255,0.55)', lineHeight:'1.75', margin:0, fontWeight:'300' }}>{t.desc}</p>
         </div>
-        <div style={{ animation:loaded?'fadeSlideIn 0.8s ease 0.8s both':'none', opacity:0, marginTop:'28px' }}>
-          <p style={{ fontSize:isMobile?'9px':'11px', color:'#00B4D8', letterSpacing:isMobile?'2px':'4px', fontWeight:'600', marginBottom:'14px' }}>{t.tagline}</p>
-          <p style={{ fontSize:isMobile?'13px':'15px', color:'rgba(255,255,255,0.3)', maxWidth:'500px', lineHeight:'1.85', margin:'0 auto 44px' }}>{t.desc}</p>
-        </div>
-        <div style={{ display:'flex', gap:'10px', justifyContent:'center', flexWrap:'wrap', animation:loaded?'fadeSlideIn 0.8s ease 1s both':'none', opacity:0 }}>
-          <button onClick={()=>setShowUpload(true)} style={{ padding:isMobile?'12px 28px':'14px 40px', background:'#00B4D8', color:'#05080F', border:'none', borderRadius:'3px', fontSize:'13px', fontWeight:'800', cursor:'pointer', letterSpacing:'1.5px', boxShadow:'0 0 40px rgba(0,180,216,0.25)', transition:'all 0.25s', fontFamily:'inherit' }}
-            onMouseEnter={e=>{e.currentTarget.style.boxShadow='0 0 70px rgba(0,180,216,0.55)';e.currentTarget.style.transform='translateY(-2px)'}}
-            onMouseLeave={e=>{e.currentTarget.style.boxShadow='0 0 40px rgba(0,180,216,0.25)';e.currentTarget.style.transform='translateY(0)'}}>
-            {t.upload}
+
+        {/* CTAs */}
+        <div style={{ position:'relative', zIndex:1, display:'flex', gap:'10px', justifyContent:'center', flexWrap:'wrap', animation:loaded?'fadeSlideIn 0.8s ease 0.95s both':'none', opacity:0, marginTop:'48px' }}>
+          <button onClick={()=>setShowUpload(true)}
+            onMouseMove={onHeroCtaMove}
+            onMouseLeave={()=>setHeroMag({ x:0, y:0 })}
+            className="cta-primary cta-hero"
+            style={{ padding:isMobile?'13px 28px':'15px 40px', background:'#00B4D8', color:'#05080F', border:'none', borderRadius:'3px', fontSize:'13px', fontWeight:'800', cursor:'pointer', letterSpacing:'1.8px', fontFamily:'inherit', display:'inline-flex', alignItems:'center', gap:'10px', transform:`translate(${heroMag.x}px,${heroMag.y}px)`, transition:'transform .18s cubic-bezier(0.16,1,0.3,1), box-shadow .25s ease' }}>
+            <span style={{ display:'inline-flex', alignItems:'center', gap:'10px' }}>{t.upload}<Icon name="arrow" size={13} stroke={2.2} /></span>
           </button>
-          <button onClick={()=>setActivePage('research')} style={{ padding:isMobile?'12px 28px':'14px 40px', background:'transparent', color:'rgba(255,255,255,0.65)', border:'1px solid rgba(255,255,255,0.12)', borderRadius:'3px', fontSize:'13px', fontWeight:'500', cursor:'pointer', transition:'all 0.25s', fontFamily:'inherit' }}
-            onMouseEnter={e=>{e.currentTarget.style.borderColor='rgba(255,255,255,0.3)';e.currentTarget.style.color='#fff';e.currentTarget.style.transform='translateY(-2px)'}}
-            onMouseLeave={e=>{e.currentTarget.style.borderColor='rgba(255,255,255,0.12)';e.currentTarget.style.color='rgba(255,255,255,0.65)';e.currentTarget.style.transform='translateY(0)'}}>
-            {t.research}
+          <button onClick={()=>setActivePage('research')} onMouseMove={tintMove} className="cta-ghost" style={{ padding:isMobile?'13px 28px':'15px 40px', background:'transparent', color:'rgba(255,255,255,0.7)', border:'1px solid rgba(255,255,255,0.12)', borderRadius:'3px', fontSize:'13px', fontWeight:'500', cursor:'pointer', fontFamily:'inherit', letterSpacing:'0.3px' }}>
+            <span>{t.research}</span>
           </button>
         </div>
-        <div style={{ display:'flex', gap:'8px', marginTop:'56px', flexWrap:'wrap', justifyContent:'center', animation:loaded?'fadeSlideIn 0.8s ease 1.2s both':'none', opacity:0 }}>
+
+        {/* stats row — editorial data strip */}
+        <div style={{ position:'relative', zIndex:1, display:'grid', gridTemplateColumns:isMobile?'1fr 1fr':'repeat(4,minmax(0,1fr))', gap:0, marginTop:isMobile?'60px':'76px', maxWidth:'820px', width:'100%', animation:loaded?'fadeSlideIn 0.8s ease 1.15s both':'none', opacity:0, borderTop:'1px solid rgba(255,255,255,0.07)', borderBottom:'1px solid rgba(255,255,255,0.07)' }}>
           {stats.map((stat,i)=>(
-            <div key={i} onMouseEnter={()=>setHoveredStat(i)} onMouseLeave={()=>setHoveredStat(null)}
-              style={{ padding:isMobile?'12px 14px':'18px 22px', border:`1px solid ${hoveredStat===i?stat.color+'55':'rgba(255,255,255,0.06)'}`, borderRadius:'6px', background:hoveredStat===i?stat.color+'0A':'rgba(255,255,255,0.015)', textAlign:'center', minWidth:isMobile?'70px':'110px', cursor:'default', transition:'all 0.3s', transform:hoveredStat===i?'translateY(-4px)':'translateY(0)' }}>
-              <div style={{ fontSize:isMobile?'16px':'24px', fontWeight:'900', color:stat.color, letterSpacing:'-0.5px' }}>{stat.value}</div>
-              <div style={{ fontSize:'8px', color:'rgba(255,255,255,0.28)', marginTop:'4px', letterSpacing:'1px', fontWeight:'600' }}>{stat.label.toUpperCase()}</div>
+            <div key={i} className="stat-col" style={{ padding:isMobile?'20px 12px':'22px 20px', textAlign:'center' }}>
+              <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:isMobile?'30px':'40px', fontWeight:'400', color:stat.color, letterSpacing:'1px', lineHeight:1, fontVariantNumeric:'tabular-nums' }}>
+                <Counter value={stat.value} delay={1150 + i*110} />
+              </div>
+              <div className="mono" style={{ fontSize:'9px', color:'rgba(255,255,255,0.4)', marginTop:'10px', letterSpacing:'1.6px', fontWeight:'600', textTransform:'uppercase' }}>{stat.label}</div>
             </div>
           ))}
         </div>
-        <div style={{ position:'absolute', bottom:'32px', left:'50%', transform:'translateX(-50%)', opacity:0.4 }}>
-          <div style={{ width:'1px', height:'52px', background:'linear-gradient(to bottom,transparent,#00B4D8)', animation:'scrollline 2s ease-in-out infinite' }} />
+
+        {/* live telemetry ticker */}
+        <div style={{ position:'relative', zIndex:1, marginTop:isMobile?'32px':'44px', animation:loaded?'fadeSlideIn 0.8s ease 1.35s both':'none', opacity:0 }}>
+          <Telemetry isFr={isFr} />
+        </div>
+
+        {/* scroll indicator */}
+        <div style={{ position:'absolute', bottom:'28px', left:'50%', transform:'translateX(-50%)', opacity:0.35 }}>
+          <div style={{ width:'1px', height:'48px', background:'linear-gradient(to bottom,transparent,#00B4D8)', animation:'scrollline 2s ease-in-out infinite' }} />
         </div>
       </section>
 
-      {/* HAWKING QUOTE */}
-      <section style={{ minHeight:'50vh', display:'flex', flexDirection:'column', justifyContent:'center', alignItems:'center', textAlign:'center', padding:isMobile?'80px 20px':'100px 24px', position:'relative', zIndex:1, borderTop:'1px solid rgba(255,255,255,0.04)', background:'linear-gradient(180deg,rgba(0,180,216,0.02) 0%,transparent 100%)' }}>
-        <FadeUp><p style={{ fontSize:'10px', color:'rgba(255,255,255,0.25)', letterSpacing:'5px', marginBottom:'44px', fontWeight:'600' }}>{t.thesis}</p></FadeUp>
-        <FadeUp delay={0.12}><blockquote style={{ fontSize:isMobile?'clamp(18px,5vw,28px)':'clamp(20px,3.5vw,40px)', fontWeight:'300', color:'rgba(255,255,255,0.72)', lineHeight:'1.5', maxWidth:'800px', margin:'0 auto 16px', fontStyle:'italic', fontFamily:'Georgia,serif' }}>{t.hawkingLine1}<br /><span style={{ color:'#fff', fontWeight:'400' }}>{t.hawkingLine2}</span></blockquote></FadeUp>
-        <FadeUp delay={0.22}><p style={{ fontSize:'11px', color:'rgba(255,255,255,0.2)', letterSpacing:'3px', marginBottom:'48px' }}>— STEPHEN HAWKING</p></FadeUp>
-        <FadeUp delay={0.34}><p style={{ fontSize:isMobile?'14px':'clamp(14px,1.8vw,17px)', color:'rgba(255,255,255,0.38)', maxWidth:'520px', lineHeight:'1.9' }}>{t.hawkingBody}</p></FadeUp>
+      {/* THESIS — HAWKING */}
+      <section style={{ padding:isMobile?'100px 20px':'140px 32px', position:'relative', zIndex:1, borderTop:'1px solid rgba(255,255,255,0.04)' }}>
+        <div style={{ maxWidth:'720px', margin:'0 auto', textAlign:'center' }}>
+          <FadeUp>
+            <div style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:'10px', marginBottom:'48px' }}>
+              <span className="mono" style={{ fontSize:'9px', color:'rgba(255,255,255,0.4)', letterSpacing:'2.5px', fontWeight:'700' }}>§ 01</span>
+              <span style={{ width:'24px', height:'1px', background:'rgba(255,255,255,0.15)' }} />
+              <span className="mono" style={{ fontSize:'10px', color:'rgba(255,255,255,0.5)', letterSpacing:'3px', fontWeight:'700', textTransform:'uppercase' }}>{t.thesis}</span>
+            </div>
+          </FadeUp>
+          <FadeUp delay={0.12}>
+            <blockquote style={{ fontSize:isMobile?'clamp(19px,5vw,26px)':'clamp(22px,3vw,34px)', fontWeight:'300', color:'rgba(255,255,255,0.82)', lineHeight:'1.45', margin:'0 0 22px', fontStyle:'italic', fontFamily:'Georgia,Cambria,serif', letterSpacing:'-0.3px' }}>
+              {t.hawkingLine1}<br /><span style={{ color:'#fff', fontWeight:'400' }}>{t.hawkingLine2}</span>
+            </blockquote>
+          </FadeUp>
+          <FadeUp delay={0.22}>
+            <p className="mono" style={{ fontSize:'10px', color:'rgba(255,255,255,0.3)', letterSpacing:'3px', marginBottom:'52px', fontWeight:'600' }}>— STEPHEN HAWKING</p>
+          </FadeUp>
+          <FadeUp delay={0.34}>
+            <p style={{ fontSize:isMobile?'14px':'16px', color:'rgba(255,255,255,0.5)', lineHeight:'1.85', maxWidth:'560px', margin:'0 auto', fontWeight:'300' }}>{t.hawkingBody}</p>
+          </FadeUp>
+        </div>
       </section>
 
       {/* FEATURES */}
-      <section style={{ padding:isMobile?'80px 20px':'100px 48px', position:'relative', zIndex:1, borderTop:'1px solid rgba(255,255,255,0.04)' }}>
-        <FadeUp>
-          <p style={{ fontSize:'10px', color:'#00B4D8', letterSpacing:'5px', marginBottom:'14px', fontWeight:'700', textAlign:'center' }}>{t.features}</p>
-          <h2 style={{ fontSize:isMobile?'clamp(28px,8vw,48px)':'clamp(32px,5vw,60px)', fontWeight:'900', textAlign:'center', letterSpacing:'-2px', marginBottom:'14px', color:'#fff' }}>{t.featuresTitle}</h2>
-          <p style={{ textAlign:'center', color:'rgba(255,255,255,0.35)', fontSize:'15px', maxWidth:'500px', margin:'0 auto 60px', lineHeight:'1.7' }}>{t.featuresDesc}</p>
-        </FadeUp>
-        <div style={{ display:'grid', gridTemplateColumns:isMobile?'1fr':'repeat(auto-fit,minmax(280px,1fr))', gap:'12px', maxWidth:'1000px', margin:'0 auto' }}>
-          {FEATURES.map((f,i)=>(
-            <FadeUp key={f.title} delay={i*0.07}>
-              <div onMouseEnter={()=>setHoveredFeature(i)} onMouseLeave={()=>setHoveredFeature(null)}
-                onClick={()=>{ if(f.page==='system')setShowUpload(true); else if(f.page)setActivePage(f.page) }}
-                style={{ padding:'28px 26px', border:`1px solid ${hoveredFeature===i?f.color+'40':'rgba(255,255,255,0.05)'}`, borderRadius:'8px', background:hoveredFeature===i?f.color+'08':'rgba(255,255,255,0.015)', transition:'all 0.35s cubic-bezier(0.16,1,0.3,1)', transform:hoveredFeature===i?'translateY(-5px)':'translateY(0)', cursor:'pointer', height:'100%' }}>
-                <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:'14px' }}>
-                  <span style={{ fontSize:'26px' }}>{f.icon}</span>
-                  <span style={{ fontSize:'9px', fontWeight:'700', color:f.color, border:`1px solid ${f.color}44`, padding:'3px 8px', borderRadius:'20px', letterSpacing:'1px' }}>{lang==='fr'?f.tagFr:f.tag}</span>
+      <section style={{ padding:isMobile?'100px 20px':'140px 32px', position:'relative', zIndex:1, borderTop:'1px solid rgba(255,255,255,0.04)' }}>
+        <CornerMark pos="tl" offset={24} /><CornerMark pos="tr" offset={24} />
+        <CornerMark pos="bl" offset={24} /><CornerMark pos="br" offset={24} />
+        <div style={{ maxWidth:'1100px', margin:'0 auto' }}>
+          <FadeUp>
+            <div style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:'10px', marginBottom:'24px' }}>
+              <span className="mono" style={{ fontSize:'9px', color:'#00B4D8', letterSpacing:'2.5px', fontWeight:'700' }}>§ 02</span>
+              <span style={{ width:'24px', height:'1px', background:'rgba(0,180,216,0.45)' }} />
+              <span className="mono" style={{ fontSize:'10px', color:'#00B4D8', letterSpacing:'3px', fontWeight:'700', textTransform:'uppercase' }}>{t.features}</span>
+            </div>
+            <h2 style={{ fontSize:isMobile?'clamp(28px,7vw,42px)':'clamp(36px,4.5vw,56px)', fontWeight:'800', textAlign:'center', letterSpacing:'-1.8px', marginBottom:'18px', color:'#fff', lineHeight:'1.05' }}>{t.featuresTitle}</h2>
+            <p style={{ textAlign:'center', color:'rgba(255,255,255,0.42)', fontSize:isMobile?'14px':'16px', maxWidth:'560px', margin:'0 auto 64px', lineHeight:'1.7', fontWeight:'300' }}>{t.featuresDesc}</p>
+          </FadeUp>
+          <div style={{ display:'grid', gridTemplateColumns:isMobile?'1fr':'repeat(auto-fit,minmax(300px,1fr))', gap:0, margin:'0 auto', borderTop:'1px solid rgba(255,255,255,0.06)', borderLeft:'1px solid rgba(255,255,255,0.06)' }}>
+            {FEATURES.map((f,i)=>(
+              <FadeUp key={f.title} delay={i*0.05}>
+                <div className="feat-card"
+                  onMouseEnter={()=>setHoveredFeature(i)} onMouseLeave={()=>setHoveredFeature(null)}
+                  onMouseMove={tintMove}
+                  onClick={()=>{ if(f.page==='system')setShowUpload(true); else if(f.page)setActivePage(f.page) }}
+                  style={{ padding:isMobile?'28px 24px':'36px 32px', borderRight:'1px solid rgba(255,255,255,0.06)', borderBottom:'1px solid rgba(255,255,255,0.06)', background:hoveredFeature===i?f.color+'08':'transparent', cursor:'pointer', height:'100%', '--ac':f.color, '--tint':f.color+'33' }}>
+                  <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:'28px' }}>
+                    <span className="mono" style={{ fontSize:'10px', color:'rgba(255,255,255,0.32)', letterSpacing:'1.5px', fontWeight:'600' }}>{String(i+1).padStart(2,'0')} / 06</span>
+                    <span className="mono" style={{ fontSize:'9px', fontWeight:'700', color:f.color, border:`1px solid ${f.color}55`, padding:'3px 8px', borderRadius:'2px', letterSpacing:'1.4px' }}>{lang==='fr'?f.tagFr:f.tag}</span>
+                  </div>
+                  <div style={{ marginBottom:'22px', color:f.color, transition:'transform .4s cubic-bezier(0.16,1,0.3,1)', transform:hoveredFeature===i?'translateY(-2px)':'translateY(0)' }}>
+                    <Icon name={FEATURE_ICONS[i]} size={22} stroke={1.5} />
+                  </div>
+                  <p style={{ fontSize:isMobile?'15px':'16px', fontWeight:'700', color:'#fff', marginBottom:'10px', letterSpacing:'-0.2px' }}>{lang==='fr'?f.titleFr:f.title}</p>
+                  <p style={{ fontSize:'13px', color:'rgba(255,255,255,0.5)', lineHeight:'1.7', fontWeight:'300' }}>{lang==='fr'?f.descFr:f.desc}</p>
                 </div>
-                <p style={{ fontSize:'15px', fontWeight:'700', color:'#fff', marginBottom:'8px' }}>{lang==='fr'?f.titleFr:f.title}</p>
-                <p style={{ fontSize:'13px', color:'rgba(255,255,255,0.38)', lineHeight:'1.7' }}>{lang==='fr'?f.descFr:f.desc}</p>
-              </div>
-            </FadeUp>
-          ))}
+              </FadeUp>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* BEYOND ACCURACY */}
-      <section style={{ padding:isMobile?'80px 20px 100px':'100px 48px 140px', position:'relative', zIndex:1, borderTop:'1px solid rgba(255,255,255,0.04)' }}>
-        <FadeUp>
-          <p style={{ fontSize:'10px', color:'#00B4D8', letterSpacing:'5px', marginBottom:'14px', fontWeight:'700', textAlign:'center' }}>{t.finding}</p>
-          <h2 style={{ fontSize:isMobile?'clamp(36px,10vw,64px)':'clamp(40px,7vw,88px)', fontWeight:'900', textAlign:'center', letterSpacing:'-3px', marginBottom:'72px', lineHeight:'0.9', color:'#fff' }}>{lang==='fr'?'Au-Delà de la Précision':'Beyond Accuracy'}</h2>
-        </FadeUp>
-        <FadeUp delay={0.1}>
-          <div style={{ maxWidth:'800px', margin:'0 auto 60px', padding:isMobile?'36px 24px':'48px', background:'rgba(230,57,70,0.03)', border:'1px solid rgba(230,57,70,0.14)', borderRadius:'8px', textAlign:'center', position:'relative', overflow:'hidden' }}>
-            <div style={{ position:'absolute', inset:0, pointerEvents:'none', background:'radial-gradient(ellipse at 50% -10%,rgba(230,57,70,0.1),transparent 55%)' }} />
-            <div style={{ fontSize:isMobile?'clamp(60px,18vw,100px)':'clamp(72px,12vw,140px)', fontWeight:'900', color:'#E63946', letterSpacing:'-5px', lineHeight:'1', marginBottom:'18px', animation:'subtleGlow 3s ease-in-out infinite' }}>33×</div>
-            <p style={{ fontSize:isMobile?'13px':'15px', color:'rgba(255,255,255,0.5)', maxWidth:'460px', margin:'0 auto', lineHeight:'1.85' }}>{t.finding33x}</p>
+      <section style={{ padding:isMobile?'100px 20px 120px':'140px 32px 160px', position:'relative', zIndex:1, borderTop:'1px solid rgba(255,255,255,0.04)' }}>
+        <CornerMark pos="tl" offset={24} color="#E63946" /><CornerMark pos="tr" offset={24} color="#E63946" />
+        <CornerMark pos="bl" offset={24} color="#E63946" /><CornerMark pos="br" offset={24} color="#E63946" />
+        <div style={{ maxWidth:'1080px', margin:'0 auto' }}>
+          <FadeUp>
+            <div style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:'10px', marginBottom:'24px' }}>
+              <span className="mono" style={{ fontSize:'9px', color:'#00B4D8', letterSpacing:'2.5px', fontWeight:'700' }}>§ 03</span>
+              <span style={{ width:'24px', height:'1px', background:'rgba(0,180,216,0.45)' }} />
+              <span className="mono" style={{ fontSize:'10px', color:'#00B4D8', letterSpacing:'3px', fontWeight:'700', textTransform:'uppercase' }}>{t.finding}</span>
+            </div>
+            <h2 style={{ fontSize:isMobile?'clamp(36px,9vw,60px)':'clamp(48px,6vw,80px)', fontWeight:'900', textAlign:'center', letterSpacing:'-3px', marginBottom:'72px', lineHeight:'0.95', color:'#fff' }}>
+              {lang==='fr'?'Au-Delà de la Précision':'Beyond Accuracy'}
+            </h2>
+          </FadeUp>
+
+          {/* 33× callout — static, editorial */}
+          <FadeUp delay={0.1}>
+            <div style={{ maxWidth:'780px', margin:'0 auto 80px', padding:isMobile?'40px 24px':'56px 48px', background:'linear-gradient(180deg,rgba(230,57,70,0.04),rgba(230,57,70,0.008))', border:'1px solid rgba(230,57,70,0.18)', borderRadius:'8px', textAlign:'center', position:'relative', overflow:'hidden' }}>
+              <div style={{ position:'absolute', inset:0, pointerEvents:'none', background:'radial-gradient(ellipse at 50% 0%,rgba(230,57,70,0.12),transparent 60%)' }} />
+              <div className="mono" style={{ position:'relative', fontSize:'10px', color:'rgba(230,57,70,0.7)', letterSpacing:'3px', fontWeight:'700', marginBottom:'24px', textTransform:'uppercase' }}>{isFr?'Divergence de Perte':'Training Loss Divergence'}</div>
+              <div style={{ position:'relative', fontFamily:"'Bebas Neue',sans-serif", fontSize:isMobile?'clamp(72px,22vw,120px)':'clamp(96px,14vw,180px)', fontWeight:'400', color:'#E63946', letterSpacing:'-2px', lineHeight:'0.95', marginBottom:'24px', fontVariantNumeric:'tabular-nums' }}>33×</div>
+              <p style={{ position:'relative', fontSize:isMobile?'14px':'15px', color:'rgba(255,255,255,0.62)', maxWidth:'520px', margin:'0 auto', lineHeight:'1.8', fontWeight:'300' }}>{t.finding33x}</p>
+            </div>
+          </FadeUp>
+
+          {/* groups — data sheet */}
+          <div style={{ display:'grid', gridTemplateColumns:isMobile?'1fr 1fr':'repeat(4,minmax(0,1fr))', gap:0, maxWidth:'1000px', margin:'0 auto', borderTop:'1px solid rgba(255,255,255,0.06)', borderLeft:'1px solid rgba(255,255,255,0.06)' }}>
+            {GROUPS.map((g,i)=>(
+              <FadeUp key={g.g} delay={i*0.06}>
+                <div className="grp-card" style={{ padding:isMobile?'22px 18px':'28px 22px', borderRight:'1px solid rgba(255,255,255,0.06)', borderBottom:'1px solid rgba(255,255,255,0.06)', transition:'background .4s cubic-bezier(0.16,1,0.3,1)', cursor:'default', height:'100%', '--tint':g.color+'2A' }}
+                  onMouseMove={tintMove}
+                  onMouseEnter={e=>{e.currentTarget.style.background=g.color+'08'}}
+                  onMouseLeave={e=>{e.currentTarget.style.background='transparent'}}>
+                  <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:'14px' }}>
+                    <span style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'34px', color:g.color, lineHeight:1, letterSpacing:'2px' }}>G{g.g}</span>
+                    {(g.winner||g.danger) && <span className="mono" style={{ fontSize:'8px', fontWeight:'800', color:g.color, border:`1px solid ${g.color}66`, padding:'2px 6px', borderRadius:'2px', letterSpacing:'1.5px' }}>{g.winner?(lang==='fr'?'GAGNANT':'WINNER'):(lang==='fr'?'DANGER':'DANGER')}</span>}
+                  </div>
+                  <p style={{ fontSize:'11px', fontWeight:'700', color:'#fff', marginBottom:'4px', letterSpacing:'0.2px' }}>{t.groupLabels[i]}</p>
+                  <p style={{ fontSize:'10px', color:'rgba(255,255,255,0.38)', lineHeight:'1.6', marginBottom:'18px', minHeight:'48px', fontWeight:'300' }}>{t.groupDescs[i]}</p>
+                  <div style={{ display:'flex', flexDirection:'column', gap:'8px', borderTop:'1px solid rgba(255,255,255,0.06)', paddingTop:'14px' }}>
+                    {[[t.statLabels[0],g.acc,'#fff'],[t.statLabels[1],g.ece,g.g==='C'?'#E63946':'#10B981'],[t.statLabels[2],g.loss,g.g==='C'?'#E63946':'rgba(255,255,255,0.55)']].map(([label,val,col])=>(
+                      <div key={label} style={{ display:'flex', justifyContent:'space-between', alignItems:'baseline' }}>
+                        <span className="mono" style={{ fontSize:'9px', color:'rgba(255,255,255,0.32)', letterSpacing:'1px', textTransform:'uppercase' }}>{label}</span>
+                        <span className="mono" style={{ fontSize:'11px', fontWeight:'700', color:col, letterSpacing:'0.2px' }}>{val}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </FadeUp>
+            ))}
           </div>
-        </FadeUp>
-        <div style={{ display:'grid', gridTemplateColumns:isMobile?'1fr 1fr':'repeat(auto-fit,minmax(215px,1fr))', gap:'10px', maxWidth:'960px', margin:'0 auto' }}>
-          {GROUPS.map((g,i)=>(
-            <FadeUp key={g.g} delay={i*0.08}>
-              <div style={{ padding:'20px 16px', border:`1px solid ${g.color}18`, borderRadius:'6px', background:`${g.color}04`, transition:'all 0.35s cubic-bezier(0.16,1,0.3,1)', cursor:'default', height:'100%' }}
-                onMouseEnter={e=>{e.currentTarget.style.borderColor=g.color+'44';e.currentTarget.style.background=g.color+'0C';e.currentTarget.style.transform='translateY(-5px)'}}
-                onMouseLeave={e=>{e.currentTarget.style.borderColor=g.color+'18';e.currentTarget.style.background=g.color+'04';e.currentTarget.style.transform='translateY(0)'}}>
-                <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:'10px' }}>
-                  <span style={{ fontSize:'28px', fontWeight:'900', color:g.color, lineHeight:1 }}>G{g.g}</span>
-                  {(g.winner||g.danger) && <span style={{ fontSize:'8px', fontWeight:'800', color:g.color, border:`1px solid ${g.color}55`, padding:'2px 6px', borderRadius:'2px', letterSpacing:'0.5px' }}>{g.winner?(lang==='fr'?'✓ GAGNANT':'✓ WINNER'):(lang==='fr'?'✗ DANGER':'✗ DANGER')}</span>}
-                </div>
-                <p style={{ fontSize:'11px', fontWeight:'700', color:'#fff', marginBottom:'4px' }}>{t.groupLabels[i]}</p>
-                <p style={{ fontSize:'10px', color:'rgba(255,255,255,0.28)', lineHeight:'1.5', marginBottom:'12px' }}>{t.groupDescs[i]}</p>
-                <div style={{ display:'flex', flexDirection:'column', gap:'5px', borderTop:'1px solid rgba(255,255,255,0.04)', paddingTop:'10px' }}>
-                  {[[t.statLabels[0],g.acc,'#fff'],[t.statLabels[1],g.ece,g.g==='C'?'#E63946':'#10B981'],[t.statLabels[2],g.loss,g.g==='C'?'#E63946':'rgba(255,255,255,0.45)']].map(([label,val,col])=>(
-                    <div key={label} style={{ display:'flex', justifyContent:'space-between', alignItems:'center' }}>
-                      <span style={{ fontSize:'9px', color:'rgba(255,255,255,0.25)' }}>{label}</span>
-                      <span style={{ fontSize:'10px', fontWeight:'700', color:col }}>{val}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </FadeUp>
-          ))}
+
+          <FadeUp delay={0.2}>
+            <div style={{ maxWidth:'640px', margin:'80px auto 0', textAlign:'center' }}>
+              <p style={{ fontSize:isMobile?'14px':'16px', color:'rgba(255,255,255,0.48)', lineHeight:'1.9', fontStyle:'italic', fontFamily:'Georgia,Cambria,serif', fontWeight:'300' }}>{t.quote}</p>
+              <button onClick={()=>setActivePage('research')} onMouseMove={tintMove} className="cta-ghost" style={{ marginTop:'32px', padding:'12px 26px', background:'transparent', border:'1px solid rgba(0,180,216,0.3)', color:'#00B4D8', borderRadius:'3px', cursor:'pointer', fontSize:'11px', fontWeight:'700', letterSpacing:'1.8px', fontFamily:'inherit', display:'inline-flex', alignItems:'center', gap:'10px' }}>
+                <span style={{ display:'inline-flex', alignItems:'center', gap:'10px' }}>{lang==='fr'?'VOIR LA RECHERCHE COMPLÈTE':'VIEW FULL RESEARCH'}<Icon name="arrow" size={12} stroke={2.2} /></span>
+              </button>
+            </div>
+          </FadeUp>
         </div>
-        <FadeUp delay={0.2}>
-          <div style={{ maxWidth:'600px', margin:'60px auto 0', textAlign:'center', padding:'36px 28px', borderTop:'1px solid rgba(255,255,255,0.04)' }}>
-            <p style={{ fontSize:isMobile?'14px':'16px', color:'rgba(255,255,255,0.4)', lineHeight:'1.9', fontStyle:'italic', fontFamily:'Georgia,serif' }}>{t.quote}</p>
-            <button onClick={()=>setActivePage('research')} style={{ marginTop:'24px', padding:'10px 24px', background:'transparent', border:'1px solid rgba(0,180,216,0.3)', color:'#00B4D8', borderRadius:'4px', cursor:'pointer', fontSize:'11px', fontWeight:'700', letterSpacing:'1px', fontFamily:'inherit', transition:'all 0.2s' }}
-              onMouseEnter={e=>{e.currentTarget.style.background='rgba(0,180,216,0.08)'}}
-              onMouseLeave={e=>{e.currentTarget.style.background='transparent'}}>
-              {lang==='fr'?'VOIR LA RECHERCHE COMPLÈTE →':'VIEW FULL RESEARCH →'}
-            </button>
-          </div>
-        </FadeUp>
       </section>
 
-      {/* LANGUAGE TOGGLE */}
-      <div style={{ position:'fixed', bottom:'28px', right:'28px', zIndex:200, display:'flex', alignItems:'center', background:'rgba(10,22,40,0.95)', border:'1px solid rgba(0,180,216,0.2)', borderRadius:'40px', overflow:'hidden', backdropFilter:'blur(20px)', boxShadow:'0 8px 32px rgba(0,0,0,0.5)', animation:loaded?'fadeSlideIn 0.8s ease 1.5s both':'none', opacity:0 }}>
+      {/* FOOTER */}
+      <footer style={{ padding:isMobile?'72px 20px 40px':'100px 32px 56px', position:'relative', zIndex:1, borderTop:'1px solid rgba(255,255,255,0.06)', background:'linear-gradient(180deg,transparent 0%,rgba(0,180,216,0.025) 100%)' }}>
+        <div style={{ maxWidth:'1100px', margin:'0 auto' }}>
+          <div style={{ display:'grid', gridTemplateColumns:isMobile?'1fr':'1.3fr 2fr', gap:isMobile?'44px':'72px', marginBottom:'56px' }}>
+            <div>
+              <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'34px', letterSpacing:'3px', lineHeight:1, marginBottom:'18px' }}>
+                <span style={{ color:'#fff' }}>Illuma</span><span style={{ color:'#00B4D8' }}>DX</span>
+              </div>
+              <p style={{ fontSize:'13px', color:'rgba(255,255,255,0.5)', lineHeight:'1.8', maxWidth:'320px', fontWeight:'300', marginBottom:'22px' }}>
+                {isFr?'Système IA clinique pour la détection de tumeurs cérébrales. Diagnostic interprétable, statistiquement validé.':'Clinical AI system for brain tumor detection. Interpretable, statistically validated diagnostics.'}
+              </p>
+              <div style={{ display:'flex', alignItems:'center', gap:'10px' }}>
+                <div style={{ width:'6px', height:'6px', borderRadius:'50%', background:'#10B981', animation:'ripple 2s infinite', flexShrink:0 }} />
+                <span className="mono" style={{ fontSize:'9px', color:'rgba(255,255,255,0.42)', letterSpacing:'2px', textTransform:'uppercase' }}>{isFr?'Système Actif · CWSF 2026':'System Active · CWSF 2026'}</span>
+              </div>
+            </div>
+            <div style={{ display:'grid', gridTemplateColumns:isMobile?'1fr 1fr':'repeat(3,1fr)', gap:isMobile?'32px 24px':'32px' }}>
+              <div>
+                <p className="mono" style={{ fontSize:'9px', color:'rgba(255,255,255,0.38)', letterSpacing:'2px', marginBottom:'18px', textTransform:'uppercase', fontWeight:'700' }}>{isFr?'Système':'System'}</p>
+                <div style={{ display:'flex', flexDirection:'column', gap:'12px' }}>
+                  <a onClick={()=>setShowUpload(true)} className="footer-link">{isFr?'Démo IA en direct':'Live AI Demo'}</a>
+                  <a onClick={()=>setActivePage('patients')} className="footer-link">{isFr?'Dossiers Patients':'Patient Records'}</a>
+                  <a onClick={()=>setActivePage('pdf')} className="footer-link">{isFr?'Rapport PDF':'PDF Report'}</a>
+                </div>
+              </div>
+              <div>
+                <p className="mono" style={{ fontSize:'9px', color:'rgba(255,255,255,0.38)', letterSpacing:'2px', marginBottom:'18px', textTransform:'uppercase', fontWeight:'700' }}>{isFr?'Recherche':'Research'}</p>
+                <div style={{ display:'flex', flexDirection:'column', gap:'12px' }}>
+                  <a onClick={()=>setActivePage('research')} className="footer-link">{isFr?'Résultats & Stats':'Findings & Stats'}</a>
+                  <a onClick={()=>setActivePage('ethics')} className="footer-link">{isFr?'Éthique & Conformité':'Ethics & Compliance'}</a>
+                </div>
+              </div>
+              <div>
+                <p className="mono" style={{ fontSize:'9px', color:'rgba(255,255,255,0.38)', letterSpacing:'2px', marginBottom:'18px', textTransform:'uppercase', fontWeight:'700' }}>{isFr?'Stack':'Stack'}</p>
+                <div style={{ display:'flex', flexDirection:'column', gap:'12px' }}>
+                  <span className="mono" style={{ fontSize:'11px', color:'rgba(255,255,255,0.55)', letterSpacing:'0.3px' }}>ResNet-18</span>
+                  <span className="mono" style={{ fontSize:'11px', color:'rgba(255,255,255,0.55)', letterSpacing:'0.3px' }}>GradCAM++</span>
+                  <span className="mono" style={{ fontSize:'11px', color:'rgba(255,255,255,0.55)', letterSpacing:'0.3px' }}>PyTorch · FastAPI</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', paddingTop:'28px', borderTop:'1px solid rgba(255,255,255,0.05)', flexWrap:'wrap', gap:'14px' }}>
+            <span className="mono" style={{ fontSize:'9px', color:'rgba(255,255,255,0.32)', letterSpacing:'2px', textTransform:'uppercase' }}>© 2026 IllumaDX · {isFr?'Tous droits réservés':'All rights reserved'}</span>
+            <span className="mono" style={{ fontSize:'9px', color:'rgba(255,255,255,0.32)', letterSpacing:'2px', textTransform:'uppercase' }}>{isFr?'Expo-sciences pancanadienne 2026':'Canada-Wide Science Fair 2026'}</span>
+          </div>
+        </div>
+      </footer>
+
+      {/* FLOATING LANG TOGGLE */}
+      <div style={{ position:'fixed', bottom:isMobile?'44px':'64px', right:isMobile?'20px':'32px', zIndex:200, display:'flex', alignItems:'center', background:'rgba(10,22,40,0.92)', border:'1px solid rgba(0,180,216,0.22)', borderRadius:'40px', overflow:'hidden', backdropFilter:'blur(20px)', WebkitBackdropFilter:'blur(20px)', boxShadow:'0 8px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,180,216,0.05)', animation:loaded?'fadeSlideIn 0.8s ease 1.4s both':'none', opacity:0 }}>
         {['en','fr'].map(l=>(
-          <button key={l} onClick={()=>setLang(l)} style={{ padding:'10px 18px', background:lang===l?'#00B4D8':'transparent', color:lang===l?'#05080F':'rgba(255,255,255,0.4)', border:'none', cursor:'pointer', fontSize:'11px', fontWeight:'800', letterSpacing:'1.5px', transition:'all 0.25s', fontFamily:'inherit' }}>{l.toUpperCase()}</button>
+          <button key={l} onClick={()=>setLang(l)} className="mono" style={{ padding:'10px 18px', background:lang===l?'#00B4D8':'transparent', color:lang===l?'#05080F':'rgba(255,255,255,0.5)', border:'none', cursor:'pointer', fontSize:'10px', fontWeight:'800', letterSpacing:'2px', transition:'all 0.25s', fontFamily:'ui-monospace,SFMono-Regular,Menlo,monospace' }}>{l.toUpperCase()}</button>
         ))}
       </div>
     </div>
