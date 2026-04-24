@@ -2,12 +2,16 @@
   <!-- Dark rounded square background -->
   <rect width="64" height="64" rx="14" fill="#05080F"/>
   <!-- Hairline teal border -->
-  <rect x="1" y="1" width="62" height="62" rx="13" fill="none" stroke="#00B4D8" stroke-opacity="0.28" stroke-width="1.5"/>
-  <!-- Subtle teal glow -->
-  <circle cx="32" cy="34" r="14" fill="#00B4D8" fill-opacity="0.12"/>
-  <!-- DX monogram -->
-  <text x="50%" y="52%" text-anchor="middle" dominant-baseline="central"
-        fill="#00B4D8"
-        font-family="'SF Pro Display', -apple-system, system-ui, 'Helvetica Neue', Arial, sans-serif"
-        font-weight="900" font-size="30" letter-spacing="-1">DX</text>
+  <rect x="1" y="1" width="62" height="62" rx="13" fill="none" stroke="#00B4D8" stroke-opacity="0.32" stroke-width="1.5"/>
+  <!-- Subtle teal glow behind monogram -->
+  <circle cx="32" cy="32" r="18" fill="#00B4D8" fill-opacity="0.12"/>
+  <!-- D — outer filled letterform -->
+  <path d="M 7 17 L 20 17 a 15 15 0 0 1 0 30 L 7 47 Z" fill="#00B4D8"/>
+  <!-- D — inner hollow (background-colored cut to reveal letter shape) -->
+  <path d="M 14 25 L 20 25 a 7 7 0 0 1 0 14 L 14 39 Z" fill="#05080F"/>
+  <!-- X — two crossing rounded bars -->
+  <g fill="#00B4D8">
+    <rect x="44" y="18" width="5" height="28" rx="2.5" transform="rotate(28 46.5 32)"/>
+    <rect x="44" y="18" width="5" height="28" rx="2.5" transform="rotate(-28 46.5 32)"/>
+  </g>
 </svg>
