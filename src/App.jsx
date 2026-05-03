@@ -2986,6 +2986,70 @@ function UploadModal({ onClose, lang }) {
 
   const reset = () => { setPhase('idle'); setResult(null); setPreview(null) }
 
+  const handleDownloadPDF = () => {
+    if (!result) return
+    const win = window.open('', '_blank')
+    const reportDate = new Date().toLocaleDateString(isFr?'fr-CA':'en-CA', { year:'numeric', month:'long', day:'numeric' })
+    const reportTime = new Date().toLocaleTimeString(isFr?'fr-CA':'en-CA', { hour:'2-digit', minute:'2-digit' })
+    const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>IllumaDX Clinical Report</title><style>
+      @page { size: letter; margin: 0.5in; }
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #1a1a1a; font-size: 11px; line-height: 1.5; }
+      .header { border-bottom: 3px solid #0A1628; padding-bottom: 16px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-end; }
+      .logo { font-size: 22px; font-weight: 900; letter-spacing: -0.5px; color: #0A1628; }
+      .logo .dx { color: #00B4D8; }
+      .meta { text-align: right; font-size: 10px; color: #555; line-height: 1.6; }
+      .meta strong { color: #0A1628; }
+      .section { margin-bottom: 18px; }
+      .sec-title { font-size: 9px; font-weight: 800; color: #555; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px solid #ddd; }
+      .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+      .stat { background: #f6f7f9; padding: 10px 12px; border-radius: 4px; }
+      .stat-label { font-size: 8px; color: #777; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700; margin-bottom: 4px; }
+      .stat-value { font-size: 16px; font-weight: 800; color: #0A1628; }
+      .diagnosis { background: #0A1628; color: #fff; padding: 16px 20px; border-radius: 6px; }
+      .diag-label { font-size: 9px; color: rgba(255,255,255,0.6); letter-spacing: 2px; text-transform: uppercase; font-weight: 700; margin-bottom: 6px; }
+      .diag-value { font-size: 26px; font-weight: 900; text-transform: capitalize; letter-spacing: -0.3px; }
+      .bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+      .bar-label { width: 90px; font-size: 11px; font-weight: 600; text-transform: capitalize; }
+      .bar-track { flex: 1; height: 14px; background: #eee; border-radius: 3px; overflow: hidden; }
+      .bar-fill { height: 100%; border-radius: 3px; }
+      .footer { border-top: 1px solid #ddd; padding-top: 12px; margin-top: 24px; font-size: 9px; color: #888; line-height: 1.6; }
+      .disclaimer { background: #fff8e1; border-left: 3px solid #FFB703; padding: 10px 14px; font-size: 10px; color: #6b4f00; margin-top: 16px; line-height: 1.6; }
+    </style></head><body>
+    <div class="header">
+      <div class="logo">Illuma<span class="dx">DX</span></div>
+      <div class="meta"><strong>${isFr?'RAPPORT IA CLINIQUE':'CLINICAL AI REPORT'}</strong><br/>${reportDate} · ${reportTime}<br/>${isFr?'Analyse anonyme':'Anonymous analysis'}</div>
+    </div>
+    <div class="section">
+      <div class="sec-title">${isFr?'DIAGNOSTIC IA':'AI DIAGNOSIS'}</div>
+      <div class="diagnosis">
+        <div class="diag-label">${isFr?'Classification prédite':'Predicted classification'}</div>
+        <div class="diag-value">${result.prediction}</div>
+        <div style="margin-top:8px;font-size:11px;color:rgba(255,255,255,0.75)">${isFr?'Confiance':'Confidence'}: <strong style="color:#FFB703">${(result.confidence*100).toFixed(1)}%</strong></div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="sec-title">${isFr?'DISTRIBUTION DE CONFIANCE':'CONFIDENCE DISTRIBUTION'}</div>
+      ${['glioma','meningioma','notumor','pituitary'].map(cls=>{const p=(result.probabilities[cls]||0)*100;const isTop=cls===result.prediction;const c=CLASS_COLORS[cls];return`<div class="bar-row"><div class="bar-label" style="color:${isTop?c:'#555'}">${cls}</div><div class="bar-track"><div class="bar-fill" style="width:${p.toFixed(1)}%;background:${isTop?c:'#ddd'}"></div></div><div style="width:45px;text-align:right;font-size:11px;font-weight:700;color:${isTop?c:'#999'}">${p.toFixed(1)}%</div></div>`}).join('')}
+    </div>
+    ${MALIGNANCY_PROFILE[result.prediction] ? `
+    <div class="section">
+      <div class="sec-title">${isFr?'CONTEXTE CLINIQUE · COMPORTEMENT TYPIQUE':'CLINICAL CONTEXT · TYPICAL BEHAVIOR'}</div>
+      <div style="background:#fff;border:1px solid ${MALIGNANCY_PROFILE[result.prediction].color};border-left:4px solid ${MALIGNANCY_PROFILE[result.prediction].color};border-radius:4px;padding:12px 16px">
+        <div style="font-size:10px;font-weight:800;color:${MALIGNANCY_PROFILE[result.prediction].color};letter-spacing:2px;text-transform:uppercase;margin-bottom:6px">${MALIGNANCY_PROFILE[result.prediction].label[isFr?'fr':'en']}</div>
+        <p style="font-size:12px;color:#333;line-height:1.7;margin-bottom:6px">${MALIGNANCY_PROFILE[result.prediction].detail[isFr?'fr':'en']}</p>
+        <p style="font-size:10px;color:#888;font-style:italic;line-height:1.5">${isFr?'Note : IllumaDX classifie le type de tumeur, pas la malignité. Une biopsie est requise pour un diagnostic définitif.':'Note: IllumaDX classifies tumor type, not malignancy. Biopsy required for definitive diagnosis.'}</p>
+      </div>
+    </div>
+    ` : ''}
+    <div class="disclaimer"><strong>${isFr?'AVIS IMPORTANT':'IMPORTANT NOTICE'}:</strong> ${isFr?'Ce rapport est généré par un système d\'IA en démonstration. Il ne remplace pas un diagnostic médical professionnel. Consultez un radiologue qualifié pour une interprétation clinique.':'This report is generated by an AI demonstration system. It does not replace professional medical diagnosis. Consult a qualified radiologist for clinical interpretation.'}</div>
+    <div class="footer"><strong>IllumaDX</strong> — ResNet-18 GroupB · 99.69% test accuracy · ECE 0.0030 · GradCAM++ interpretability · Trained on 7,627 deduplicated brain MRI images. ${isFr?'Aucune information patient stockée. Analyse anonyme.':'No patient information stored. Anonymous analysis.'}</div>
+    <script>window.onload = () => { setTimeout(() => window.print(), 300); }</script>
+    </body></html>`
+    win.document.write(html)
+    win.document.close()
+  }
+
   const REJECTS = {
     not_mri: { color:'#E63946', icon:'brain', title:isFr?'PAS UNE IRM CÉRÉBRALE':'NOT A BRAIN MRI', code:isFr?'ERR · SCAN_INVALIDE':'ERR · NON_BRAIN_SCAN', desc:isFr?'Cette image n\'a pas été reconnue comme une IRM cérébrale valide. Veuillez téléverser une IRM cérébrale en niveaux de gris.':'This image was not recognized as a valid brain MRI. Please upload a greyscale brain MRI scan.' },
     invalid: { color:'#E63946', icon:'shield',  title:isFr?'CONFIANCE INSUFFISANTE':'LOW CONFIDENCE', code:isFr?'ERR · SEUIL_60%':'ERR · CONF_GATE_<60%',   desc:isFr?'La confiance du modèle est inférieure au seuil de sécurité de 60%. Le scan n\'a pas pu être classifié de manière fiable.':'Model confidence fell below the 60% safety threshold. The scan could not be classified reliably.' },
@@ -3181,10 +3245,15 @@ function UploadModal({ onClose, lang }) {
                   <p style={{ fontSize:'11px', color:'rgba(255,183,3,0.82)', margin:0, lineHeight:'1.65', fontWeight:'400' }}>{isFr?'Outil de recherche uniquement. Ne remplace pas un diagnostic clinique par un radiologue certifié.':'Research tool only. Not a substitute for clinical diagnosis by a certified radiologist.'}</p>
                 </div>
 
-                {/* RESET */}
-                <button onClick={reset} onMouseMove={tintMove} className="cta-ghost" style={{ marginTop:'18px', width:'100%', padding:'13px', background:'transparent', border:'1px solid rgba(0,180,216,0.22)', color:'#00B4D8', borderRadius:'5px', fontSize:'11px', fontWeight:'800', cursor:'pointer', letterSpacing:'1.8px', fontFamily:'inherit', display:'inline-flex', alignItems:'center', justifyContent:'center', gap:'10px' }}>
-                  <span style={{ display:'inline-flex', alignItems:'center', gap:'10px' }}><Icon name="upload" size={12} stroke={2.2} />{isFr?'Analyser un autre scan':'Analyze another scan'}</span>
-                </button>
+                {/* ACTIONS */}
+                <div style={{ display:'grid', gridTemplateColumns:'2fr 1fr', gap:'10px', marginTop:'24px' }}>
+                  <button onClick={handleDownloadPDF} className="cta-primary" style={{ padding:'14px', background:'#FFB703', color:'#05080F', border:'none', borderRadius:'6px', cursor:'pointer', fontSize:'11px', fontWeight:'900', letterSpacing:'1.8px', fontFamily:'inherit', display:'inline-flex', alignItems:'center', justifyContent:'center', gap:'10px', textTransform:'uppercase', boxShadow:'0 0 24px rgba(255,183,3,0.25)' }}>
+                    {isFr?'TÉLÉCHARGER LE RAPPORT PDF':'DOWNLOAD PDF REPORT'}
+                  </button>
+                  <button onClick={reset} style={{ padding:'14px', background:'transparent', color:'rgba(255,255,255,0.7)', border:'1px solid rgba(255,255,255,0.18)', borderRadius:'6px', cursor:'pointer', fontSize:'10px', fontWeight:'700', letterSpacing:'1.6px', fontFamily:'inherit', textTransform:'uppercase' }}>
+                    {isFr?'NOUVEAU SCAN':'ANALYZE ANOTHER'}
+                  </button>
+                </div>
               </div>
             )
           })()}
