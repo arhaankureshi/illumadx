@@ -2988,10 +2988,20 @@ function UploadModal({ onClose, lang }) {
 
   const handleDownloadPDF = () => {
     if (!result) return
+    const reportId = 'RPT-' + Math.random().toString(36).substring(2,10).toUpperCase()
+    const conf = result.confidence * 100
+    const riskTier = conf > 95 ? { label:{en:'HIGH CONFIDENCE',fr:'CONFIANCE ÉLEVÉE'}, color:'#10B981', action:{en:'Result strongly supported. Biopsy recommended for definitive diagnosis and grading.', fr:'Résultat fortement appuyé. Biopsie recommandée pour un diagnostic et un grade définitifs.'}} : conf > 80 ? { label:{en:'MODERATE CONFIDENCE',fr:'CONFIANCE MODÉRÉE'}, color:'#FFB703', action:{en:'Result moderately supported. Additional contrast-enhanced imaging recommended before clinical decisions.', fr:'Résultat modérément appuyé. Imagerie supplémentaire avec contraste recommandée avant toute décision clinique.'}} : { label:{en:'LOW CONFIDENCE',fr:'CONFIANCE FAIBLE'}, color:'#E63946', action:{en:'Result uncertain. Do not act on this prediction without further imaging and radiologist review.', fr:'Résultat incertain. Ne pas agir sur cette prédiction sans imagerie supplémentaire et examen radiologique.'}}
+    const nextSteps = {
+      glioma: { en: ['Contrast-enhanced MRI (T1+Gd, T2-FLAIR, DWI)', 'Neurosurgical consultation within 1–2 weeks', 'Stereotactic biopsy for WHO grading', 'Multidisciplinary tumor board review'], fr: ['IRM avec contraste (T1+Gd, T2-FLAIR, DWI)', 'Consultation neurochirurgicale dans 1–2 semaines', 'Biopsie stéréotaxique pour grade OMS', 'Revue multidisciplinaire en comité oncologique'] },
+      meningioma: { en: ['Contrast-enhanced MRI to confirm dural attachment', 'Neurosurgical consultation', 'Monitor with serial imaging if asymptomatic', 'Surgical resection if symptomatic or growing'], fr: ['IRM avec contraste pour confirmer l\'attache durale', 'Consultation neurochirurgicale', 'Surveillance par imagerie sérielle si asymptomatique', 'Résection chirurgicale si symptomatique ou en croissance'] },
+      pituitary: { en: ['Pituitary-protocol MRI (thin-slice sellar imaging)', 'Endocrine workup: prolactin, cortisol, IGF-1, TSH/free T4', 'Endocrinology referral', 'Visual field testing if mass effect suspected'], fr: ['IRM protocole hypophysaire (coupes fines sellaires)', 'Bilan endocrinien : prolactine, cortisol, IGF-1, TSH/T4 libre', 'Référence en endocrinologie', 'Test du champ visuel si effet de masse suspecté'] },
+      notumor: { en: ['No tumor detected on this scan', 'Clinical correlation recommended if symptoms persist', 'Consider alternative diagnoses based on presentation', 'Repeat imaging only if clinically indicated'], fr: ['Aucune tumeur détectée sur ce scan', 'Corrélation clinique recommandée si les symptômes persistent', 'Considérer des diagnostics alternatifs selon la présentation', 'Imagerie répétée seulement si cliniquement indiquée'] }
+    }
+    const steps = nextSteps[result.prediction]
     const win = window.open('', '_blank')
     const reportDate = new Date().toLocaleDateString(isFr?'fr-CA':'en-CA', { year:'numeric', month:'long', day:'numeric' })
     const reportTime = new Date().toLocaleTimeString(isFr?'fr-CA':'en-CA', { hour:'2-digit', minute:'2-digit' })
-    const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>IllumaDX Clinical Report</title><style>
+    const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>IllumaDX Clinical Report ${reportId}</title><style>
       @page { size: letter; margin: 0.5in; }
       * { box-sizing: border-box; margin: 0; padding: 0; }
       body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #1a1a1a; font-size: 11px; line-height: 1.5; }
@@ -3000,38 +3010,72 @@ function UploadModal({ onClose, lang }) {
       .logo .dx { color: #00B4D8; }
       .meta { text-align: right; font-size: 10px; color: #555; line-height: 1.6; }
       .meta strong { color: #0A1628; }
+      .meta .rid { font-family: ui-monospace, 'SF Mono', monospace; font-size: 9px; color: #777; letter-spacing: 0.5px; margin-top: 2px; }
       .section { margin-bottom: 18px; }
       .sec-title { font-size: 9px; font-weight: 800; color: #555; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px solid #ddd; }
-      .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
-      .stat { background: #f6f7f9; padding: 10px 12px; border-radius: 4px; }
-      .stat-label { font-size: 8px; color: #777; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700; margin-bottom: 4px; }
-      .stat-value { font-size: 16px; font-weight: 800; color: #0A1628; }
       .diagnosis { background: #0A1628; color: #fff; padding: 16px 20px; border-radius: 6px; }
       .diag-label { font-size: 9px; color: rgba(255,255,255,0.6); letter-spacing: 2px; text-transform: uppercase; font-weight: 700; margin-bottom: 6px; }
       .diag-value { font-size: 26px; font-weight: 900; text-transform: capitalize; letter-spacing: -0.3px; }
+      .risk-tier { background: #fff; border: 1.5px solid; border-left-width: 4px; border-radius: 4px; padding: 10px 14px; margin-top: 10px; }
+      .risk-label { font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; }
+      .risk-action { font-size: 11px; color: #333; line-height: 1.55; }
       .bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
       .bar-label { width: 90px; font-size: 11px; font-weight: 600; text-transform: capitalize; }
       .bar-track { flex: 1; height: 14px; background: #eee; border-radius: 3px; overflow: hidden; }
       .bar-fill { height: 100%; border-radius: 3px; }
+      .heatmap-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+      .heatmap-cell { background: #f6f7f9; border-radius: 4px; padding: 8px; text-align: center; }
+      .heatmap-cell img { width: 100%; height: auto; border-radius: 3px; display: block; margin-bottom: 4px; }
+      .heatmap-caption { font-size: 8.5px; color: #777; letter-spacing: 1px; text-transform: uppercase; font-weight: 700; }
+      .heatmap-note { font-size: 10px; color: #555; line-height: 1.55; margin-top: 8px; padding: 8px 12px; background: #f6f7f9; border-radius: 3px; font-style: italic; }
+      .steps-list { list-style: none; padding: 0; }
+      .steps-list li { padding: 7px 0 7px 22px; border-bottom: 1px solid #eee; font-size: 11px; color: #333; position: relative; line-height: 1.5; }
+      .steps-list li:last-child { border-bottom: none; }
+      .steps-list li:before { content: ''; position: absolute; left: 6px; top: 13px; width: 8px; height: 8px; background: #0A1628; border-radius: 50%; }
       .footer { border-top: 1px solid #ddd; padding-top: 12px; margin-top: 24px; font-size: 9px; color: #888; line-height: 1.6; }
+      .footer strong { color: #0A1628; }
       .disclaimer { background: #fff8e1; border-left: 3px solid #FFB703; padding: 10px 14px; font-size: 10px; color: #6b4f00; margin-top: 16px; line-height: 1.6; }
     </style></head><body>
     <div class="header">
       <div class="logo">Illuma<span class="dx">DX</span></div>
-      <div class="meta"><strong>${isFr?'RAPPORT IA CLINIQUE':'CLINICAL AI REPORT'}</strong><br/>${reportDate} · ${reportTime}<br/>${isFr?'Analyse anonyme':'Anonymous analysis'}</div>
+      <div class="meta"><strong>${isFr?'RAPPORT IA CLINIQUE':'CLINICAL AI REPORT'}</strong><br/>${reportDate} · ${reportTime}<br/>${isFr?'Analyse anonyme':'Anonymous analysis'}<div class="rid">${reportId}</div></div>
     </div>
+
     <div class="section">
       <div class="sec-title">${isFr?'DIAGNOSTIC IA':'AI DIAGNOSIS'}</div>
       <div class="diagnosis">
         <div class="diag-label">${isFr?'Classification prédite':'Predicted classification'}</div>
         <div class="diag-value">${result.prediction}</div>
-        <div style="margin-top:8px;font-size:11px;color:rgba(255,255,255,0.75)">${isFr?'Confiance':'Confidence'}: <strong style="color:#FFB703">${(result.confidence*100).toFixed(1)}%</strong></div>
+        <div style="margin-top:8px;font-size:11px;color:rgba(255,255,255,0.75)">${isFr?'Confiance':'Confidence'}: <strong style="color:#FFB703">${conf.toFixed(1)}%</strong></div>
+      </div>
+      <div class="risk-tier" style="border-color:${riskTier.color}">
+        <div class="risk-label" style="color:${riskTier.color}">${riskTier.label[isFr?'fr':'en']}</div>
+        <div class="risk-action">${riskTier.action[isFr?'fr':'en']}</div>
       </div>
     </div>
+
     <div class="section">
       <div class="sec-title">${isFr?'DISTRIBUTION DE CONFIANCE':'CONFIDENCE DISTRIBUTION'}</div>
       ${['glioma','meningioma','notumor','pituitary'].map(cls=>{const p=(result.probabilities[cls]||0)*100;const isTop=cls===result.prediction;const c=CLASS_COLORS[cls];return`<div class="bar-row"><div class="bar-label" style="color:${isTop?c:'#555'}">${cls}</div><div class="bar-track"><div class="bar-fill" style="width:${p.toFixed(1)}%;background:${isTop?c:'#ddd'}"></div></div><div style="width:45px;text-align:right;font-size:11px;font-weight:700;color:${isTop?c:'#999'}">${p.toFixed(1)}%</div></div>`}).join('')}
     </div>
+
+    ${result.heatmap_b ? `
+    <div class="section">
+      <div class="sec-title">${isFr?'INTERPRÉTABILITÉ GRADCAM++':'GRADCAM++ INTERPRETABILITY'}</div>
+      <div class="heatmap-grid">
+        <div class="heatmap-cell">
+          <img src="data:image/png;base64,${result.heatmap_b}" alt="GradCAM++ GroupB"/>
+          <div class="heatmap-caption">GroupB · ${isFr?'Augmentation Basique':'Basic Augmentation'}</div>
+        </div>
+        ${result.heatmap_d ? `<div class="heatmap-cell">
+          <img src="data:image/png;base64,${result.heatmap_d}" alt="GradCAM++ GroupD"/>
+          <div class="heatmap-caption">GroupD · ${isFr?'Domaine-Spécifique':'Domain-Specific'}</div>
+        </div>` : ''}
+      </div>
+      <div class="heatmap-note">${isFr?'Les zones colorées (rouge/jaune) montrent où le modèle a regardé pour faire sa prédiction. Une activation chevauchant la tumeur visible suggère un raisonnement valide. Une activation sur des régions non pertinentes suggère un résultat à traiter avec prudence.':'Colored regions (red/yellow) show where the model looked to make its prediction. Activation overlapping the visible tumor suggests valid reasoning. Activation on irrelevant regions suggests the result should be treated with caution.'}</div>
+    </div>
+    ` : ''}
+
     ${MALIGNANCY_PROFILE[result.prediction] ? `
     <div class="section">
       <div class="sec-title">${isFr?'CONTEXTE CLINIQUE · COMPORTEMENT TYPIQUE':'CLINICAL CONTEXT · TYPICAL BEHAVIOR'}</div>
@@ -3042,8 +3086,18 @@ function UploadModal({ onClose, lang }) {
       </div>
     </div>
     ` : ''}
-    <div class="disclaimer"><strong>${isFr?'AVIS IMPORTANT':'IMPORTANT NOTICE'}:</strong> ${isFr?'Ce rapport est généré par un système d\'IA en démonstration. Il ne remplace pas un diagnostic médical professionnel. Consultez un radiologue qualifié pour une interprétation clinique.':'This report is generated by an AI demonstration system. It does not replace professional medical diagnosis. Consult a qualified radiologist for clinical interpretation.'}</div>
-    <div class="footer"><strong>IllumaDX</strong> — ResNet-18 GroupB · 99.69% test accuracy · ECE 0.0030 · GradCAM++ interpretability · Trained on 7,627 deduplicated brain MRI images. ${isFr?'Aucune information patient stockée. Analyse anonyme.':'No patient information stored. Anonymous analysis.'}</div>
+
+    <div class="section">
+      <div class="sec-title">${isFr?'PROCHAINES ÉTAPES RECOMMANDÉES':'RECOMMENDED NEXT STEPS'}</div>
+      <ul class="steps-list">
+        ${steps[isFr?'fr':'en'].map(s=>`<li>${s}</li>`).join('')}
+      </ul>
+    </div>
+
+    <div class="disclaimer"><strong>${isFr?'AVIS IMPORTANT':'IMPORTANT NOTICE'}:</strong> ${isFr?'Ce rapport est généré par un système d\'IA en démonstration. Il ne remplace pas un diagnostic médical professionnel. Consultez un radiologue qualifié pour une interprétation clinique. Aucune information patient n\'est stockée.':'This report is generated by an AI demonstration system. It does not replace professional medical diagnosis. Consult a qualified radiologist for clinical interpretation. No patient information is stored.'}</div>
+
+    <div class="footer"><strong>IllumaDX</strong> — ResNet-18 GroupB · 99.69% test accuracy · ECE 0.0030 · GradCAM++ interpretability · trained on 7,627 deduplicated brain MRI images · ${isFr?'Statistiquement validé sur 40 modèles, ANOVA F=38.93, p<0.001':'Statistically validated across 40 models, ANOVA F=38.93, p<0.001'}<br/>${isFr?'Rapport':'Report'} ${reportId} · ${isFr?'Aucune information patient stockée. Analyse anonyme.':'No patient information stored. Anonymous analysis.'}</div>
+
     <script>window.onload = () => { setTimeout(() => window.print(), 300); }</script>
     </body></html>`
     win.document.write(html)
