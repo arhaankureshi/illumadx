@@ -1017,6 +1017,7 @@ function PDFReportPage({ lang, onClose }) {
   const [result, setResult] = useState(null)
   const [dragOver, setDragOver] = useState(false)
   const fileRef = useRef(null)
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
 
   const handleFile = async (file) => {
     if (!file || !file.type.startsWith('image/')) return
@@ -1111,7 +1112,7 @@ function PDFReportPage({ lang, onClose }) {
 
   return (
     <SubPageWrapper onClose={onClose} title={isFr?'Rapport PDF':'PDF Report'} titleColor="#FFB703" lang={lang}>
-      <div style={{ maxWidth:'860px', margin:'0 auto', padding:'48px 24px 80px' }}>
+      <div style={{ maxWidth:'860px', margin:'0 auto', padding: isMobile ? '36px 18px 60px' : '48px 24px 80px' }}>
 
         {/* Header */}
         <div style={{ marginBottom:'40px' }}>
@@ -1202,7 +1203,7 @@ function PDFReportPage({ lang, onClose }) {
               {/* Result card */}
               <div style={{ position:'relative', border:`1px solid ${predColor}44`, borderRadius:'10px', padding:'24px 28px', marginBottom:'18px', background:`linear-gradient(180deg,${predColor}0D,transparent)`, overflow:'hidden' }}>
                 <div style={{ position:'absolute', top:0, left:0, right:0, height:'1px', background:`linear-gradient(90deg,transparent,${predColor},transparent)` }} />
-                <div style={{ display:'grid', gridTemplateColumns:'1.3fr 1fr', gap:'24px', alignItems:'center', marginBottom:'22px' }}>
+                <div style={{ display:'grid', gridTemplateColumns: isMobile ? '1fr' : '1.3fr 1fr', gap: isMobile ? '14px' : '24px', alignItems:'center', marginBottom: isMobile ? '17px' : '22px' }}>
                   <div>
                     <p className="mono" style={{ fontSize:'9px', color:'rgba(255,255,255,0.4)', letterSpacing:'2.5px', marginBottom:'8px', textTransform:'uppercase', fontWeight:'700' }}>{isFr?'Diagnostic IA':'AI Diagnosis'}</p>
                     <h2 style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'44px', letterSpacing:'2.5px', color:predColor, margin:0, lineHeight:1, textTransform:'uppercase' }}>{result.prediction}</h2>
@@ -1239,7 +1240,7 @@ function PDFReportPage({ lang, onClose }) {
               <MalignancyChip prediction={result.prediction} isFr={isFr} />
 
               {/* Action buttons */}
-              <div style={{ display:'grid', gridTemplateColumns:'2fr 1fr', gap:'10px', marginBottom:'28px' }}>
+              <div style={{ display:'grid', gridTemplateColumns: isMobile ? '1fr' : '2fr 1fr', gap:'10px', marginBottom: isMobile ? '21px' : '28px' }}>
                 <button onClick={handlePrint} onMouseMove={tintMove} className="cta-primary" style={{ padding:'16px', background:'#FFB703', color:'#05080F', border:'none', borderRadius:'6px', cursor:'pointer', fontSize:'12px', fontWeight:'900', letterSpacing:'1.8px', fontFamily:'inherit', display:'inline-flex', alignItems:'center', justifyContent:'center', gap:'12px', textTransform:'uppercase', boxShadow:'0 0 32px rgba(255,183,3,0.3)' }}>
                   <span style={{ display:'inline-flex', alignItems:'center', gap:'10px' }}><Icon name="file" size={14} stroke={2} />{isFr?'Télécharger PDF':'Download PDF Report'}</span>
                 </button>
@@ -1758,6 +1759,7 @@ function ResearchPage({ lang, onClose, initialTab }) {
 function EthicsPage({ lang, onClose, initialTab }) {
   const isFr = lang === 'fr'
   const [activeTab, setActiveTab] = useState(initialTab || 'regulatory')
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
 
   const tabs = [
     { id:'regulatory', label:isFr?'Réglementation':'Regulatory',  num:'01' },
@@ -2007,7 +2009,14 @@ function EthicsPage({ lang, onClose, initialTab }) {
               </div>
               <div style={{ padding:'24px 20px', background:'rgba(10,22,40,0.35)', border:'1px solid rgba(0,180,216,0.18)', borderRadius:'10px', position:'relative', overflow:'hidden' }}>
                 <div style={{ position:'absolute', top:0, left:0, right:0, height:'1px', background:'linear-gradient(90deg,transparent,#00B4D8 30%,#10B981 70%,transparent)' }} />
+                {/* Mobile scroll hint */}
+                {isMobile && (
+                  <p className="mono" style={{ fontSize:'9px', color:'rgba(0,180,216,0.65)', letterSpacing:'1.5px', textTransform:'uppercase', marginBottom:'8px', fontWeight:'700' }}>
+                    {isFr?'Faites défiler horizontalement pour voir tout le parcours →':'Swipe horizontally to see full journey →'}
+                  </p>
+                )}
                 {/* Timeline axis */}
+                <div style={{ position:'relative' }}>
                 <div data-tour="patient-journey" style={{ display:'grid', gridTemplateColumns:'repeat(9,1fr)', gap:0, alignItems:'stretch', minWidth:'600px', overflowX:'auto' }}>
                   {[
                     { type:'step', step:isFr?'Symptômes':'Symptoms',      desc:isFr?'Maux de tête, changements visuels':'Headaches, vision changes', icon:'alert', color:'#E63946', t:isFr?'Jour 0':'Day 0' },
@@ -2066,6 +2075,11 @@ function EthicsPage({ lang, onClose, initialTab }) {
                       </motion.div>
                     )
                   })}
+                </div>
+                {/* Fade gradient — mobile scroll affordance */}
+                {isMobile && (
+                  <div style={{ position:'absolute', right:0, top:0, bottom:0, width:'30px', background:'linear-gradient(90deg,transparent,#05080F)', pointerEvents:'none' }} />
+                )}
                 </div>
                 {/* Legend under timeline */}
                 <div style={{ marginTop:'18px', paddingTop:'14px', borderTop:'1px dashed rgba(255,255,255,0.1)', display:'flex', gap:'20px', flexWrap:'wrap', justifyContent:'space-between', alignItems:'center' }}>
@@ -2477,6 +2491,7 @@ function PatientRecordsPage({ lang, onClose, initialPatientId, patientDetailTab 
   const [patients, setPatients] = useState(INITIAL_PATIENTS)
   const [searchError, setSearchError] = useState(false)
   const isFr = lang === 'fr'
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
 
   // Auto-select a patient when navigated from the tour
   useEffect(() => {
@@ -2544,11 +2559,12 @@ function PatientRecordsPage({ lang, onClose, initialPatientId, patientDetailTab 
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
         style={{ display:'flex', flex:1, overflow:'hidden' }}>
-        {/* LEFT SIDEBAR */}
-        <div style={{ width:'320px', borderRight:'1px solid rgba(255,255,255,0.06)', display:'flex', flexDirection:'column', flexShrink:0, background:'rgba(5,8,15,0.55)' }}>
+        {/* LEFT SIDEBAR — hidden on mobile when a patient is selected (mobile shows one pane at a time) */}
+        {(!isMobile || !selectedPatient) && (
+        <div style={{ width: isMobile ? '100%' : '320px', borderRight: isMobile ? 'none' : '1px solid rgba(255,255,255,0.06)', display:'flex', flexDirection:'column', flexShrink:0, background:'rgba(5,8,15,0.55)' }}>
           {/* Search */}
-          <div style={{ padding:'20px 18px 16px', borderBottom:'1px solid rgba(255,255,255,0.05)', flexShrink:0 }}>
-            <p className="mono" style={{ fontSize:'9px', color:'rgba(255,255,255,0.4)', letterSpacing:'2.5px', marginBottom:'12px', fontWeight:'700', textTransform:'uppercase' }}>{isFr?'Chercher par ID':'Search by ID'}</p>
+          <div style={{ padding: isMobile ? '14px 13px 11px' : '20px 18px 16px', borderBottom:'1px solid rgba(255,255,255,0.05)', flexShrink:0 }}>
+            <p className="mono" style={{ fontSize:'9px', color:'rgba(255,255,255,0.4)', letterSpacing:'2.5px', marginBottom: isMobile ? '8px' : '12px', fontWeight:'700', textTransform:'uppercase' }}>{isFr?'Chercher par ID':'Search by ID'}</p>
             <div style={{ display:'flex', gap:'6px' }}>
               <input value={searchId} onChange={e=>{setSearchId(e.target.value);setSearchError(false)}} onKeyDown={e=>e.key==='Enter'&&handleSearch()} placeholder="AHS-10042" className="mono" style={{ flex:1, background:'rgba(255,255,255,0.03)', border:`1px solid ${searchError?'#E63946':'rgba(255,255,255,0.1)'}`, borderRadius:'5px', padding:'9px 12px', color:'#fff', fontSize:'12px', letterSpacing:'0.5px', fontFamily:'ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace', outline:'none', transition:'border-color .2s' }} />
               <button onClick={handleSearch} onMouseMove={tintMove} className="cta-primary" style={{ padding:'9px 14px', background:'#10B981', color:'#05080F', border:'none', borderRadius:'5px', cursor:'pointer', fontSize:'10px', fontWeight:'800', fontFamily:'inherit', letterSpacing:'1.8px' }}>GO</button>
@@ -2557,18 +2573,18 @@ function PatientRecordsPage({ lang, onClose, initialPatientId, patientDetailTab 
           </div>
 
           {/* List header */}
-          <div style={{ padding:'14px 18px 8px', display:'flex', justifyContent:'space-between', alignItems:'center', flexShrink:0 }}>
+          <div style={{ padding: isMobile ? '10px 13px 6px' : '14px 18px 8px', display:'flex', justifyContent:'space-between', alignItems:'center', flexShrink:0 }}>
             <span className="mono" style={{ fontSize:'9px', color:'rgba(255,255,255,0.4)', letterSpacing:'2.5px', fontWeight:'700', textTransform:'uppercase' }}>{isFr?'Dossiers actifs':'Active records'}</span>
             <span className="mono tnum" style={{ fontSize:'9px', color:'rgba(16,185,129,0.75)', letterSpacing:'1.5px', fontWeight:'800', background:'rgba(16,185,129,0.08)', padding:'2px 7px', borderRadius:'3px', border:'1px solid rgba(16,185,129,0.2)' }}>{doneCount}/{patients.length}</span>
           </div>
 
           {/* Patient rows */}
-          <div style={{ flex:1, overflowY:'auto', padding:'4px 10px 16px' }}>
+          <div style={{ flex:1, overflowY:'auto', padding: isMobile ? '3px 7px 11px' : '4px 10px 16px' }}>
             {patients.map((p, i) => {
               const active = selectedPatient?.id === p.id
               return (
                 <div key={p.id} onClick={()=>{setSelectedPatient(p);setSearchError(false)}} onMouseMove={tintMove}
-                  style={{ position:'relative', padding:'13px 14px', borderRadius:'7px', cursor:'pointer', marginBottom:'4px', background:active?'rgba(16,185,129,0.1)':'transparent', border:`1px solid ${active?'rgba(16,185,129,0.3)':'rgba(255,255,255,0.04)'}`, transition:'all 0.2s', overflow:'hidden', '--mx':'50%', '--my':'50%' }}
+                  style={{ position:'relative', padding: isMobile ? '10px 11px' : '13px 14px', borderRadius:'7px', cursor:'pointer', marginBottom:'4px', background:active?'rgba(16,185,129,0.1)':'transparent', border:`1px solid ${active?'rgba(16,185,129,0.3)':'rgba(255,255,255,0.04)'}`, transition:'all 0.2s', overflow:'hidden', '--mx':'50%', '--my':'50%' }}
                   onMouseEnter={e=>{if(!active)e.currentTarget.style.background='rgba(255,255,255,0.025)';if(!active)e.currentTarget.style.borderColor='rgba(16,185,129,0.14)'}}
                   onMouseLeave={e=>{if(!active)e.currentTarget.style.background='transparent';if(!active)e.currentTarget.style.borderColor='rgba(255,255,255,0.04)'}}>
                   <div style={{ position:'absolute', inset:0, background:'radial-gradient(160px circle at var(--mx,50%) var(--my,50%),rgba(16,185,129,0.12),transparent 55%)', opacity:active?0.9:0, transition:'opacity .3s', pointerEvents:'none' }} />
@@ -2580,6 +2596,7 @@ function PatientRecordsPage({ lang, onClose, initialPatientId, patientDetailTab 
                       </div>
                       <span className="mono" style={{ fontSize:'8px', fontWeight:'800', color:p.statusColor, border:`1px solid ${p.statusColor}55`, padding:'2px 6px', borderRadius:'2px', letterSpacing:'1.2px', whiteSpace:'nowrap', flexShrink:0 }}>{p.status==='Scan Complete'?(isFr?'TERMINÉ':'DONE'):(isFr?'EN ATTENTE':'PENDING')}</span>
                     </div>
+                    {!isMobile && (<>
                     <div style={{ display:'flex', gap:'12px', flexWrap:'wrap', alignItems:'center' }}>
                       <span className="mono" style={{ fontSize:'10px', color:'rgba(255,255,255,0.45)' }}>{p.age}Y · {p.sex[0]}</span>
                       <span className="mono" style={{ fontSize:'10px', color:'rgba(255,255,255,0.3)', letterSpacing:'1px', textTransform:'uppercase' }}>{p.dept}</span>
@@ -2591,16 +2608,27 @@ function PatientRecordsPage({ lang, onClose, initialPatientId, patientDetailTab 
                         <span className="mono tnum" style={{ fontSize:'9px', color:'rgba(255,255,255,0.5)', marginLeft:'auto' }}>{(p.latestResult.confidence*100).toFixed(1)}%</span>
                       </div>
                     )}
+                    </>)}
                   </div>
                 </div>
               )
             })}
           </div>
         </div>
+        )}
 
-        {/* MAIN */}
+        {/* MAIN — hidden on mobile when no patient is selected */}
+        {(!isMobile || selectedPatient) && (
+        <>
         {selectedPatient
-          ? <PatientDetail key={selectedPatient.id} patient={selectedPatient} lang={lang} onScanComplete={r=>handleScanComplete(selectedPatient.id,r)} externalTab={patientDetailTab} />
+          ? <>
+              {isMobile && (
+                <div style={{ position:'absolute', top:'76px', left:'8px', zIndex:10 }}>
+                  <button onClick={()=>setSelectedPatient(null)} className="mono" style={{ background:'rgba(10,22,40,0.94)', border:'1px solid rgba(16,185,129,0.35)', color:'#10B981', borderRadius:'5px', padding:'6px 10px', fontSize:'10px', fontWeight:'800', cursor:'pointer', letterSpacing:'1.4px', fontFamily:'ui-monospace,SFMono-Regular,Menlo,monospace', textTransform:'uppercase', backdropFilter:'blur(12px)' }}>← {isFr?'Liste':'List'}</button>
+                </div>
+              )}
+              <PatientDetail key={selectedPatient.id} patient={selectedPatient} lang={lang} onScanComplete={r=>handleScanComplete(selectedPatient.id,r)} externalTab={patientDetailTab} />
+            </>
           : (
             <div style={{ flex:1, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:'18px', padding:'20px', textAlign:'center', position:'relative' }}>
               <CornerMark pos="tl" offset={24} color="#10B981" /><CornerMark pos="tr" offset={24} color="#10B981" />
@@ -2619,6 +2647,8 @@ function PatientRecordsPage({ lang, onClose, initialPatientId, patientDetailTab 
             </div>
           )
         }
+        </>
+        )}
       </motion.div>
     </motion.div>
   )
@@ -2630,6 +2660,7 @@ function PatientDetail({ patient, lang, onScanComplete, externalTab }) {
   const [activeTab, setActiveTab] = useState(externalTab || 'overview')
   const fileRef = useRef(null)
   const isFr = lang === 'fr'
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
 
   useEffect(()=>{ setScanPhase(patient.latestResult?'done':'idle'); setLocalResult(patient.latestResult||null) },[patient.id])
 
@@ -2659,11 +2690,11 @@ function PatientDetail({ patient, lang, onScanComplete, externalTab }) {
   return (
     <div style={{ flex:1, display:'flex', flexDirection:'column', overflow:'hidden', animation:'fadeIn 0.25s ease', position:'relative' }}>
       {/* PATIENT HEADER */}
-      <div style={{ padding:'24px 28px 0', borderBottom:'1px solid rgba(255,255,255,0.06)', background:'rgba(10,22,40,0.3)', flexShrink:0 }}>
+      <div style={{ padding: isMobile ? '17px 18px 0' : '24px 28px 0', borderBottom:'1px solid rgba(255,255,255,0.06)', background:'rgba(10,22,40,0.3)', flexShrink:0 }}>
         <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', flexWrap:'wrap', gap:'14px', marginBottom:'20px' }}>
           <div style={{ flex:1, minWidth:'280px' }}>
-            <div style={{ display:'flex', alignItems:'center', gap:'10px', marginBottom:'8px', flexWrap:'wrap' }}>
-              <h2 style={{ fontSize:'22px', fontWeight:'800', color:'#fff', letterSpacing:'-0.4px', lineHeight:1 }}>{patient.name}</h2>
+            <div style={{ display:'flex', flexDirection: isMobile ? 'column' : 'row', alignItems: isMobile ? 'flex-start' : 'center', gap: isMobile ? '6px' : '10px', marginBottom:'8px', flexWrap:'wrap' }}>
+              <h2 style={{ fontSize: isMobile ? '19px' : '22px', fontWeight:'800', color:'#fff', letterSpacing:'-0.4px', lineHeight:1 }}>{patient.name}</h2>
               <span className="mono" style={{ fontSize:'8px', fontWeight:'800', color:patient.statusColor, border:`1px solid ${patient.statusColor}55`, padding:'3px 8px', borderRadius:'2px', letterSpacing:'1.5px' }}>{patient.status==='Scan Complete'?(isFr?'TERMINÉ':'COMPLETE'):(isFr?'EN ATTENTE':'AWAITING')}</span>
               <span className="mono" style={{ fontSize:'8px', fontWeight:'800', color:'#E63946', border:'1px solid rgba(230,57,70,0.45)', padding:'3px 8px', borderRadius:'2px', letterSpacing:'1.5px', background:'rgba(230,57,70,0.1)', display:'inline-flex', alignItems:'center', gap:'5px' }}>
                 <span style={{ display:'inline-flex' }}><Icon name="alert" size={9} stroke={2} /></span>
@@ -2671,7 +2702,7 @@ function PatientDetail({ patient, lang, onScanComplete, externalTab }) {
               </span>
             </div>
             <p className="mono" style={{ fontSize:'10px', color:'#10B981', letterSpacing:'2px', fontWeight:'700', marginBottom:'18px', textTransform:'uppercase' }}>{patient.id} · {patient.facility}</p>
-            <div style={{ display:'flex', gap:'26px', flexWrap:'wrap' }}>
+            <div style={{ display: isMobile ? 'grid' : 'flex', gridTemplateColumns: isMobile ? '1fr 1fr' : undefined, gap: isMobile ? '12px' : '26px', flexWrap:'wrap' }}>
               {[[isFr?'Âge / Sexe':'Age / Sex',`${patient.age}Y · ${patient.sex}`],[isFr?'Médecin':'Physician',patient.physician],[isFr?'Service':'Dept',patient.dept],[isFr?'Scan':'Scan date',patient.scanDate],[isFr?'Groupe':'Blood type',patient.bloodType]].map(([l,v])=>(
                 <div key={l}>
                   <p className="mono" style={{ fontSize:'8px', color:'rgba(255,255,255,0.38)', letterSpacing:'2px', marginBottom:'5px', textTransform:'uppercase', fontWeight:'700' }}>{l}</p>
@@ -2704,7 +2735,7 @@ function PatientDetail({ patient, lang, onScanComplete, externalTab }) {
       </div>
 
       {/* TAB CONTENT */}
-      <div style={{ flex:1, overflowY:'auto', padding:'26px 28px' }}>
+      <div style={{ flex:1, overflowY:'auto', padding: isMobile ? '18px 18px' : '26px 28px' }}>
 
         {/* OVERVIEW */}
         {activeTab==='overview' && (
@@ -2729,7 +2760,7 @@ function PatientDetail({ patient, lang, onScanComplete, externalTab }) {
                   <p className="mono" style={{ fontSize:'9px', color:'rgba(255,255,255,0.45)', letterSpacing:'2.5px', fontWeight:'700', textTransform:'uppercase' }}>§ 02 · {isFr?'Signes vitaux à l\'admission':'Vitals on admission'}</p>
                   <p className="mono" style={{ fontSize:'9px', color:'rgba(255,255,255,0.4)', letterSpacing:'1.5px' }}>{patient.vitals.ts}</p>
                 </div>
-                <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(90px,1fr))', gap:0, borderTop:'1px solid rgba(255,255,255,0.06)', borderLeft:'1px solid rgba(255,255,255,0.06)' }}>
+                <div style={{ display:'grid', gridTemplateColumns: isMobile ? 'repeat(3,1fr)' : 'repeat(auto-fit,minmax(90px,1fr))', gap:0, borderTop:'1px solid rgba(255,255,255,0.06)', borderLeft:'1px solid rgba(255,255,255,0.06)' }}>
                   {[
                     ['BP',     patient.vitals.bp],
                     ['HR',     patient.vitals.hr && `${patient.vitals.hr} bpm`],
@@ -2837,9 +2868,9 @@ function PatientDetail({ patient, lang, onScanComplete, externalTab }) {
                   <div style={{ border:'1px solid rgba(255,255,255,0.06)', borderRadius:'8px', padding:'18px 20px', background:'rgba(10,22,40,0.4)' }}>
                     <p className="mono" style={{ fontSize:'9px', color:'rgba(255,255,255,0.55)', letterSpacing:'2.5px', marginBottom:'14px', fontWeight:'700', textTransform:'uppercase' }}>§ 05 · {isFr?'Liste des problèmes':'Problem List'}</p>
                     {patient.problemList.map((p,i)=>(
-                      <div key={i} style={{ display:'flex', gap:'12px', padding:'6px 0', borderBottom: i < patient.problemList.length-1 ? '1px solid rgba(255,255,255,0.04)' : 'none', alignItems:'baseline' }}>
-                        <span className="mono tnum" style={{ fontSize:'10px', color:'#00B4D8', fontWeight:'800', letterSpacing:'0.5px', minWidth:'60px', flexShrink:0 }}>{p.code}</span>
-                        <span style={{ fontSize:'12px', color:'rgba(255,255,255,0.72)', lineHeight:'1.55' }}>{p.label}</span>
+                      <div key={i} style={{ display:'flex', flexDirection: isMobile ? 'column' : 'row', gap: isMobile ? '2px' : '12px', padding:'6px 0', borderBottom: i < patient.problemList.length-1 ? '1px solid rgba(255,255,255,0.04)' : 'none', alignItems: isMobile ? 'flex-start' : 'baseline' }}>
+                        <span className="mono tnum" style={{ fontSize:'10px', color:'#00B4D8', fontWeight:'800', letterSpacing:'0.5px', minWidth: isMobile ? 'auto' : '60px', flexShrink:0 }}>{p.code}</span>
+                        <span style={{ fontSize: isMobile ? '11px' : '12px', color:'rgba(255,255,255,0.72)', lineHeight:'1.55' }}>{p.label}</span>
                       </div>
                     ))}
                   </div>
@@ -3479,6 +3510,7 @@ function JudgeModeTour({ isOpen, onClose, onTriggerUpload, setShowUpload, showUp
   const [isPaused, setIsPaused] = useState(false)
   const [isNavigating, setIsNavigating] = useState(false)
   const [progress, setProgress] = useState(0)
+  const [isCollapsed, setIsCollapsed] = useState(false)
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
 
   const steps = [
@@ -3646,6 +3678,13 @@ function JudgeModeTour({ isOpen, onClose, onTriggerUpload, setShowUpload, showUp
     setCurrentStep(6)
   }, [isOpen, currentStep, uploadPhase])
 
+  // On mobile: auto-collapse the panel when on a modal-open step so it doesn't cover modal content.
+  // Expand again automatically on non-modal steps.
+  useEffect(() => {
+    if (!isOpen || !isMobile) return
+    setIsCollapsed(!!steps[currentStep].modalOpen)
+  }, [currentStep, isOpen])
+
   const step = steps[currentStep]
 
   return (
@@ -3703,16 +3742,16 @@ function JudgeModeTour({ isOpen, onClose, onTriggerUpload, setShowUpload, showUp
             transition={{ duration:0.32, ease:[0.16,1,0.3,1] }}
             style={{
               position:'fixed',
-              bottom: isMobile ? 0 : '32px',
+              bottom: isMobile ? '12px' : '32px',
               right: isMobile ? '8px' : '32px',
               left: isMobile ? '8px' : 'auto',
               width: isMobile ? 'auto' : '420px',
               maxWidth: isMobile ? 'none' : '92vw',
-              maxHeight: isMobile ? '74vh' : 'calc(100vh - 64px)',
+              maxHeight: isMobile ? (isCollapsed ? 'fit-content' : '60vh') : 'calc(100vh - 64px)',
               overflowY:'auto',
               background:'linear-gradient(180deg, rgba(10,22,40,0.98), rgba(7,14,28,0.98))',
               border:'1px solid rgba(255,183,3,0.4)',
-              borderRadius: isMobile ? '14px 14px 0 0' : '12px',
+              borderRadius:'12px',
               boxShadow:'0 24px 80px rgba(0,0,0,0.7), 0 0 32px rgba(255,183,3,0.18)',
               backdropFilter:'blur(20px)',
               WebkitBackdropFilter:'blur(20px)',
@@ -3720,29 +3759,38 @@ function JudgeModeTour({ isOpen, onClose, onTriggerUpload, setShowUpload, showUp
             }}
           >
             {/* progress bar */}
-            <div style={{ position:'sticky', top:0, height:'3px', background:'rgba(255,183,3,0.12)', borderRadius:'14px 14px 0 0', overflow:'hidden' }}>
+            <div style={{ position:'sticky', top:0, height:'3px', background:'rgba(255,183,3,0.12)', borderRadius:'12px 12px 0 0', overflow:'hidden' }}>
               <div style={{ height:'100%', width:`${isNavigating?0:progress}%`, background:'#FFB703', transition:'width 0.1s linear', boxShadow:'0 0 8px rgba(255,183,3,0.6)' }} />
             </div>
-            <div style={{ padding: isMobile ? '18px 22px 22px' : '22px 24px' }}>
+            <div style={{ padding: isMobile ? '14px 16px' : '22px 24px' }}>
               {/* header */}
-              <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:'12px' }}>
-                <div style={{ display:'flex', alignItems:'center', gap:'10px' }}>
+              <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom: (isMobile && isCollapsed) ? 0 : '12px' }}>
+                <div style={{ display:'flex', alignItems:'center', gap:'10px', flexWrap:'wrap' }}>
                   <span className="mono" style={{ fontSize:'10px', color:'#FFB703', letterSpacing:'2.5px', fontWeight:'800', textTransform:'uppercase' }}>{isFr?'Mode Juge':'Judge Mode'}</span>
                   <span style={{ width:'14px', height:'1px', background:'rgba(255,183,3,0.4)' }} />
                   <span className="mono tnum" style={{ fontSize:'10px', color:'rgba(255,183,3,0.85)', letterSpacing:'1.5px', fontWeight:'800' }}>{currentStep+1}/{steps.length}</span>
                   {isNavigating && <span className="mono" style={{ fontSize:'9px', color:'rgba(0,180,216,0.85)', letterSpacing:'1.5px', fontWeight:'700', textTransform:'uppercase' }}>· {isFr?'Navigation':'Navigating'}</span>}
                 </div>
-                <button onClick={handleClose} aria-label="close" style={{ background:'transparent', border:'none', color:'rgba(255,255,255,0.5)', cursor:'pointer', fontSize:'14px', padding:'2px 6px', fontFamily:'inherit' }}>✕</button>
+                <div style={{ display:'flex', alignItems:'center', gap:'6px' }}>
+                  {isMobile && (
+                    <button onClick={()=>setIsCollapsed(c=>!c)} aria-label={isCollapsed?'expand':'collapse'} style={{ background:'transparent', border:'none', color:'rgba(255,255,255,0.5)', cursor:'pointer', fontSize:'16px', padding:'2px 6px', fontFamily:'inherit', lineHeight:1 }}>{isCollapsed?'+':'—'}</button>
+                  )}
+                  <button onClick={handleClose} aria-label="close" style={{ background:'transparent', border:'none', color:'rgba(255,255,255,0.5)', cursor:'pointer', fontSize:'14px', padding:'2px 6px', fontFamily:'inherit' }}>✕</button>
+                </div>
               </div>
+              {!(isMobile && isCollapsed) && (<>
               {/* title + desc */}
-              <h3 style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'26px', color:'#fff', letterSpacing:'1.5px', marginBottom:'10px', lineHeight:1.05 }}>{step.title}</h3>
-              <p style={{ fontSize: isMobile ? '12px' : '13px', color:'rgba(255,255,255,0.78)', lineHeight:'1.7', marginBottom:'20px', fontWeight:'300' }}>{step.desc}</p>
+              <h3 style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize: isMobile ? '22px' : '26px', color:'#fff', letterSpacing:'1.5px', marginBottom:'10px', lineHeight:1.05 }}>{step.title}</h3>
+              <div style={{ maxHeight: isMobile ? '35vh' : 'none', overflowY: isMobile ? 'auto' : 'visible', marginBottom:'12px' }}>
+                <p style={{ fontSize: isMobile ? '11.5px' : '13px', color:'rgba(255,255,255,0.78)', lineHeight:'1.7', fontWeight:'300', margin:0 }}>{step.desc}</p>
+              </div>
               {/* hint */}
               {!step.final && (
-                <div className="mono" style={{ fontSize:'9px', color:'rgba(255,255,255,0.4)', letterSpacing:'1.5px', textTransform:'uppercase', fontWeight:'600', marginBottom:'8px', textAlign:'center' }}>
+                <div className="mono" style={{ fontSize: isMobile ? '8px' : '9px', color:'rgba(255,255,255,0.4)', letterSpacing:'1.5px', textTransform:'uppercase', fontWeight:'600', marginBottom:'8px', textAlign:'center' }}>
                   {isFr?"Cliquez 'Suivant' quand prêt, ou attendez l'avancement automatique":"Click 'Next' when ready, or wait for auto-advance"}
                 </div>
               )}
+              </>)}
               {/* footer controls */}
               <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', gap:'8px', flexWrap:'wrap' }}>
                 <div style={{ display:'flex', gap:'6px', alignItems:'center' }}>
@@ -3854,7 +3902,7 @@ export default function App() {
       {/* NAV — floating */}
       <nav style={{ position:'fixed', top:isMobile?0:'14px', left:isMobile?0:'16px', right:isMobile?0:'16px', zIndex:100, padding:isMobile?'0 16px':'0 24px', height:'66px', display:'flex', justifyContent:'space-between', alignItems:'center', background:scrollY>40?'rgba(5,8,15,0.82)':'rgba(5,8,15,0.5)', backdropFilter:'blur(22px) saturate(150%)', WebkitBackdropFilter:'blur(22px) saturate(150%)', border:`1px solid rgba(255,255,255,${scrollY>40?0.08:0.05})`, borderRadius:isMobile?0:'14px', boxShadow:isMobile?'none':(scrollY>40?'0 12px 40px rgba(0,0,0,0.5)':'0 6px 28px rgba(0,0,0,0.25)'), transition:'background 0.4s, border-color 0.4s, box-shadow 0.4s', opacity:loaded?1:0, animation:loaded?'fadeSlideIn 0.8s ease 0.1s both':'none' }}>
         <div style={{ display:'flex', alignItems:'center', gap:isMobile?'10px':'16px', flexShrink:0 }}>
-          <div onClick={()=>setActivePage(null)} style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:isMobile?'22px':'26px', letterSpacing:'2px', cursor:'pointer', lineHeight:1 }}>
+          <div onClick={()=>setActivePage(null)} style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:isMobile?'18px':'26px', letterSpacing:'2px', cursor:'pointer', lineHeight:1 }}>
             <span style={{ color:'#fff' }}>Illuma</span><span style={{ color:'#00B4D8' }}>DX</span>
           </div>
           {!isMobile && <>
@@ -3862,10 +3910,10 @@ export default function App() {
             <span className="mono" style={{ fontSize:'10px', color:'rgba(255,255,255,0.42)', letterSpacing:'1.5px', textTransform:'uppercase' }}>{isFr?'IA Clinique Diagnostique':'Clinical AI Diagnostic'}</span>
           </>}
         </div>
-        <div style={{ display:'flex', gap:isMobile?'12px':'30px', alignItems:'center' }}>
+        <div style={{ display:'flex', gap:isMobile?'8px':'30px', alignItems:'center' }}>
           {visibleNav.map(item=>(
             <div key={item.id} className="nav-btn" onClick={()=>handleNavClick(item)} style={{ position:'relative', cursor:'pointer' }}>
-              <span className="nav-link" style={{ display:'inline-block', fontSize:isMobile?'10px':'11px', fontWeight:'600', color:'rgba(255,255,255,0.55)', letterSpacing:'1.8px', textTransform:'uppercase', transition:'color .2s', whiteSpace:'nowrap' }}
+              <span className="nav-link" style={{ display:'inline-block', fontSize:isMobile?'9px':'11px', fontWeight:'600', color:'rgba(255,255,255,0.55)', letterSpacing:'1.8px', textTransform:'uppercase', transition:'color .2s', whiteSpace:'nowrap' }}
                 onMouseEnter={e=>{e.currentTarget.style.color=item.color}}
                 onMouseLeave={e=>{e.currentTarget.style.color='rgba(255,255,255,0.55)'}}>
                 {isMobile?(lang==='fr'?item.labelFr:item.label).split(' ')[0]:(lang==='fr'?item.labelFr:item.label)}
@@ -3879,10 +3927,10 @@ export default function App() {
             </div>
           ))}
         </div>
-        <div style={{ display:'flex', alignItems:'center', gap:isMobile?'8px':'10px', flexShrink:0 }}>
+        <div style={{ display:'flex', alignItems:'center', gap:isMobile?'4px':'10px', flexShrink:0 }}>
           <div className="nav-btn" style={{ position:'relative' }}>
-            <button onClick={()=>setShowJudgeTour(true)} onMouseMove={tintMove} className="cta-primary" style={{ padding:isMobile?'7px 10px':'9px 16px', background:'#FFB703', color:'#05080F', border:'none', borderRadius:'3px', fontSize:isMobile?'10px':'11px', fontWeight:'800', cursor:'pointer', letterSpacing:'1.6px', boxShadow:'0 0 24px rgba(255,183,3,0.22)', fontFamily:'inherit' }}>
-              <span>{isMobile ? (isFr?'JUGE':'JUDGE') : (isFr?'MODE JUGE':'JUDGE MODE')}</span>
+            <button onClick={()=>setShowJudgeTour(true)} onMouseMove={tintMove} className="cta-primary" style={{ padding:isMobile?'5px 8px':'9px 16px', background:'#FFB703', color:'#05080F', border:'none', borderRadius:'3px', fontSize:isMobile?'9px':'11px', fontWeight:'800', cursor:'pointer', letterSpacing:'1.6px', boxShadow:'0 0 24px rgba(255,183,3,0.22)', fontFamily:'inherit' }}>
+              <span>{isMobile ? 'TOUR' : (isFr?'MODE JUGE':'JUDGE MODE')}</span>
             </button>
             {!isMobile && (
               <div className="nav-tooltip" style={{ position:'absolute', top:'calc(100% + 14px)', left:'50%', transform:'translateX(-50%) translateY(6px)', background:'rgba(10,22,40,0.96)', border:'1px solid rgba(255,183,3,0.35)', borderRadius:'4px', padding:'7px 12px', whiteSpace:'nowrap', fontSize:'9px', color:'#FFB703', letterSpacing:'2px', fontFamily:'ui-monospace,SFMono-Regular,Menlo,monospace', fontWeight:'700', textTransform:'uppercase', opacity:0, transition:'opacity .25s cubic-bezier(0.16,1,0.3,1),transform .25s cubic-bezier(0.16,1,0.3,1)', pointerEvents:'none', backdropFilter:'blur(14px)', WebkitBackdropFilter:'blur(14px)', zIndex:200, boxShadow:'0 10px 28px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,183,3,0.22), 0 0 20px rgba(255,183,3,0.18)' }}>
@@ -3892,7 +3940,7 @@ export default function App() {
             )}
           </div>
           <div className="nav-btn" style={{ position:'relative' }}>
-            <button onClick={()=>setShowUpload(true)} data-tour="upload-btn" onMouseMove={tintMove} className="cta-primary" style={{ padding:isMobile?'7px 12px':'9px 18px', background:'#00B4D8', color:'#05080F', border:'none', borderRadius:'3px', fontSize:isMobile?'10px':'11px', fontWeight:'800', cursor:'pointer', letterSpacing:'1.6px', boxShadow:'0 0 24px rgba(0,180,216,0.22)', fontFamily:'inherit' }}>
+            <button onClick={()=>setShowUpload(true)} data-tour="upload-btn" onMouseMove={tintMove} className="cta-primary" style={{ padding:isMobile?'5px 8px':'9px 18px', background:'#00B4D8', color:'#05080F', border:'none', borderRadius:'3px', fontSize:isMobile?'9px':'11px', fontWeight:'800', cursor:'pointer', letterSpacing:'1.6px', boxShadow:'0 0 24px rgba(0,180,216,0.22)', fontFamily:'inherit' }}>
               <span>{isMobile?'UPLOAD':t.upload}</span>
             </button>
             {!isMobile && (
