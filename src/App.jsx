@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 
 const API_URL = 'https://arhaanie-illumadx-backend.hf.space'
 
@@ -14,11 +15,15 @@ function useInView(threshold = 0.12) {
 }
 
 function FadeUp({ children, delay = 0 }) {
-  const [ref, inView] = useInView()
   return (
-    <div ref={ref} style={{ opacity: inView ? 1 : 0, transform: inView ? 'translateY(0)' : 'translateY(36px)', transition: `opacity 0.8s cubic-bezier(0.16,1,0.3,1) ${delay}s, transform 0.8s cubic-bezier(0.16,1,0.3,1) ${delay}s` }}>
+    <motion.div
+      initial={{ opacity: 0, y: 36 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.12 }}
+      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay }}
+    >
       {children}
-    </div>
+    </motion.div>
   )
 }
 
@@ -422,7 +427,6 @@ const LANDING_CSS = `
   .feat-card{position:relative;overflow:hidden;isolation:isolate;transition:border-color .45s cubic-bezier(0.16,1,0.3,1),background .45s cubic-bezier(0.16,1,0.3,1),transform .45s cubic-bezier(0.16,1,0.3,1)}
   .feat-card::before{content:'';position:absolute;inset:0;background:radial-gradient(220px circle at var(--mx,50%) var(--my,50%),var(--tint,rgba(0,180,216,0.22)),transparent 55%);opacity:0;transition:opacity .35s;pointer-events:none;z-index:0}
   .feat-card::after{content:'';position:absolute;top:0;left:0;width:0;height:1px;background:var(--ac);transition:width .55s cubic-bezier(0.16,1,0.3,1);z-index:2}
-  .feat-card:hover{transform:translateY(-2px)}
   .feat-card:hover::before{opacity:1}
   .feat-card:hover::after{width:100%}
   .feat-card > *{position:relative;z-index:1}
@@ -973,7 +977,12 @@ function Counter({ value, delay = 0 }) {
 
 function SubPageWrapper({ children, onClose, title, titleColor = '#00B4D8', lang }) {
   return (
-    <div style={{ position:'fixed', inset:0, zIndex:500, background:'#05080F', display:'flex', flexDirection:'column', fontFamily:"'Inter',system-ui,sans-serif", animation:'slideUp 0.35s cubic-bezier(0.16,1,0.3,1)' }}>
+    <motion.div
+      initial={{ opacity: 0, y: 40, scale: 0.985 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, y: 20, scale: 0.99 }}
+      transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+      style={{ position:'fixed', inset:0, zIndex:500, background:'#05080F', display:'flex', flexDirection:'column', fontFamily:"'Inter',system-ui,sans-serif" }}>
       <style>{BASE_CSS + LANDING_CSS + `@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}`}</style>
       <div style={{ background:'rgba(10,22,40,0.96)', borderBottom:`1px solid ${titleColor}33`, padding:'0 24px', height:'66px', display:'flex', alignItems:'center', justifyContent:'space-between', backdropFilter:'blur(24px) saturate(140%)', WebkitBackdropFilter:'blur(24px) saturate(140%)', flexShrink:0, position:'relative' }}>
         <CornerMark pos="tl" offset={10} color={titleColor} /><CornerMark pos="tr" offset={10} color={titleColor} />
@@ -988,8 +997,16 @@ function SubPageWrapper({ children, onClose, title, titleColor = '#00B4D8', lang
           <span className="mono" style={{ fontSize:'9px', color:'rgba(255,255,255,0.45)', letterSpacing:'2px', textTransform:'uppercase' }}>IllumaDX · CWSF 2026</span>
         </div>
       </div>
-      <div style={{ flex:1, overflowY:'auto' }}>{children}</div>
-    </div>
+      <div style={{ flex:1, overflowY:'auto' }}>
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
+          style={{ height: '100%' }}>
+          {children}
+        </motion.div>
+      </div>
+    </motion.div>
   )
 }
 
@@ -1277,9 +1294,9 @@ function PDFReportPage({ lang, onClose }) {
 }
 
 // ─── RESEARCH PAGE ────────────────────────────────────────────────────────────
-function ResearchPage({ lang, onClose }) {
+function ResearchPage({ lang, onClose, initialTab }) {
   const isFr = lang === 'fr'
-  const [activeTab, setActiveTab] = useState('findings')
+  const [activeTab, setActiveTab] = useState(initialTab || 'findings')
 
   const tabs = [
     { id:'findings',    label:isFr?'Résultats Clés':'Key Findings',   num:'01' },
@@ -1353,7 +1370,7 @@ function ResearchPage({ lang, onClose }) {
                 <div key={i} style={{ padding:'20px 22px', borderRight:'1px solid rgba(255,255,255,0.06)', borderBottom:'1px solid rgba(255,255,255,0.06)', transition:'background .3s', cursor:'default' }}
                   onMouseEnter={e=>{e.currentTarget.style.background=c+'06'}}
                   onMouseLeave={e=>{e.currentTarget.style.background='transparent'}}>
-                  <div className="tnum" style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'clamp(24px,3vw,32px)', fontWeight:'400', color:c, letterSpacing:'0.5px', marginBottom:'8px', lineHeight:1 }}>{v}</div>
+                  <div className="tnum" style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'clamp(24px,3vw,32px)', fontWeight:'400', color:c, letterSpacing:'0.5px', marginBottom:'8px', lineHeight:1 }}><Counter value={v} delay={i*80} /></div>
                   <div className="mono" style={{ fontSize:'10px', color:'rgba(255,255,255,0.65)', fontWeight:'700', marginBottom:'4px', letterSpacing:'0.5px', textTransform:'uppercase' }}>{l}</div>
                   <div className="mono" style={{ fontSize:'9px', color:'rgba(255,255,255,0.32)', letterSpacing:'1px', textTransform:'uppercase' }}>{s}</div>
                 </div>
@@ -1523,6 +1540,44 @@ function ResearchPage({ lang, onClose }) {
               </div>
             </div>
 
+            {/* Literature comparison — bar chart + table wrapped together for tour spotlight */}
+            <div data-tour="literature-section">
+            <div data-tour="literature-chart" style={{ background:'rgba(10,22,40,0.5)', border:'1px solid rgba(255,255,255,0.06)', borderRadius:'10px', padding:'24px 26px', marginBottom:'14px', position:'relative' }}>
+              <div style={{ position:'absolute', top:0, left:0, right:0, height:'1px', background:'linear-gradient(90deg,transparent,#10B981,transparent)' }} />
+              <p className="mono" style={{ fontSize:'10px', color:'rgba(255,255,255,0.55)', letterSpacing:'2.5px', fontWeight:'700', textTransform:'uppercase', marginBottom:'18px' }}>{isFr?'Précision vs Littérature Publiée':'Accuracy vs Published Literature'}</p>
+              <div style={{ display:'flex', flexDirection:'column', gap:'14px' }}>
+                {[
+                  ['IllumaDX (This study)','ResNet-18 GroupB',99.69,true],
+                  ['Sartaj et al. 2020','CNN',91.38,false],
+                  ['Cheng et al. 2017','SVM + CE Features',91.28,false],
+                  ['Pashaei et al. 2018','CNN',88.72,false],
+                  ['Abiwinanda et al. 2019','CNN',84.19,false],
+                ].map(([study,model,acc,highlight],i)=>(
+                  <div key={study} style={{ display:'flex', alignItems:'center', gap:'14px' }}>
+                    <div style={{ width:'clamp(120px,30%,200px)', flexShrink:0 }}>
+                      <div style={{ display:'flex', alignItems:'center', gap:'6px', marginBottom:'3px', flexWrap:'wrap' }}>
+                        <span style={{ fontSize:'12px', fontWeight:'700', color:'rgba(255,255,255,0.88)' }}>{study}</span>
+                        {highlight && (
+                          <span className="mono" style={{ fontSize:'8px', fontWeight:'800', color:'#10B981', padding:'2px 6px', border:'1px solid rgba(16,185,129,0.35)', borderRadius:'2px', letterSpacing:'1px', textTransform:'uppercase' }}>{isFr?'✓ CETTE ÉTUDE':'✓ THIS STUDY'}</span>
+                        )}
+                      </div>
+                      <span className="mono" style={{ fontSize:'9px', color:'rgba(255,255,255,0.4)', letterSpacing:'1px', textTransform:'uppercase' }}>{model}</span>
+                    </div>
+                    <div style={{ flex:1, height:'28px', background:'rgba(255,255,255,0.04)', borderRadius:'4px', overflow:'hidden', position:'relative', minWidth:0 }}>
+                      <motion.div
+                        initial={{ width:0 }}
+                        whileInView={{ width:`${acc}%` }}
+                        viewport={{ once:true, amount:0.3 }}
+                        transition={{ duration:1.1, ease:[0.16,1,0.3,1], delay:i*0.12 }}
+                        style={{ height:'100%', borderRadius:'4px', background: highlight?'linear-gradient(90deg,#10B981,#00B4D8)':'rgba(255,255,255,0.18)', boxShadow: highlight?'0 0 16px rgba(16,185,129,0.4)':'none' }}
+                      />
+                    </div>
+                    <div className="mono tnum" style={{ width:'70px', textAlign:'right', flexShrink:0, fontSize:'13px', fontWeight:'800', color: highlight?'#10B981':'rgba(255,255,255,0.55)' }}>{acc.toFixed(2)}%</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
             {/* Literature comparison */}
             <div style={{ background:'rgba(10,22,40,0.5)', border:'1px solid rgba(255,255,255,0.06)', borderRadius:'10px', overflow:'hidden' }}>
               <div style={{ padding:'16px 22px', borderBottom:'1px solid rgba(255,255,255,0.05)' }}>
@@ -1560,6 +1615,7 @@ function ResearchPage({ lang, onClose }) {
                   </tbody>
                 </table>
               </div>
+            </div>
             </div>
           </div>
         )}
@@ -1625,7 +1681,7 @@ function ResearchPage({ lang, onClose }) {
         {activeTab==='deepdive' && (
           <div style={{ animation:'fadeIn 0.35s ease' }}>
             {/* Hero card */}
-            <div style={{ position:'relative', background:'linear-gradient(180deg,rgba(255,183,3,0.06),rgba(255,183,3,0.01))', border:'1px solid rgba(255,183,3,0.28)', borderRadius:'12px', padding:'44px 40px', marginBottom:'18px', overflow:'hidden' }}>
+            <div data-tour="projectboard-link" style={{ position:'relative', background:'linear-gradient(180deg,rgba(255,183,3,0.06),rgba(255,183,3,0.01))', border:'1px solid rgba(255,183,3,0.28)', borderRadius:'12px', padding:'44px 40px', marginBottom:'18px', overflow:'hidden' }}>
               <div style={{ position:'absolute', top:0, left:0, right:0, height:'1px', background:'linear-gradient(90deg,transparent,#FFB703,transparent)' }} />
               <div style={{ position:'absolute', inset:0, background:'radial-gradient(ellipse at 50% 0%,rgba(255,183,3,0.14),transparent 60%)', pointerEvents:'none' }} />
               <CornerMark pos="tl" offset={14} color="#FFB703" /><CornerMark pos="tr" offset={14} color="#FFB703" />
@@ -1699,9 +1755,9 @@ function ResearchPage({ lang, onClose }) {
 }
 
 // ─── ETHICS PAGE ─────────────────────────────────────────────────────────────
-function EthicsPage({ lang, onClose }) {
+function EthicsPage({ lang, onClose, initialTab }) {
   const isFr = lang === 'fr'
-  const [activeTab, setActiveTab] = useState('regulatory')
+  const [activeTab, setActiveTab] = useState(initialTab || 'regulatory')
 
   const tabs = [
     { id:'regulatory', label:isFr?'Réglementation':'Regulatory',  num:'01' },
@@ -1759,11 +1815,12 @@ function EthicsPage({ lang, onClose }) {
               </p>
               <div style={{ display:'grid', gap:'8px' }}>
                 {[
-                  { step:'01', label:isFr?'Classification SaMD':'SaMD Classification', desc:isFr?'Classe II — risque modéré. Aide à la décision clinique, pas diagnostic autonome.':'Class II — moderate risk. Decision support, not autonomous diagnosis.', done:false },
-                  { step:'02', label:isFr?'Approbation Santé Canada':'Health Canada Approval', desc:isFr?'Licence de dispositif médical (MDL) requise avant commercialisation.':'Medical Device License (MDL) required before commercialization.', done:false },
-                  { step:'03', label:isFr?'Essais cliniques':'Clinical Trials', desc:isFr?'Validation prospective sur données patients réels, multi-sites.':'Prospective validation on real patient data, multi-site.', done:false },
-                  { step:'04', label:isFr?'Validation radiologique':'Radiologist Validation', desc:isFr?'Outreach initié — Dr. Jacob Jaremko, U of Alberta (imagerie médicale IA).':'Outreach initiated — Dr. Jacob Jaremko, U of Alberta (AI medical imaging).', done:true },
-                  { step:'05', label:isFr?'Surveillance post-marché':'Post-market Surveillance', desc:isFr?'Surveillance continue des performances en conditions réelles.':'Ongoing performance monitoring in real-world conditions.', done:false },
+                  { step:'01', label:isFr?'Classification SaMD':'SaMD Classification', desc:isFr?"Identifié comme Logiciel Médical de Classe II sous le règlement de Santé Canada. Outil d'aide à la décision, non un diagnostic autonome. Profil de risque et usage prévu documentés formellement.":"Identified as Class II Software as a Medical Device under Health Canada's Medical Device Regulations. Decision support tool, not autonomous diagnosis. Risk profile and intended use formally documented.", done:true },
+                  { step:'02', label:isFr?'Évaluation des Risques et Audit de Biais':'Risk Assessment & Bias Audit', desc:isFr?"Audit complet des biais complété sur les dimensions du jeu de données, du modèle et de la généralisation. Conclusions documentées dans l'onglet Biais. Voie de mitigation identifiée via validation multi-scanner externe.":"Comprehensive bias audit completed across dataset, model, and generalization dimensions. Findings documented in the Bias tab. Mitigation pathway identified through external multi-scanner validation.", done:true },
+                  { step:'03', label:isFr?'Approbation Santé Canada':'Health Canada Approval', desc:isFr?"Licence de dispositif médical (MDL) requise avant déploiement commercial. Voie d'application identifiée ; soumission en attente de validation externe.":"Medical Device License (MDL) required before commercial deployment. Application pathway identified; submission pending external validation.", done:false },
+                  { step:'04', label:isFr?'Essais Cliniques':'Clinical Trials', desc:isFr?"Validation prospective sur des données patients réelles, multi-sites, requise avant déploiement. Protocole CER en attente.":"Prospective validation on real patient data across multiple sites required before deployment. IRB protocol pending.", done:false },
+                  { step:'05', label:isFr?'Sensibilisation Recherche et Clinique':'Researcher & Clinical Outreach', desc:isFr?"Sensibilisation auprès des chercheurs cliniques, radiologues et contacts d'Alberta Health Services initiée. Multiples contacts académiques et cliniques engagés ; réponses reçues. Validation clinique complète en attente.":"Outreach to clinical researchers, radiologists, and Alberta Health Services contacts initiated. Multiple academic and clinical contacts engaged; responses received. Full clinical validation remains pending.", done:true },
+                  { step:'06', label:isFr?'Surveillance Post-commercialisation':'Post-market Surveillance', desc:isFr?"Cadre de surveillance continue défini pour les conditions du monde réel. Implémentation en attente du déploiement.":"Ongoing performance monitoring framework defined for real-world conditions. Implementation pending deployment.", done:false },
                 ].map(({step,label,desc,done})=>(
                   <div key={step} style={{ display:'flex', gap:'16px', padding:'14px 18px', background:'rgba(10,22,40,0.4)', borderRadius:'7px', border:`1px solid ${done?'rgba(16,185,129,0.28)':'rgba(255,255,255,0.05)'}`, alignItems:'flex-start' }}>
                     <div style={{ width:'32px', height:'32px', borderRadius:'50%', background:done?'rgba(16,185,129,0.14)':'rgba(255,255,255,0.04)', border:`1px solid ${done?'#10B981':'rgba(255,255,255,0.1)'}`, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
@@ -1951,7 +2008,7 @@ function EthicsPage({ lang, onClose }) {
               <div style={{ padding:'24px 20px', background:'rgba(10,22,40,0.35)', border:'1px solid rgba(0,180,216,0.18)', borderRadius:'10px', position:'relative', overflow:'hidden' }}>
                 <div style={{ position:'absolute', top:0, left:0, right:0, height:'1px', background:'linear-gradient(90deg,transparent,#00B4D8 30%,#10B981 70%,transparent)' }} />
                 {/* Timeline axis */}
-                <div style={{ display:'grid', gridTemplateColumns:'repeat(9,1fr)', gap:0, alignItems:'stretch', minWidth:'600px', overflowX:'auto' }}>
+                <div data-tour="patient-journey" style={{ display:'grid', gridTemplateColumns:'repeat(9,1fr)', gap:0, alignItems:'stretch', minWidth:'600px', overflowX:'auto' }}>
                   {[
                     { type:'step', step:isFr?'Symptômes':'Symptoms',      desc:isFr?'Maux de tête, changements visuels':'Headaches, vision changes', icon:'alert', color:'#E63946', t:isFr?'Jour 0':'Day 0' },
                     { type:'gap',  label:isFr?'jours – semaines':'days – weeks' },
@@ -1966,20 +2023,47 @@ function EthicsPage({ lang, onClose }) {
                     if (it.type === 'gap') {
                       return (
                         <div key={i} style={{ display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:'0 2px', minWidth:'48px' }}>
-                          <div style={{ width:'100%', height:'1px', background:it.highlight?'linear-gradient(90deg,#00B4D8,#10B981)':'rgba(255,255,255,0.18)', marginBottom:'6px' }} />
-                          <span className="mono" style={{ fontSize:'8px', color:it.highlight?'#00B4D8':'rgba(255,255,255,0.35)', letterSpacing:'0.8px', textTransform:'uppercase', fontWeight:it.highlight?'800':'600', textAlign:'center', lineHeight:1.3 }}>{it.label}</span>
+                          <motion.div
+                            initial={{ scaleX: 0 }}
+                            whileInView={{ scaleX: 1 }}
+                            viewport={{ once: true, amount: 0.3 }}
+                            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: i * 0.12 + 0.25 }}
+                            style={{ width:'100%', height:'1px', background:it.highlight?'linear-gradient(90deg,#00B4D8,#10B981)':'rgba(255,255,255,0.18)', marginBottom:'6px', transformOrigin:'left center' }}
+                          />
+                          <motion.span
+                            initial={{ opacity: 0 }}
+                            whileInView={{ opacity: 1 }}
+                            viewport={{ once: true, amount: 0.3 }}
+                            transition={{ duration: 0.4, delay: i * 0.12 + 0.4 }}
+                            className="mono"
+                            style={{ fontSize:'8px', color:it.highlight?'#00B4D8':'rgba(255,255,255,0.35)', letterSpacing:'0.8px', textTransform:'uppercase', fontWeight:it.highlight?'800':'600', textAlign:'center', lineHeight:1.3 }}>{it.label}</motion.span>
                         </div>
                       )
                     }
                     return (
-                      <div key={i} style={{ padding:'16px 12px 14px', background:`${it.color}0A`, border:`1px solid ${it.color}40`, borderRadius:'8px', textAlign:'center', position:'relative', minWidth:'108px', boxShadow:it.aiOnly?`0 0 24px ${it.color}22`:'none' }}>
+                      <motion.div
+                        key={i}
+                        initial={{ opacity: 0, scale: 0.92, y: 8 }}
+                        whileInView={it.aiOnly
+                          ? { opacity: 1, scale: 1, y: 0, boxShadow: ['0 0 24px rgba(0,180,216,0.18)','0 0 36px rgba(0,180,216,0.32)','0 0 24px rgba(0,180,216,0.18)'] }
+                          : { opacity: 1, scale: 1, y: 0 }}
+                        viewport={{ once: true, amount: 0.3 }}
+                        transition={it.aiOnly
+                          ? { duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: i * 0.12, boxShadow: { duration: 2.5, ease: 'easeInOut', repeat: Infinity, delay: i * 0.12 + 1.0 } }
+                          : { duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: i * 0.12 }}
+                        style={{ padding:'16px 12px 14px', background:`${it.color}0A`, border:`1px solid ${it.color}40`, borderRadius:'8px', textAlign:'center', position:'relative', minWidth:'108px', boxShadow:it.aiOnly?`0 0 24px ${it.color}22`:'none' }}>
                         <div style={{ position:'absolute', top:6, left:8, color:it.color }}><span className="mono" style={{ fontSize:'8.5px', fontWeight:'800', letterSpacing:'0.5px', opacity:0.75 }}>0{Math.floor(i/2)+1}</span></div>
-                        <div style={{ color:it.color, display:'inline-flex', marginBottom:'8px', marginTop:'6px' }}><Icon name={it.icon} size={22} stroke={1.6} /></div>
+                        <motion.div
+                          initial={{ rotate: -10, opacity: 0 }}
+                          whileInView={{ rotate: 0, opacity: 1 }}
+                          viewport={{ once: true, amount: 0.3 }}
+                          transition={{ duration: 0.4, delay: i * 0.12 + 0.2 }}
+                          style={{ color:it.color, display:'inline-flex', marginBottom:'8px', marginTop:'6px' }}><Icon name={it.icon} size={22} stroke={1.6} /></motion.div>
                         <p className="mono" style={{ fontSize:'10px', fontWeight:'800', color:it.color, marginBottom:'4px', letterSpacing:'1px', textTransform:'uppercase' }}>{it.step}</p>
                         <p style={{ fontSize:'9px', color:'rgba(255,255,255,0.55)', lineHeight:'1.5', marginBottom:'8px' }}>{it.desc}</p>
                         <span className="mono tnum" style={{ fontSize:'9px', color:'rgba(255,255,255,0.5)', letterSpacing:'1px', textTransform:'uppercase', padding:'2px 7px', borderRadius:'2px', background:'rgba(255,255,255,0.04)', border:'1px solid rgba(255,255,255,0.08)', fontWeight:'700' }}>{it.t}</span>
                         {it.aiOnly && <div className="mono" style={{ marginTop:'8px', fontSize:'8px', background:'rgba(0,180,216,0.25)', color:'#00B4D8', padding:'2px 6px', borderRadius:'2px', fontWeight:'800', letterSpacing:'1.2px' }}>{isFr?'SEUL. IA':'AI ONLY'}</div>}
-                      </div>
+                      </motion.div>
                     )
                   })}
                 </div>
@@ -2387,12 +2471,19 @@ function printPatientReport(patient, result, lang) {
 }
 
 // ─── PATIENT RECORDS PAGE ─────────────────────────────────────────────────────
-function PatientRecordsPage({ lang, onClose }) {
+function PatientRecordsPage({ lang, onClose, initialPatientId, patientDetailTab }) {
   const [searchId, setSearchId] = useState('')
   const [selectedPatient, setSelectedPatient] = useState(null)
   const [patients, setPatients] = useState(INITIAL_PATIENTS)
   const [searchError, setSearchError] = useState(false)
   const isFr = lang === 'fr'
+
+  // Auto-select a patient when navigated from the tour
+  useEffect(() => {
+    if (!initialPatientId) return
+    const found = INITIAL_PATIENTS.find(p => p.id === initialPatientId)
+    if (found) setSelectedPatient(found)
+  }, [initialPatientId])
 
   const handleSearch = () => {
     const found = patients.find(p => p.id.toLowerCase() === searchId.trim().toLowerCase())
@@ -2415,7 +2506,12 @@ function PatientRecordsPage({ lang, onClose }) {
   const doneCount = patients.filter(p => p.latestResult).length
 
   return (
-    <div style={{ position:'fixed', inset:0, zIndex:500, background:'#05080F', display:'flex', flexDirection:'column', fontFamily:"'Inter',system-ui,sans-serif", animation:'slideUp 0.35s cubic-bezier(0.16,1,0.3,1)' }}>
+    <motion.div
+      initial={{ opacity: 0, y: 40, scale: 0.985 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, y: 20, scale: 0.99 }}
+      transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+      style={{ position:'fixed', inset:0, zIndex:500, background:'#05080F', display:'flex', flexDirection:'column', fontFamily:"'Inter',system-ui,sans-serif" }}>
       <style>{BASE_CSS + LANDING_CSS}</style>
 
       {/* SIMULATED DATA BANNER */}
@@ -2443,7 +2539,11 @@ function PatientRecordsPage({ lang, onClose }) {
         </div>
       </div>
 
-      <div style={{ display:'flex', flex:1, overflow:'hidden' }}>
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
+        style={{ display:'flex', flex:1, overflow:'hidden' }}>
         {/* LEFT SIDEBAR */}
         <div style={{ width:'320px', borderRight:'1px solid rgba(255,255,255,0.06)', display:'flex', flexDirection:'column', flexShrink:0, background:'rgba(5,8,15,0.55)' }}>
           {/* Search */}
@@ -2500,7 +2600,7 @@ function PatientRecordsPage({ lang, onClose }) {
 
         {/* MAIN */}
         {selectedPatient
-          ? <PatientDetail key={selectedPatient.id} patient={selectedPatient} lang={lang} onScanComplete={r=>handleScanComplete(selectedPatient.id,r)} />
+          ? <PatientDetail key={selectedPatient.id} patient={selectedPatient} lang={lang} onScanComplete={r=>handleScanComplete(selectedPatient.id,r)} externalTab={patientDetailTab} />
           : (
             <div style={{ flex:1, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:'18px', padding:'20px', textAlign:'center', position:'relative' }}>
               <CornerMark pos="tl" offset={24} color="#10B981" /><CornerMark pos="tr" offset={24} color="#10B981" />
@@ -2519,19 +2619,22 @@ function PatientRecordsPage({ lang, onClose }) {
             </div>
           )
         }
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   )
 }
 
-function PatientDetail({ patient, lang, onScanComplete }) {
+function PatientDetail({ patient, lang, onScanComplete, externalTab }) {
   const [scanPhase, setScanPhase] = useState(patient.latestResult?'done':'idle')
   const [localResult, setLocalResult] = useState(patient.latestResult||null)
-  const [activeTab, setActiveTab] = useState('overview')
+  const [activeTab, setActiveTab] = useState(externalTab || 'overview')
   const fileRef = useRef(null)
   const isFr = lang === 'fr'
 
   useEffect(()=>{ setScanPhase(patient.latestResult?'done':'idle'); setLocalResult(patient.latestResult||null) },[patient.id])
+
+  // Allow the tour to switch tabs externally
+  useEffect(() => { if (externalTab) setActiveTab(externalTab) }, [externalTab])
 
   const handleFile = async (file) => {
     if (!file||!file.type.startsWith('image/')) return
@@ -2578,7 +2681,7 @@ function PatientDetail({ patient, lang, onScanComplete }) {
             </div>
           </div>
           {localResult && (
-            <button onClick={()=>printPatientReport(patient,localResult,lang)} onMouseMove={tintMove} className="cta-ghost" style={{ display:'inline-flex', alignItems:'center', gap:'10px', padding:'10px 18px', background:'rgba(255,183,3,0.06)', border:'1px solid rgba(255,183,3,0.3)', color:'#FFB703', borderRadius:'5px', cursor:'pointer', fontSize:'10px', fontWeight:'800', letterSpacing:'1.6px', fontFamily:'inherit', textTransform:'uppercase', flexShrink:0 }}>
+            <button onClick={()=>printPatientReport(patient,localResult,lang)} data-tour="export-pdf-btn" onMouseMove={tintMove} className="cta-ghost" style={{ display:'inline-flex', alignItems:'center', gap:'10px', padding:'10px 18px', background:'rgba(255,183,3,0.06)', border:'1px solid rgba(255,183,3,0.3)', color:'#FFB703', borderRadius:'5px', cursor:'pointer', fontSize:'10px', fontWeight:'800', letterSpacing:'1.6px', fontFamily:'inherit', textTransform:'uppercase', flexShrink:0 }}>
               <span style={{ display:'inline-flex', alignItems:'center', gap:'9px' }}><Icon name="file" size={12} stroke={1.8} />{isFr?'Export PDF':'Export PDF'}</span>
             </button>
           )}
@@ -2605,7 +2708,7 @@ function PatientDetail({ patient, lang, onScanComplete }) {
 
         {/* OVERVIEW */}
         {activeTab==='overview' && (
-          <div style={{ animation:'fadeIn 0.25s ease' }}>
+          <div data-tour="patient-overview" style={{ animation:'fadeIn 0.25s ease' }}>
 
             {/* § 01 Presenting complaint */}
             {patient.presentingComplaint && (
@@ -2786,7 +2889,7 @@ function PatientDetail({ patient, lang, onScanComplete }) {
 
         {/* HISTORY */}
         {activeTab==='history' && (
-          <div style={{ animation:'fadeIn 0.25s ease' }}>
+          <div data-tour="scan-history" style={{ animation:'fadeIn 0.25s ease' }}>
             <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:'20px', flexWrap:'wrap', gap:'8px' }}>
               <p className="mono" style={{ fontSize:'9px', color:'rgba(255,255,255,0.42)', letterSpacing:'2.5px', fontWeight:'700', textTransform:'uppercase' }}>§ 02 · {patient.scanHistory.length} {isFr?'entrées':'entries'}</p>
               <p className="mono" style={{ fontSize:'9px', color:'rgba(255,255,255,0.3)', letterSpacing:'2px', fontWeight:'700', textTransform:'uppercase' }}>{isFr?'Plus récent → plus ancien':'Most recent → oldest'}</p>
@@ -2963,11 +3066,21 @@ function PatientDetail({ patient, lang, onScanComplete }) {
 }
 
 // ─── UPLOAD MODAL ─────────────────────────────────────────────────────────────
-function UploadModal({ onClose, lang }) {
+const DEMO_SAMPLES = [
+  { mri:'/demo/sample-1-glioma.jpg',     json:'/demo/prediction-1-glioma.json' },
+  { mri:'/demo/sample-2-meningioma.jpg', json:'/demo/prediction-2-meningioma.json' },
+  { mri:'/demo/sample-3-pituitary.jpg',  json:'/demo/prediction-3-pituitary.json' },
+  { mri:'/demo/sample-4-notumor.jpg',    json:'/demo/prediction-4-notumor.json' },
+  { mri:'/demo/sample-5-glioma-b.jpg',   json:'/demo/prediction-5-glioma-b.json' },
+]
+
+function UploadModal({ onClose, lang, showDemoButton = false, autoTriggerDemo = false, onPhaseChange }) {
   const [phase, setPhase] = useState('idle')
   const [result, setResult] = useState(null)
   const [dragOver, setDragOver] = useState(false)
   const [preview, setPreview] = useState(null)
+  const [demoIndex, setDemoIndex] = useState(0)
+  const [demoUsed, setDemoUsed] = useState(false)
   const fileRef = useRef(null)
   const isFr = lang === 'fr'
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
@@ -2983,6 +3096,30 @@ function UploadModal({ onClose, lang }) {
       setResult(data); setPhase('result')
     } catch { setPhase('error') }
   }
+
+  const handleTryDemo = async () => {
+    const sample = DEMO_SAMPLES[demoIndex % DEMO_SAMPLES.length]
+    setPreview(sample.mri); setPhase('loading')
+    try {
+      const res = await fetch(sample.json)
+      const data = await res.json()
+      setTimeout(() => {
+        setResult(data); setPhase('result')
+        setDemoIndex(i => (i + 1) % DEMO_SAMPLES.length)
+        setDemoUsed(true)
+      }, 1400)
+    } catch { setPhase('error') }
+  }
+
+  // Auto-trigger demo when opened from the tour (only fires while in idle phase)
+  useEffect(() => {
+    if (!autoTriggerDemo || phase !== 'idle') return
+    const t = setTimeout(() => { handleTryDemo() }, 1500)
+    return () => clearTimeout(t)
+  }, [autoTriggerDemo, phase])
+
+  // Bubble phase changes to App so the tour can react
+  useEffect(() => { if (onPhaseChange) onPhaseChange(phase) }, [phase, onPhaseChange])
 
   const reset = () => { setPhase('idle'); setResult(null); setPreview(null) }
 
@@ -3179,6 +3316,19 @@ function UploadModal({ onClose, lang }) {
                 </div>
               </div>
             </div>
+            {showDemoButton && (
+              <>
+                <button onClick={handleTryDemo} data-tour="try-demo-btn" onMouseMove={tintMove} className="cta-primary" style={{ marginTop:'14px', width:'100%', padding:'13px', background:'#FFB703', color:'#05080F', border:'none', borderRadius:'5px', cursor:'pointer', fontSize:'11px', fontWeight:'900', letterSpacing:'2px', fontFamily:'inherit', display:'inline-flex', alignItems:'center', justifyContent:'center', gap:'10px', textTransform:'uppercase', boxShadow:'0 0 24px rgba(255,183,3,0.28)' }}>
+                  <Icon name="zap" size={12} stroke={2.4} />
+                  {isFr?'ESSAYER DEMO · IRM PRÉCHARGÉE':'TRY DEMO · PRELOADED MRI'}
+                </button>
+                {demoUsed && (
+                  <p className="mono" style={{ marginTop:'8px', fontSize:'9px', color:'rgba(255,255,255,0.45)', letterSpacing:'1.5px', textTransform:'uppercase', textAlign:'center' }}>
+                    {isFr?'Cliquez encore pour un autre scan':'Click again for another scan'}
+                  </p>
+                )}
+              </>
+            )}
             <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginTop:'18px', flexWrap:'wrap', gap:'10px' }}>
               <span className="mono" style={{ fontSize:'9px', color:'rgba(255,255,255,0.38)', letterSpacing:'2px', textTransform:'uppercase' }}>{isFr?'Formats · PNG · JPG · JPEG':'Accepted · PNG · JPG · JPEG'}</span>
               <span className="mono" style={{ fontSize:'9px', color:'rgba(255,255,255,0.38)', letterSpacing:'2px', textTransform:'uppercase' }}>{isFr?'Aucune donnée patient stockée':'No patient data stored'}</span>
@@ -3228,7 +3378,7 @@ function UploadModal({ onClose, lang }) {
             const confPct = result.confidence * 100
             const confLabel = confPct >= 90 ? (isFr?'CONFIANCE ÉLEVÉE':'HIGH CONFIDENCE') : (isFr?'CONFIANCE MODÉRÉE':'MODERATE CONFIDENCE')
             return (
-              <div style={{ animation:'fadeIn 0.4s ease' }}>
+              <div data-tour="prediction-result" style={{ animation:'fadeIn 0.4s ease' }}>
                 {/* PREDICTION CARD */}
                 <div style={{ position:'relative', border:`1px solid ${predColor}44`, borderRadius:'10px', padding:isMobile?'22px 18px':'26px 28px', marginBottom:'22px', background:`linear-gradient(180deg,${predColor}0D,transparent)`, overflow:'hidden' }}>
                   <div style={{ position:'absolute', top:0, left:0, right:0, height:'1px', background:`linear-gradient(90deg,transparent,${predColor},transparent)` }} />
@@ -3301,7 +3451,7 @@ function UploadModal({ onClose, lang }) {
 
                 {/* ACTIONS */}
                 <div style={{ display:'grid', gridTemplateColumns:'2fr 1fr', gap:'10px', marginTop:'24px' }}>
-                  <button onClick={handleDownloadPDF} className="cta-primary" style={{ padding:'14px', background:'#FFB703', color:'#05080F', border:'none', borderRadius:'6px', cursor:'pointer', fontSize:'11px', fontWeight:'900', letterSpacing:'1.8px', fontFamily:'inherit', display:'inline-flex', alignItems:'center', justifyContent:'center', gap:'10px', textTransform:'uppercase', boxShadow:'0 0 24px rgba(255,183,3,0.25)' }}>
+                  <button onClick={handleDownloadPDF} data-tour="pdf-export-btn" className="cta-primary" style={{ padding:'14px', background:'#FFB703', color:'#05080F', border:'none', borderRadius:'6px', cursor:'pointer', fontSize:'11px', fontWeight:'900', letterSpacing:'1.8px', fontFamily:'inherit', display:'inline-flex', alignItems:'center', justifyContent:'center', gap:'10px', textTransform:'uppercase', boxShadow:'0 0 24px rgba(255,183,3,0.25)' }}>
                     {isFr?'TÉLÉCHARGER LE RAPPORT PDF':'DOWNLOAD PDF REPORT'}
                   </button>
                   <button onClick={reset} style={{ padding:'14px', background:'transparent', color:'rgba(255,255,255,0.7)', border:'1px solid rgba(255,255,255,0.18)', borderRadius:'6px', cursor:'pointer', fontSize:'10px', fontWeight:'700', letterSpacing:'1.6px', fontFamily:'inherit', textTransform:'uppercase' }}>
@@ -3318,6 +3468,309 @@ function UploadModal({ onClose, lang }) {
   )
 }
 
+// ─── JUDGE MODE TOUR ──────────────────────────────────────────────────────────
+const DEFAULT_STEP_DURATION_MS = 14000
+const PROJECT_BOARD_URL = 'https://partner.projectboard.world/ysc/project/beyond-accuracy-evaluating-data-augmentation-strategies-for-ai-brain-tumor-detection-with-gradcam-in'
+
+function JudgeModeTour({ isOpen, onClose, onTriggerUpload, setShowUpload, showUpload, uploadPhase, setPatientDetailTab, setActivePage, lang }) {
+  const isFr = lang === 'fr'
+  const [currentStep, setCurrentStep] = useState(0)
+  const [targetRect, setTargetRect] = useState(null)
+  const [isPaused, setIsPaused] = useState(false)
+  const [isNavigating, setIsNavigating] = useState(false)
+  const [progress, setProgress] = useState(0)
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
+
+  const steps = [
+    // 0 — Hero
+    { selector:'[data-tour="hero"]', action:()=>{ setShowUpload(false); setActivePage(null) }, title:isFr?'Le Problème':'The Problem',
+      desc:isFr?"Au Canada rural, l'attente médiane pour une IRM non urgente est de 18,1 semaines (Institut Fraser, 2025). Globalement, 3,6 milliards d'études d'imagerie ont lieu chaque année, mais les deux tiers du monde manquent d'accès aux radiologues. Le goulot n'est pas les scanners — c'est l'expertise. L'IA devrait combler cet écart. Mais comment savoir si on peut lui faire confiance ?"
+            :"In rural Canada, the median wait for a non-urgent MRI is 18.1 weeks (Fraser Institute, 2025). Globally, 3.6 billion imaging studies happen each year, but two-thirds of the world lacks adequate radiologist access. The bottleneck isn't scanners — it's expert availability. AI is supposed to close this gap. But how do we know we can trust it?" },
+    // 1 — Setup
+    { selector:'[data-tour="finding"]', action:()=>{ setShowUpload(false); setActivePage(null) }, title:isFr?'Le Cadre Expérimental':'The Setup',
+      desc:isFr?"Nous avons entraîné 40 modèles ResNet-18 — quatre stratégies × dix graines aléatoires. 7 627 images IRM dédupliquées : gliome, méningiome, pituitaire, sans tumeur. L'hypothèse : l'augmentation spécifique au domaine (GroupD) battrait l'augmentation de base (GroupB)."
+            :"We trained 40 ResNet-18 models — four data augmentation strategies × ten random seeds each. 7,627 deduplicated brain MRI images across glioma, meningioma, pituitary, and notumor classes. The hypothesis: domain-specific augmentation (GroupD) would outperform basic augmentation (GroupB)." },
+    // 2 — Detonation
+    { selector:'[data-tour="finding"]', action:()=>{ setShowUpload(false); setActivePage(null) }, title:isFr?'La Détonation':'The Detonation',
+      desc:isFr?"GroupB a gagné à 99,69 % de précision. GroupC : 98,66 % — seulement 1 point de moins. Mais sa perte d'entraînement était 33× supérieure. Même précision. Raisonnement complètement différent. C'est l'illusion de la connaissance."
+            :"GroupB won at 99.69% accuracy. GroupC scored 98.66% — only 1 point lower. But GroupC's training loss was 33× higher than GroupB's. Same accuracy. Completely different reasoning. This is the illusion of knowledge — invisible if you only measure accuracy." },
+    // 3 — Statistical Proof
+    { selector:'[data-tour="groups"]', action:()=>{ setShowUpload(false); setActivePage(null) }, title:isFr?'La Preuve Statistique':'The Statistical Proof',
+      desc:isFr?"ANOVA sur les 4 groupes : F=38,93, p<0,000001. d de Cohen entre GroupB et GroupC : 4,750 — effet massif. Les différences ne sont pas du bruit. Systématiques et reproductibles sur 10 graines indépendantes par groupe."
+            :"ANOVA across all 4 groups: F=38.93, p<0.000001. Cohen's d between GroupB and GroupC: 4.750 — a massive effect size. The differences aren't noise. They're systematic and reproducible across 10 independent seeds per group." },
+    // 4 — Live Inference. MANUAL: judge can click upload button OR Next. Either advances to step 5.
+    { selector:'[data-tour="upload-btn"]', action:()=>{ setShowUpload(false); setActivePage(null) }, title:isFr?'Inférence en Direct':'Live Inference',
+      desc:isFr?"C'est un système déployable, pas seulement de la recherche. Le bouton Téléverser à droite ouvre notre modale d'inférence en direct. Cliquez-le maintenant — ou cliquez sur Suivant pour que la visite l'ouvre pour vous."
+            :"This is a deployable system, not just research. The Upload button to your right opens our live inference modal. Click it now — or click Next to let the tour open it for you." },
+    // 5 — Watch It Work. MANUAL: judge clicks TRY DEMO; advances when phase becomes 'result'.
+    { selector:'[data-tour="try-demo-btn"]', action:()=>onTriggerUpload(true), navDelay:600, modalOpen:true, duration:30000, title:isFr?'Regardez-Le Fonctionner':'Watch It Work',
+      desc:isFr?"Le bouton ESSAYER DEMO ci-dessous charge une vraie IRM cérébrale et l'exécute dans notre modèle. Cliquez maintenant pour voir la prédiction en temps réel. Vous pouvez cliquer plusieurs fois pour parcourir 5 types de tumeurs différents."
+            :"The TRY DEMO button below loads a real brain MRI and runs it through our model. Click it now to see the prediction in real time. You can click multiple times to cycle through 5 different tumor types." },
+    // 6 — The Result. Spotlight prediction-result.
+    { selector:'[data-tour="prediction-result"]', action:()=>{}, modalOpen:true, title:isFr?'Le Résultat':'The Result',
+      desc:isFr?"GroupB ResNet-18 a retourné sa prédiction avec 96-99 % de confiance. Ci-dessous : la distribution de probabilités à 4 classes et trois cartes de chaleur GradCAM++ qui montrent exactement où le modèle s'est concentré — GroupB primaire, GroupD vérification, et la vue consensus combinée. Les régions rouges/jaunes = attention pertinente à la tumeur."
+            :"GroupB ResNet-18 returned its prediction at 96-99% confidence. Below you'll see the four-class probability distribution and three GradCAM++ heatmaps showing exactly where the model focused — GroupB primary, GroupD cross-check, and the combined consensus view. Red/yellow regions = tumor-relevant attention." },
+    // 7 — Clinical Output. Spotlight DOWNLOAD PDF REPORT.
+    { selector:'[data-tour="pdf-export-btn"]', action:()=>{}, modalOpen:true, title:isFr?'Sortie Clinique':'Clinical Output',
+      desc:isFr?"Chaque prédiction peut être exportée en rapport PDF cliniquement formaté — prédiction, confiance, carte de chaleur, benchmarks complets, avertissement clinique. C'est ce qui atterrirait dans le DSE d'un hôpital. Cliquez sur le bouton surligné pour voir le PDF généré."
+            :"Every prediction can be exported as a clinically formatted PDF report — prediction, confidence, heatmap, full benchmarks, clinical disclaimer. This is what would land in a hospital's EHR system. Click the highlighted button to see the actual generated PDF." },
+    // 8 — Beating the Literature. Wraps bar chart + table together.
+    { selector:'[data-tour="literature-section"]', action:()=>{ setShowUpload(false); setActivePage('research', {tab:'stats'}) }, navDelay:1200, title:isFr?'Surpasser la Littérature':'Beating the Literature',
+      desc:isFr?"Nous avons comparé IllumaDX à 4 études publiées sur la même tâche. Nos 99,69 % battent Sartaj 2020 (91,38 %), Cheng 2017 (91,28 %), Pashaei 2018 (88,72 %), Abiwinanda 2019 (84,19 %). Le graphique montre l'écart visuel. Le tableau dessous montre notre méthodologie + rigueur statistique — 10 graines, ANOVA validé."
+            :"We compared IllumaDX against 4 published studies on the same task. Our 99.69% beats Sartaj 2020 (91.38%), Cheng 2017 (91.28%), Pashaei 2018 (88.72%), and Abiwinanda 2019 (84.19%). The bar chart shows the visual gap. The table below shows our methodology + statistical rigor — 10 seeds, ANOVA validated." },
+    // 9 — Real Clinical Workflow. Patients → Sarah Mahmoud auto-selected → Overview tab spotlit.
+    { selector:'[data-tour="patient-overview"]', action:()=>{ setShowUpload(false); setPatientDetailTab('overview'); setActivePage('patients', {patientId:'AHS-10078'}) }, navDelay:1200, title:isFr?'Flux Clinique Réel':'Real Clinical Workflow',
+      desc:isFr?"Intégration DSE. Huit dossiers patients simulés, chacun avec historique clinique complet, signes vitaux, liste de problèmes, antécédents familiaux, médicaments, et résultats de laboratoire. Le profil de Sarah Mahmoud s'affiche maintenant — un flux de travail réel. Notez la profondeur — ce n'est pas une démo jouet."
+            :"EHR integration. Eight simulated patient records, each with full clinical history, vitals, problem list, family history, medications, and lab results. Sarah Mahmoud's profile is now showing — a real-world workflow. Notice the depth — this isn't a toy demo." },
+    // 10 — Patient Scan History. Auto-switch to history tab + spotlight timeline.
+    { selector:'[data-tour="scan-history"]', action:()=>{ setPatientDetailTab('history') }, navDelay:600, title:isFr?'Historique des Scans':'Patient Scan History',
+      desc:isFr?"L'historique complet des scans de Sarah — 5 IRM antérieures sur 8 mois, incluant son analyse IA IllumaDX avec 88,3 % de confiance méningiome. Le système suit les données longitudinales exactement comme un vrai DSE. Chaque prédiction IA est horodatée et annotée."
+            :"Sarah's full scan history — 5 prior MRIs over 8 months, including her IllumaDX AI analysis with 88.3% meningioma confidence. The system tracks longitudinal data exactly as a real EHR would. Each AI prediction is timestamped + annotated." },
+    // 11 — Patient Journey. Ethics cost tab.
+    { selector:'[data-tour="patient-journey"]', action:()=>{ setShowUpload(false); setActivePage('ethics', {tab:'cost'}) }, navDelay:1200, title:isFr?'Le Parcours Patient':'The Patient Journey',
+      desc:isFr?"Du symptôme au traitement, le parcours standard en Alberta rural prend des semaines — parfois des mois. Insérer le triage IA avant le radiologue compresse le signalement urgent de semaines à secondes, tout en gardant le radiologue en contrôle de chaque décision."
+            :"From symptom to treatment, the standard pathway in rural Alberta takes weeks — sometimes months. Inserting AI triage as a pre-radiologist step compresses urgent flagging from weeks to seconds, while keeping the radiologist firmly in control of every decision." },
+    // 12 — Why This Matters. Final. Research deepdive.
+    { selector:'[data-tour="projectboard-link"]', action:()=>{ setShowUpload(false); setActivePage('research', {tab:'deepdive'}) }, navDelay:1200, final:true, title:isFr?'Pourquoi Cela Compte':'Why This Matters',
+      desc:isFr?"IllumaDX ne résout pas les tumeurs — les radiologues le font. IllumaDX résout comment FAIRE CONFIANCE à l'IA en médecine. Un modèle à 99 % qui regarde la mauvaise région échouera silencieusement dans un autre hôpital. La précision mesure les résultats. GradCAM++ mesure le raisonnement. Les tumeurs cérébrales sont juste où nous l'avons prouvé. L'archive de recherche complète — journal complet, les 40 artefacts de modèles, carnets statistiques — vit sur le tableau de projet YSC."
+            :"IllumaDX isn't solving brain tumors — radiologists do that. IllumaDX is solving how to TRUST AI in medicine. A model scoring 99% but looking at the wrong region will fail silently in a new hospital. Accuracy measures outcomes. GradCAM++ measures reasoning. Brain tumors is just where we proved it. The complete research archive — full journal, all 40 model artifacts, statistical notebooks — lives on the YSC ProjectBoard." },
+  ]
+
+  const handleClose = () => { setCurrentStep(0); setTargetRect(null); setIsPaused(false); setProgress(0); setIsNavigating(false); onClose() }
+  const handleNext = () => { setIsPaused(true); setProgress(0); if (currentStep < steps.length - 1) setCurrentStep(s => s + 1) }
+  const handlePrev = () => { setIsPaused(true); setProgress(0); setCurrentStep(s => Math.max(0, s - 1)) }
+  const handleSkipToEnd = () => { setIsPaused(true); setProgress(0); setCurrentStep(steps.length - 1) }
+  const togglePause = () => setIsPaused(p => !p)
+  const handleTryItYourself = () => { handleClose(); onTriggerUpload(false) }
+  const handleProjectBoard = () => { window.open(PROJECT_BOARD_URL, '_blank', 'noopener,noreferrer') }
+
+  // On step change: run action, hold isNavigating during navDelay, then scroll + measure (with retry)
+  useEffect(() => {
+    if (!isOpen) return
+    const step = steps[currentStep]
+    if (step.action) step.action()
+
+    const navDelay = step.navDelay || 0
+    setIsNavigating(navDelay > 0)
+    setTargetRect(null)
+
+    let scrollFn = null
+    const timeouts = []
+    const setT = (fn, ms) => { const id = setTimeout(fn, ms); timeouts.push(id); return id }
+
+    const attachScrollListener = (el) => {
+      scrollFn = () => {
+        const r = el.getBoundingClientRect()
+        setTargetRect({ top:r.top, left:r.left, width:r.width, height:r.height })
+      }
+      window.addEventListener('scroll', scrollFn, { passive:true })
+      window.addEventListener('resize', scrollFn)
+    }
+
+    const finalizeMeasure = (el) => {
+      try { el.scrollIntoView({ behavior:'smooth', block:'center' }) } catch (e) {}
+      // Wait 600ms after scrollIntoView for smooth scroll to settle, then measure
+      setT(() => {
+        const r = el.getBoundingClientRect()
+        setTargetRect({ top:r.top, left:r.left, width:r.width, height:r.height })
+        attachScrollListener(el)
+      }, 600)
+    }
+
+    const measure = () => {
+      if (!step.selector) { setTargetRect(null); return }
+      const el = document.querySelector(step.selector)
+      if (el) { finalizeMeasure(el); return }
+      // Retry once after 400ms
+      setT(() => {
+        const retryEl = document.querySelector(step.selector)
+        if (retryEl) finalizeMeasure(retryEl)
+        else setTargetRect(null)
+      }, 400)
+    }
+
+    if (navDelay > 0) {
+      setT(() => { setIsNavigating(false); measure() }, navDelay)
+    } else {
+      measure()
+    }
+
+    return () => {
+      timeouts.forEach(id => clearTimeout(id))
+      if (scrollFn) {
+        window.removeEventListener('scroll', scrollFn)
+        window.removeEventListener('resize', scrollFn)
+      }
+    }
+  }, [currentStep, isOpen])
+
+  // Auto-advance timer. Paused while isPaused, isNavigating, OR a modal opened
+  // outside the tour's control (i.e., showUpload is true on a step that didn't open it).
+  useEffect(() => {
+    const userOpenedModal = showUpload && !steps[currentStep].modalOpen
+    if (!isOpen || isPaused || isNavigating || userOpenedModal) return
+    setProgress(0)
+    const stepDur = steps[currentStep].duration || DEFAULT_STEP_DURATION_MS
+    const start = Date.now()
+    const id = setInterval(() => {
+      const elapsed = Date.now() - start
+      const pct = Math.min(100, (elapsed / stepDur) * 100)
+      setProgress(pct)
+      if (elapsed >= stepDur) {
+        clearInterval(id)
+        if (!steps[currentStep].final && currentStep < steps.length - 1) {
+          setCurrentStep(s => s + 1)
+        }
+      }
+    }, 100)
+    return () => clearInterval(id)
+  }, [currentStep, isOpen, isPaused, isNavigating, showUpload])
+
+  // Escape closes
+  useEffect(() => {
+    if (!isOpen) return
+    const onKey = (e) => { if (e.key === 'Escape') handleClose() }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [isOpen])
+
+  // Step 4 → 5: when judge clicks Upload button (showUpload flips to true), advance to step 5.
+  useEffect(() => {
+    if (!isOpen || currentStep !== 4 || !showUpload) return
+    setCurrentStep(5)
+  }, [isOpen, currentStep, showUpload])
+
+  // Step 5 → 6: when the demo prediction lands (phase === 'result'), advance to step 6.
+  useEffect(() => {
+    if (!isOpen || currentStep !== 5 || uploadPhase !== 'result') return
+    setCurrentStep(6)
+  }, [isOpen, currentStep, uploadPhase])
+
+  const step = steps[currentStep]
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <>
+          {/* dim — purely visual. pointerEvents:none on all dim layers so the page underneath
+              (including the spotlit element) stays fully interactive. Tour closes via Esc or X button only. */}
+          {(() => {
+            const dimStripStyle = { background:'rgba(5,8,15,0.55)', zIndex:2000, pointerEvents:'none' }
+            return targetRect ? (
+              <>
+                <motion.div key="dim-top"    initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} transition={{duration:0.3}}
+                  style={{ position:'fixed', top:0, left:0, right:0, height: Math.max(0, targetRect.top - 10), ...dimStripStyle }} />
+                <motion.div key="dim-bottom" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} transition={{duration:0.3}}
+                  style={{ position:'fixed', top: targetRect.top + targetRect.height + 10, left:0, right:0, bottom:0, ...dimStripStyle }} />
+                <motion.div key="dim-left"   initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} transition={{duration:0.3}}
+                  style={{ position:'fixed', top: Math.max(0, targetRect.top - 10), left:0, width: Math.max(0, targetRect.left - 10), height: targetRect.height + 20, ...dimStripStyle }} />
+                <motion.div key="dim-right"  initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} transition={{duration:0.3}}
+                  style={{ position:'fixed', top: Math.max(0, targetRect.top - 10), left: targetRect.left + targetRect.width + 10, right:0, height: targetRect.height + 20, ...dimStripStyle }} />
+              </>
+            ) : (
+              <motion.div key="dim-full" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} transition={{duration:0.3}}
+                style={{ position:'fixed', inset:0, ...dimStripStyle }} />
+            )
+          })()}
+
+          {/* highlight ring */}
+          {targetRect && (
+            <motion.div
+              key={`ring-${currentStep}`}
+              initial={{ opacity:0, scale:0.96 }}
+              animate={{ opacity:1, scale:1 }}
+              exit={{ opacity:0 }}
+              transition={{ duration:0.45, ease:[0.16,1,0.3,1] }}
+              style={{
+                position:'fixed',
+                top: targetRect.top - 10,
+                left: targetRect.left - 10,
+                width: targetRect.width + 20,
+                height: targetRect.height + 20,
+                border:'3px solid #00B4D8',
+                borderRadius:'12px',
+                boxShadow:'0 0 0 4px rgba(0,180,216,0.15), 0 0 40px rgba(0,180,216,0.5)',
+                pointerEvents:'none',
+                zIndex:2001,
+              }}
+            />
+          )}
+
+          {/* panel */}
+          <motion.div
+            key="judge-panel"
+            initial={{ opacity:0, y:24 }} animate={{ opacity:1, y:0 }} exit={{ opacity:0, y:12 }}
+            transition={{ duration:0.32, ease:[0.16,1,0.3,1] }}
+            style={{
+              position:'fixed',
+              bottom: isMobile ? 0 : '32px',
+              right: isMobile ? '8px' : '32px',
+              left: isMobile ? '8px' : 'auto',
+              width: isMobile ? 'auto' : '420px',
+              maxWidth: isMobile ? 'none' : '92vw',
+              maxHeight: isMobile ? '74vh' : 'calc(100vh - 64px)',
+              overflowY:'auto',
+              background:'linear-gradient(180deg, rgba(10,22,40,0.98), rgba(7,14,28,0.98))',
+              border:'1px solid rgba(255,183,3,0.4)',
+              borderRadius: isMobile ? '14px 14px 0 0' : '12px',
+              boxShadow:'0 24px 80px rgba(0,0,0,0.7), 0 0 32px rgba(255,183,3,0.18)',
+              backdropFilter:'blur(20px)',
+              WebkitBackdropFilter:'blur(20px)',
+              zIndex:2002,
+            }}
+          >
+            {/* progress bar */}
+            <div style={{ position:'sticky', top:0, height:'3px', background:'rgba(255,183,3,0.12)', borderRadius:'14px 14px 0 0', overflow:'hidden' }}>
+              <div style={{ height:'100%', width:`${isNavigating?0:progress}%`, background:'#FFB703', transition:'width 0.1s linear', boxShadow:'0 0 8px rgba(255,183,3,0.6)' }} />
+            </div>
+            <div style={{ padding: isMobile ? '18px 22px 22px' : '22px 24px' }}>
+              {/* header */}
+              <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:'12px' }}>
+                <div style={{ display:'flex', alignItems:'center', gap:'10px' }}>
+                  <span className="mono" style={{ fontSize:'10px', color:'#FFB703', letterSpacing:'2.5px', fontWeight:'800', textTransform:'uppercase' }}>{isFr?'Mode Juge':'Judge Mode'}</span>
+                  <span style={{ width:'14px', height:'1px', background:'rgba(255,183,3,0.4)' }} />
+                  <span className="mono tnum" style={{ fontSize:'10px', color:'rgba(255,183,3,0.85)', letterSpacing:'1.5px', fontWeight:'800' }}>{currentStep+1}/{steps.length}</span>
+                  {isNavigating && <span className="mono" style={{ fontSize:'9px', color:'rgba(0,180,216,0.85)', letterSpacing:'1.5px', fontWeight:'700', textTransform:'uppercase' }}>· {isFr?'Navigation':'Navigating'}</span>}
+                </div>
+                <button onClick={handleClose} aria-label="close" style={{ background:'transparent', border:'none', color:'rgba(255,255,255,0.5)', cursor:'pointer', fontSize:'14px', padding:'2px 6px', fontFamily:'inherit' }}>✕</button>
+              </div>
+              {/* title + desc */}
+              <h3 style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'26px', color:'#fff', letterSpacing:'1.5px', marginBottom:'10px', lineHeight:1.05 }}>{step.title}</h3>
+              <p style={{ fontSize: isMobile ? '12px' : '13px', color:'rgba(255,255,255,0.78)', lineHeight:'1.7', marginBottom:'20px', fontWeight:'300' }}>{step.desc}</p>
+              {/* hint */}
+              {!step.final && (
+                <div className="mono" style={{ fontSize:'9px', color:'rgba(255,255,255,0.4)', letterSpacing:'1.5px', textTransform:'uppercase', fontWeight:'600', marginBottom:'8px', textAlign:'center' }}>
+                  {isFr?"Cliquez 'Suivant' quand prêt, ou attendez l'avancement automatique":"Click 'Next' when ready, or wait for auto-advance"}
+                </div>
+              )}
+              {/* footer controls */}
+              <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', gap:'8px', flexWrap:'wrap' }}>
+                <div style={{ display:'flex', gap:'6px', alignItems:'center' }}>
+                  <button onClick={togglePause} className="mono" aria-label={isPaused?'play':'pause'} title={isPaused?(isFr?'Lecture':'Play'):(isFr?'Pause':'Pause')} style={{ background:'rgba(255,255,255,0.04)', border:'1px solid rgba(255,255,255,0.12)', color:'rgba(255,255,255,0.75)', cursor:'pointer', fontSize:'11px', fontWeight:'700', padding:'7px 10px', borderRadius:'4px', fontFamily:'ui-monospace,SFMono-Regular,Menlo,monospace', minWidth:'34px' }}>{isPaused?'▶':'⏸'}</button>
+                  <button onClick={handlePrev} disabled={currentStep===0} className="mono" style={{ background:'transparent', border:'1px solid rgba(255,255,255,0.12)', color: currentStep===0?'rgba(255,255,255,0.2)':'rgba(255,255,255,0.65)', cursor: currentStep===0?'not-allowed':'pointer', fontSize:'9.5px', letterSpacing:'1.5px', fontWeight:'700', padding:'7px 11px', borderRadius:'4px', textTransform:'uppercase', fontFamily:'ui-monospace,SFMono-Regular,Menlo,monospace' }}>{isFr?'← Préc':'← Prev'}</button>
+                </div>
+                <div style={{ display:'flex', gap:'6px', alignItems:'center', flexWrap:'wrap' }}>
+                  {!step.final && (
+                    <button onClick={handleSkipToEnd} className="mono" style={{ background:'transparent', border:'1px solid rgba(255,255,255,0.12)', color:'rgba(255,255,255,0.55)', cursor:'pointer', fontSize:'9.5px', letterSpacing:'1.5px', fontWeight:'700', padding:'7px 11px', borderRadius:'4px', textTransform:'uppercase', fontFamily:'ui-monospace,SFMono-Regular,Menlo,monospace' }}>{isFr?'Passer':'Skip'}</button>
+                  )}
+                  {step.final ? (
+                    <>
+                      <button onClick={handleProjectBoard} className="mono cta-primary" style={{ background:'rgba(255,183,3,0.14)', color:'#FFB703', border:'1px solid rgba(255,183,3,0.45)', cursor:'pointer', fontSize:'10px', letterSpacing:'1.5px', fontWeight:'800', padding:'9px 12px', borderRadius:'4px', textTransform:'uppercase', fontFamily:'ui-monospace,SFMono-Regular,Menlo,monospace' }}>{isFr?'Recherche ↗':'Research ↗'}</button>
+                      <button onClick={handleTryItYourself} className="mono cta-primary" style={{ background:'#FFB703', color:'#05080F', border:'none', cursor:'pointer', fontSize:'10px', letterSpacing:'1.6px', fontWeight:'900', padding:'10px 14px', borderRadius:'4px', textTransform:'uppercase', fontFamily:'ui-monospace,SFMono-Regular,Menlo,monospace', boxShadow:'0 0 18px rgba(255,183,3,0.32)' }}>{isFr?'Essayez →':'Try It →'}</button>
+                    </>
+                  ) : (
+                    <button onClick={handleNext} className="mono cta-primary" style={{ background:'#FFB703', color:'#05080F', border:'none', cursor:'pointer', fontSize:'10px', letterSpacing:'1.8px', fontWeight:'900', padding:'10px 16px', borderRadius:'4px', textTransform:'uppercase', fontFamily:'ui-monospace,SFMono-Regular,Menlo,monospace', boxShadow:'0 0 18px rgba(255,183,3,0.32)' }}>{isFr?'Suivant →':'Next →'}</button>
+                  )}
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
+  )
+}
+
 // ─── MAIN APP ─────────────────────────────────────────────────────────────────
 export default function App() {
   const [scrollY, setScrollY] = useState(0)
@@ -3328,18 +3781,17 @@ export default function App() {
   const [lang, setLang] = useState('en')
   const [isMobile, setIsMobile] = useState(false)
   const [showUpload, setShowUpload] = useState(false)
+  const [uploadDemoMode, setUploadDemoMode] = useState(false)
+  const [showJudgeTour, setShowJudgeTour] = useState(false)
   const [activePage, setActivePage] = useState(null)
-  const [heroMag, setHeroMag] = useState({ x: 0, y: 0 })
+  const [pageInitialTab, setPageInitialTab] = useState(null)
+  const [pageInitialPatientId, setPageInitialPatientId] = useState(null)
+  const [patientDetailTab, setPatientDetailTab] = useState(null)
+  const [uploadPhase, setUploadPhase] = useState('idle')
+
+  const triggerUpload = (withDemo) => { setUploadDemoMode(!!withDemo); setShowUpload(true) }
   const [scrollPct, setScrollPct] = useState(0)
   const [showIntro, setShowIntro] = useState(true)
-
-  const onHeroCtaMove = (e) => {
-    const r = e.currentTarget.getBoundingClientRect()
-    const dx = (e.clientX - (r.left + r.width / 2)) / r.width
-    const dy = (e.clientY - (r.top + r.height / 2)) / r.height
-    setHeroMag({ x: dx * 10, y: dy * 8 })
-    tintMove(e)
-  }
 
   const t = T[lang]
   const isFr = lang === 'fr'
@@ -3392,11 +3844,12 @@ export default function App() {
       <ClickBurst />
       <CustomCursor />
 
-      {showUpload && <UploadModal onClose={()=>setShowUpload(false)} lang={lang} />}
-      {activePage==='patients' && <PatientRecordsPage lang={lang} onClose={()=>setActivePage(null)} />}
+      {showUpload && <UploadModal onClose={()=>{setShowUpload(false); setUploadDemoMode(false); setUploadPhase('idle')}} lang={lang} showDemoButton={uploadDemoMode} autoTriggerDemo={uploadDemoMode} onPhaseChange={setUploadPhase} />}
+      <JudgeModeTour isOpen={showJudgeTour} onClose={()=>setShowJudgeTour(false)} onTriggerUpload={triggerUpload} setShowUpload={setShowUpload} showUpload={showUpload} uploadPhase={uploadPhase} setPatientDetailTab={setPatientDetailTab} setActivePage={(p, opts)=>{ setPageInitialTab((opts && opts.tab) || null); setPageInitialPatientId((opts && opts.patientId) || null); if (p !== 'patients') setPatientDetailTab(null); setActivePage(p) }} lang={lang} />
+      {activePage==='patients' && <PatientRecordsPage key={`patients-${pageInitialPatientId||'default'}`} lang={lang} onClose={()=>setActivePage(null)} initialPatientId={pageInitialPatientId} patientDetailTab={patientDetailTab} />}
       {activePage==='pdf' && <PDFReportPage lang={lang} onClose={()=>setActivePage(null)} />}
-      {activePage==='research' && <ResearchPage lang={lang} onClose={()=>setActivePage(null)} />}
-      {activePage==='ethics' && <EthicsPage lang={lang} onClose={()=>setActivePage(null)} />}
+      {activePage==='research' && <ResearchPage key={`research-${pageInitialTab||'default'}`} lang={lang} onClose={()=>setActivePage(null)} initialTab={pageInitialTab} />}
+      {activePage==='ethics' && <EthicsPage key={`ethics-${pageInitialTab||'default'}`} lang={lang} onClose={()=>setActivePage(null)} initialTab={pageInitialTab} />}
 
       {/* NAV — floating */}
       <nav style={{ position:'fixed', top:isMobile?0:'14px', left:isMobile?0:'16px', right:isMobile?0:'16px', zIndex:100, padding:isMobile?'0 16px':'0 24px', height:'66px', display:'flex', justifyContent:'space-between', alignItems:'center', background:scrollY>40?'rgba(5,8,15,0.82)':'rgba(5,8,15,0.5)', backdropFilter:'blur(22px) saturate(150%)', WebkitBackdropFilter:'blur(22px) saturate(150%)', border:`1px solid rgba(255,255,255,${scrollY>40?0.08:0.05})`, borderRadius:isMobile?0:'14px', boxShadow:isMobile?'none':(scrollY>40?'0 12px 40px rgba(0,0,0,0.5)':'0 6px 28px rgba(0,0,0,0.25)'), transition:'background 0.4s, border-color 0.4s, box-shadow 0.4s', opacity:loaded?1:0, animation:loaded?'fadeSlideIn 0.8s ease 0.1s both':'none' }}>
@@ -3426,13 +3879,34 @@ export default function App() {
             </div>
           ))}
         </div>
-        <button onClick={()=>setShowUpload(true)} onMouseMove={tintMove} className="cta-primary" style={{ padding:isMobile?'7px 12px':'9px 18px', background:'#00B4D8', color:'#05080F', border:'none', borderRadius:'3px', fontSize:isMobile?'10px':'11px', fontWeight:'800', cursor:'pointer', letterSpacing:'1.6px', boxShadow:'0 0 24px rgba(0,180,216,0.22)', fontFamily:'inherit', flexShrink:0 }}>
-          <span>{isMobile?'UPLOAD':t.upload}</span>
-        </button>
+        <div style={{ display:'flex', alignItems:'center', gap:isMobile?'8px':'10px', flexShrink:0 }}>
+          <div className="nav-btn" style={{ position:'relative' }}>
+            <button onClick={()=>setShowJudgeTour(true)} onMouseMove={tintMove} className="cta-primary" style={{ padding:isMobile?'7px 10px':'9px 16px', background:'#FFB703', color:'#05080F', border:'none', borderRadius:'3px', fontSize:isMobile?'10px':'11px', fontWeight:'800', cursor:'pointer', letterSpacing:'1.6px', boxShadow:'0 0 24px rgba(255,183,3,0.22)', fontFamily:'inherit' }}>
+              <span>{isMobile ? (isFr?'JUGE':'JUDGE') : (isFr?'MODE JUGE':'JUDGE MODE')}</span>
+            </button>
+            {!isMobile && (
+              <div className="nav-tooltip" style={{ position:'absolute', top:'calc(100% + 14px)', left:'50%', transform:'translateX(-50%) translateY(6px)', background:'rgba(10,22,40,0.96)', border:'1px solid rgba(255,183,3,0.35)', borderRadius:'4px', padding:'7px 12px', whiteSpace:'nowrap', fontSize:'9px', color:'#FFB703', letterSpacing:'2px', fontFamily:'ui-monospace,SFMono-Regular,Menlo,monospace', fontWeight:'700', textTransform:'uppercase', opacity:0, transition:'opacity .25s cubic-bezier(0.16,1,0.3,1),transform .25s cubic-bezier(0.16,1,0.3,1)', pointerEvents:'none', backdropFilter:'blur(14px)', WebkitBackdropFilter:'blur(14px)', zIndex:200, boxShadow:'0 10px 28px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,183,3,0.22), 0 0 20px rgba(255,183,3,0.18)' }}>
+                {isFr?'Visite guidée de 2 min du projet complet':'2-min guided tour of the whole project'}
+                <span style={{ position:'absolute', top:'-4px', left:'50%', transform:'translateX(-50%) rotate(45deg)', width:'7px', height:'7px', background:'rgba(10,22,40,0.96)', borderLeft:'1px solid rgba(255,183,3,0.35)', borderTop:'1px solid rgba(255,183,3,0.35)' }} />
+              </div>
+            )}
+          </div>
+          <div className="nav-btn" style={{ position:'relative' }}>
+            <button onClick={()=>setShowUpload(true)} data-tour="upload-btn" onMouseMove={tintMove} className="cta-primary" style={{ padding:isMobile?'7px 12px':'9px 18px', background:'#00B4D8', color:'#05080F', border:'none', borderRadius:'3px', fontSize:isMobile?'10px':'11px', fontWeight:'800', cursor:'pointer', letterSpacing:'1.6px', boxShadow:'0 0 24px rgba(0,180,216,0.22)', fontFamily:'inherit' }}>
+              <span>{isMobile?'UPLOAD':t.upload}</span>
+            </button>
+            {!isMobile && (
+              <div className="nav-tooltip" style={{ position:'absolute', top:'calc(100% + 14px)', left:'50%', transform:'translateX(-50%) translateY(6px)', background:'rgba(10,22,40,0.96)', border:'1px solid rgba(0,180,216,0.35)', borderRadius:'4px', padding:'7px 12px', whiteSpace:'nowrap', fontSize:'9px', color:'#00B4D8', letterSpacing:'2px', fontFamily:'ui-monospace,SFMono-Regular,Menlo,monospace', fontWeight:'700', textTransform:'uppercase', opacity:0, transition:'opacity .25s cubic-bezier(0.16,1,0.3,1),transform .25s cubic-bezier(0.16,1,0.3,1)', pointerEvents:'none', backdropFilter:'blur(14px)', WebkitBackdropFilter:'blur(14px)', zIndex:200, boxShadow:'0 10px 28px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,180,216,0.22), 0 0 20px rgba(0,180,216,0.18)' }}>
+                {isFr?"Essayez l'IA en direct sur votre propre IRM":'Try the live AI on your own brain MRI'}
+                <span style={{ position:'absolute', top:'-4px', left:'50%', transform:'translateX(-50%) rotate(45deg)', width:'7px', height:'7px', background:'rgba(10,22,40,0.96)', borderLeft:'1px solid rgba(0,180,216,0.35)', borderTop:'1px solid rgba(0,180,216,0.35)' }} />
+              </div>
+            )}
+          </div>
+        </div>
       </nav>
 
       {/* HERO */}
-      <section style={{ minHeight:'100vh', display:'flex', flexDirection:'column', justifyContent:'center', alignItems:'center', textAlign:'center', padding:isMobile?'120px 20px 60px':'140px 32px 80px', position:'relative', zIndex:1 }}>
+      <section data-tour="hero" style={{ minHeight:'100vh', display:'flex', flexDirection:'column', justifyContent:'center', alignItems:'center', textAlign:'center', padding:isMobile?'120px 20px 60px':'140px 32px 80px', position:'relative', zIndex:1 }}>
         <HeroOrbital isMobile={isMobile} />
         <CornerMark pos="tl" offset={28} /><CornerMark pos="tr" offset={28} />
         <CornerMark pos="bl" offset={28} /><CornerMark pos="br" offset={28} />
@@ -3464,13 +3938,13 @@ export default function App() {
 
         {/* CTAs */}
         <div style={{ position:'relative', zIndex:1, display:'flex', gap:'10px', justifyContent:'center', flexWrap:'wrap', animation:loaded?'fadeSlideIn 0.8s ease 0.95s both':'none', opacity:0, marginTop:'48px' }}>
-          <button onClick={()=>setShowUpload(true)}
-            onMouseMove={onHeroCtaMove}
-            onMouseLeave={()=>setHeroMag({ x:0, y:0 })}
+          <motion.button onClick={()=>setShowUpload(true)}
             className="cta-primary cta-hero"
-            style={{ padding:isMobile?'13px 28px':'15px 40px', background:'#00B4D8', color:'#05080F', border:'none', borderRadius:'3px', fontSize:'13px', fontWeight:'800', cursor:'pointer', letterSpacing:'1.8px', fontFamily:'inherit', display:'inline-flex', alignItems:'center', gap:'10px', transform:`translate(${heroMag.x}px,${heroMag.y}px)`, transition:'transform .18s cubic-bezier(0.16,1,0.3,1), box-shadow .25s ease' }}>
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+            style={{ padding:isMobile?'13px 28px':'15px 40px', background:'#00B4D8', color:'#05080F', border:'none', borderRadius:'3px', fontSize:'13px', fontWeight:'800', cursor:'pointer', letterSpacing:'1.8px', fontFamily:'inherit', display:'inline-flex', alignItems:'center', gap:'10px', transition:'box-shadow .25s ease' }}>
             <span style={{ display:'inline-flex', alignItems:'center', gap:'10px' }}>{t.upload}<Icon name="arrow" size={13} stroke={2.2} /></span>
-          </button>
+          </motion.button>
           <button onClick={()=>setActivePage('research')} onMouseMove={tintMove} className="cta-ghost" style={{ padding:isMobile?'13px 28px':'15px 40px', background:'transparent', color:'rgba(255,255,255,0.7)', border:'1px solid rgba(255,255,255,0.12)', borderRadius:'3px', fontSize:'13px', fontWeight:'500', cursor:'pointer', fontFamily:'inherit', letterSpacing:'0.3px' }}>
             <span>{t.research}</span>
           </button>
@@ -3540,7 +4014,9 @@ export default function App() {
           <div style={{ display:'grid', gridTemplateColumns:isMobile?'1fr':'repeat(auto-fit,minmax(300px,1fr))', gap:0, margin:'0 auto', borderTop:'1px solid rgba(255,255,255,0.06)', borderLeft:'1px solid rgba(255,255,255,0.06)' }}>
             {FEATURES.map((f,i)=>(
               <FadeUp key={f.title} delay={i*0.05}>
-                <div className="feat-card"
+                <motion.div className="feat-card"
+                  whileHover={{ y: -4 }}
+                  transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
                   onMouseEnter={()=>setHoveredFeature(i)} onMouseLeave={()=>setHoveredFeature(null)}
                   onMouseMove={tintMove}
                   onClick={()=>{ if(f.page==='system')setShowUpload(true); else if(f.page)setActivePage(f.page) }}
@@ -3554,7 +4030,7 @@ export default function App() {
                   </div>
                   <p style={{ fontSize:isMobile?'15px':'16px', fontWeight:'700', color:'#fff', marginBottom:'10px', letterSpacing:'-0.2px' }}>{lang==='fr'?f.titleFr:f.title}</p>
                   <p style={{ fontSize:'13px', color:'rgba(255,255,255,0.5)', lineHeight:'1.7', fontWeight:'300' }}>{lang==='fr'?f.descFr:f.desc}</p>
-                </div>
+                </motion.div>
               </FadeUp>
             ))}
           </div>
@@ -3579,16 +4055,16 @@ export default function App() {
 
           {/* 33× callout — static, editorial */}
           <FadeUp delay={0.1}>
-            <div style={{ maxWidth:'780px', margin:'0 auto 80px', padding:isMobile?'40px 24px':'56px 48px', background:'linear-gradient(180deg,rgba(230,57,70,0.04),rgba(230,57,70,0.008))', border:'1px solid rgba(230,57,70,0.18)', borderRadius:'8px', textAlign:'center', position:'relative', overflow:'hidden' }}>
+            <div data-tour="finding" style={{ maxWidth:'780px', margin:'0 auto 80px', padding:isMobile?'40px 24px':'56px 48px', background:'linear-gradient(180deg,rgba(230,57,70,0.04),rgba(230,57,70,0.008))', border:'1px solid rgba(230,57,70,0.18)', borderRadius:'8px', textAlign:'center', position:'relative', overflow:'hidden' }}>
               <div style={{ position:'absolute', inset:0, pointerEvents:'none', background:'radial-gradient(ellipse at 50% 0%,rgba(230,57,70,0.12),transparent 60%)' }} />
               <div className="mono" style={{ position:'relative', fontSize:'10px', color:'rgba(230,57,70,0.7)', letterSpacing:'3px', fontWeight:'700', marginBottom:'24px', textTransform:'uppercase' }}>{isFr?'Divergence de Perte':'Training Loss Divergence'}</div>
-              <div style={{ position:'relative', fontFamily:"'Bebas Neue',sans-serif", fontSize:isMobile?'clamp(72px,22vw,120px)':'clamp(96px,14vw,180px)', fontWeight:'400', color:'#E63946', letterSpacing:'-2px', lineHeight:'0.95', marginBottom:'24px', fontVariantNumeric:'tabular-nums' }}>33×</div>
+              <div style={{ position:'relative', fontFamily:"'Bebas Neue',sans-serif", fontSize:isMobile?'clamp(72px,22vw,120px)':'clamp(96px,14vw,180px)', fontWeight:'400', color:'#E63946', letterSpacing:'-2px', lineHeight:'0.95', marginBottom:'24px', fontVariantNumeric:'tabular-nums' }}><Counter value="33×" delay={0} /></div>
               <p style={{ position:'relative', fontSize:isMobile?'14px':'15px', color:'rgba(255,255,255,0.62)', maxWidth:'520px', margin:'0 auto', lineHeight:'1.8', fontWeight:'300' }}>{t.finding33x}</p>
             </div>
           </FadeUp>
 
           {/* groups — data sheet */}
-          <div style={{ display:'grid', gridTemplateColumns:isMobile?'1fr 1fr':'repeat(4,minmax(0,1fr))', gap:0, maxWidth:'1000px', margin:'0 auto', borderTop:'1px solid rgba(255,255,255,0.06)', borderLeft:'1px solid rgba(255,255,255,0.06)' }}>
+          <div data-tour="groups" style={{ display:'grid', gridTemplateColumns:isMobile?'1fr 1fr':'repeat(4,minmax(0,1fr))', gap:0, maxWidth:'1000px', margin:'0 auto', borderTop:'1px solid rgba(255,255,255,0.06)', borderLeft:'1px solid rgba(255,255,255,0.06)' }}>
             {GROUPS.map((g,i)=>(
               <FadeUp key={g.g} delay={i*0.06}>
                 <div className="grp-card" style={{ padding:isMobile?'22px 18px':'28px 22px', borderRight:'1px solid rgba(255,255,255,0.06)', borderBottom:'1px solid rgba(255,255,255,0.06)', transition:'background .4s cubic-bezier(0.16,1,0.3,1)', cursor:'default', height:'100%', '--tint':g.color+'2A' }}
@@ -3602,7 +4078,7 @@ export default function App() {
                   <p style={{ fontSize:'11px', fontWeight:'700', color:'#fff', marginBottom:'4px', letterSpacing:'0.2px' }}>{t.groupLabels[i]}</p>
                   <p style={{ fontSize:'10px', color:'rgba(255,255,255,0.38)', lineHeight:'1.6', marginBottom:'18px', minHeight:'48px', fontWeight:'300' }}>{t.groupDescs[i]}</p>
                   <div style={{ display:'flex', flexDirection:'column', gap:'8px', borderTop:'1px solid rgba(255,255,255,0.06)', paddingTop:'14px' }}>
-                    {[[t.statLabels[0],g.acc,'#fff'],[t.statLabels[1],g.ece,g.g==='C'?'#E63946':'#10B981'],[t.statLabels[2],g.loss,g.g==='C'?'#E63946':'rgba(255,255,255,0.55)']].map(([label,val,col])=>(
+                    {[[t.statLabels[0],<Counter value={g.acc} delay={i*100} />,'#fff'],[t.statLabels[1],<Counter value={g.ece} delay={i*100+50} />,g.g==='C'?'#E63946':'#10B981'],[t.statLabels[2],g.loss,g.g==='C'?'#E63946':'rgba(255,255,255,0.55)']].map(([label,val,col])=>(
                       <div key={label} style={{ display:'flex', justifyContent:'space-between', alignItems:'baseline' }}>
                         <span className="mono" style={{ fontSize:'9px', color:'rgba(255,255,255,0.32)', letterSpacing:'1px', textTransform:'uppercase' }}>{label}</span>
                         <span className="mono" style={{ fontSize:'11px', fontWeight:'700', color:col, letterSpacing:'0.2px' }}>{val}</span>
