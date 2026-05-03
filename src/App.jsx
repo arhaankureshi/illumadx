@@ -24,6 +24,30 @@ function FadeUp({ children, delay = 0 }) {
 
 const CLASS_COLORS = { glioma: '#E63946', meningioma: '#FFB703', notumor: '#10B981', pituitary: '#00B4D8' }
 
+const MALIGNANCY_PROFILE = {
+  glioma: { label:{en:'Typically Malignant',fr:'Typiquement Maligne'}, color:'#E63946', detail:{en:'Most gliomas are WHO Grade II–IV. Biopsy required for definitive diagnosis and grading.', fr:'La plupart des gliomes sont de Grade OMS II–IV. Une biopsie est requise pour un diagnostic et un grade définitifs.'}},
+  meningioma: { label:{en:'Usually Benign',fr:'Habituellement Bénigne'}, color:'#10B981', detail:{en:'~80% are WHO Grade I (benign). Biopsy required for definitive diagnosis and to rule out atypical or anaplastic variants.', fr:'~80% sont de Grade OMS I (bénignes). Une biopsie est requise pour un diagnostic définitif et pour exclure les variantes atypiques.'}},
+  pituitary: { label:{en:'Almost Always Benign',fr:'Presque Toujours Bénigne'}, color:'#10B981', detail:{en:'Nearly all are benign adenomas. Biopsy and endocrine workup recommended for definitive diagnosis and hormonal effects.', fr:'Presque tous sont des adénomes bénins. Biopsie et bilan endocrinien recommandés pour un diagnostic définitif et les effets hormonaux.'}},
+  notumor: null
+}
+
+function MalignancyChip({ prediction, isFr, compact = false }) {
+  const profile = MALIGNANCY_PROFILE[prediction]
+  if (!profile) return null
+  const lang = isFr ? 'fr' : 'en'
+  return (
+    <div style={{ background:'rgba(10,22,40,0.55)', border:`1px solid ${profile.color}3A`, borderLeft:`3px solid ${profile.color}`, borderRadius:'5px', padding: compact?'8px 12px':'10px 14px', marginTop: compact?'10px':'14px' }}>
+      <div style={{ display:'flex', alignItems:'center', gap:'8px', marginBottom:'5px', flexWrap:'wrap' }}>
+        <span className="mono" style={{ fontSize:'8.5px', color:'rgba(255,255,255,0.45)', letterSpacing:'1.8px', fontWeight:'700', textTransform:'uppercase' }}>{isFr?'Contexte Clinique':'Clinical Context'}</span>
+        <span style={{ color:'rgba(255,255,255,0.2)', fontSize:'9px' }}>·</span>
+        <span className="mono" style={{ fontSize:'10px', color:profile.color, fontWeight:'800', letterSpacing:'1px', textTransform:'uppercase' }}>{profile.label[lang]}</span>
+      </div>
+      <p style={{ fontSize: compact?'11px':'11.5px', color:'rgba(255,255,255,0.72)', lineHeight:'1.55', fontWeight:'300', margin:0 }}>{profile.detail[lang]}</p>
+      <p style={{ fontSize:'9.5px', color:'rgba(255,255,255,0.4)', lineHeight:'1.5', fontStyle:'italic', marginTop:'5px', fontWeight:'300' }}>{isFr?'Note : IllumaDX classifie le type de tumeur, pas la malignité. Une biopsie est requise pour un diagnostic définitif.':'Note: IllumaDX classifies tumor type, not malignancy. Biopsy required for definitive diagnosis.'}</p>
+    </div>
+  )
+}
+
 const T = {
   en: {
     live:'LIVE CLINICAL AI SYSTEM', tagline:'BECAUSE DIAGNOSIS STARTS WITH CLARITY',
@@ -1023,6 +1047,16 @@ function PDFReportPage({ lang, onClose }) {
       <div class="sec-title">${isFr?'DISTRIBUTION DE CONFIANCE':'CONFIDENCE DISTRIBUTION'}</div>
       ${['glioma','meningioma','notumor','pituitary'].map(cls=>{const p=(result.probabilities[cls]||0)*100;const isTop=cls===result.prediction;const c=CLASS_COLORS[cls];return`<div class="bar-row"><div class="bar-label" style="color:${isTop?c:'#555'}">${cls}</div><div class="bar-track"><div class="bar-fill" style="width:${p.toFixed(1)}%;background:${isTop?c:'#ddd'}"></div></div><div style="width:45px;text-align:right;font-size:11px;font-weight:700;color:${isTop?c:'#999'}">${p.toFixed(1)}%</div></div>`}).join('')}
     </div>
+    ${MALIGNANCY_PROFILE[result.prediction] ? `
+    <div class="section">
+      <div class="sec-title">${isFr?'CONTEXTE CLINIQUE · COMPORTEMENT TYPIQUE':'CLINICAL CONTEXT · TYPICAL BEHAVIOR'}</div>
+      <div style="background:#fff;border:1px solid ${MALIGNANCY_PROFILE[result.prediction].color};border-left:4px solid ${MALIGNANCY_PROFILE[result.prediction].color};border-radius:4px;padding:12px 16px">
+        <div style="font-size:10px;font-weight:800;color:${MALIGNANCY_PROFILE[result.prediction].color};letter-spacing:2px;text-transform:uppercase;margin-bottom:6px">${MALIGNANCY_PROFILE[result.prediction].label[isFr?'fr':'en']}</div>
+        <p style="font-size:12px;color:#333;line-height:1.7;margin-bottom:6px">${MALIGNANCY_PROFILE[result.prediction].detail[isFr?'fr':'en']}</p>
+        <p style="font-size:10px;color:#888;font-style:italic;line-height:1.5">${isFr?'Note : IllumaDX classifie le type de tumeur, pas la malignité. Une biopsie est requise pour un diagnostic définitif.':'Note: IllumaDX classifies tumor type, not malignancy. Biopsy required for definitive diagnosis.'}</p>
+      </div>
+    </div>
+    ` : ''}
     <div class="section">
       <div class="sec-title">${isFr?'BENCHMARKS DU MODÈLE':'MODEL BENCHMARKS'} — GroupB ResNet-18</div>
       <div class="grid3">
@@ -1184,6 +1218,8 @@ function PDFReportPage({ lang, onClose }) {
                   })}
                 </div>
               </div>
+
+              <MalignancyChip prediction={result.prediction} isFr={isFr} />
 
               {/* Action buttons */}
               <div style={{ display:'grid', gridTemplateColumns:'2fr 1fr', gap:'10px', marginBottom:'28px' }}>
@@ -2222,6 +2258,19 @@ function printPatientReport(patient, result, lang) {
     <div class="ai-meta">${isFr?'Les zones colorées montrent où l\'IA a regardé sur votre scan':'Colored areas show where the AI looked on your scan'}</div>` : ''}
   </div>
 
+  ${MALIGNANCY_PROFILE[result.prediction] ? `
+  <div class="section">
+    <div class="sec-title"><span><span class="num">§</span> ${isFr?'Contexte Clinique':'Clinical Context'}</span><span class="aux">${isFr?'comportement typique':'typical behavior'}</span></div>
+    <div style="background:#fff;border:1px solid ${MALIGNANCY_PROFILE[result.prediction].color};border-left:3px solid ${MALIGNANCY_PROFILE[result.prediction].color};border-radius:3px;padding:9px 12px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap">
+        <span style="font-family:ui-monospace,monospace;font-size:9px;color:${MALIGNANCY_PROFILE[result.prediction].color};font-weight:800;letter-spacing:1.5px;text-transform:uppercase">${MALIGNANCY_PROFILE[result.prediction].label[isFr?'fr':'en']}</span>
+      </div>
+      <p style="font-size:10.5px;color:#333;line-height:1.55;margin-bottom:4px">${MALIGNANCY_PROFILE[result.prediction].detail[isFr?'fr':'en']}</p>
+      <p style="font-size:9px;color:#999;font-style:italic;line-height:1.5">${isFr?'Note : IllumaDX classifie le type de tumeur, pas la malignité. Une biopsie est requise pour un diagnostic définitif.':'Note: IllumaDX classifies tumor type, not malignancy. Biopsy required for definitive diagnosis.'}</p>
+    </div>
+  </div>
+  ` : ''}
+
   ${patient.problemList && patient.problemList.length ? `
   <!-- §03 YOUR ACTIVE DIAGNOSES -->
   <div class="section">
@@ -2718,6 +2767,9 @@ function PatientDetail({ patient, lang, onScanComplete }) {
                     <span style={{ display:'inline-flex', alignItems:'center', gap:'8px' }}>{isFr?'Heatmaps':'Heatmaps'}<Icon name="arrow" size={11} stroke={2.4} /></span>
                   </button>
                 </div>
+                <div style={{ width:'100%', marginTop:'4px' }}>
+                  <MalignancyChip prediction={localResult.prediction} isFr={isFr} compact />
+                </div>
               </div>
             ) : (
               <div style={{ border:'1px dashed rgba(0,180,216,0.22)', borderRadius:'8px', padding:'28px 24px', textAlign:'center', background:'rgba(0,180,216,0.02)' }}>
@@ -2845,6 +2897,8 @@ function PatientDetail({ patient, lang, onScanComplete }) {
                       </div>
                     </div>
                   </div>
+
+                  <MalignancyChip prediction={localResult.prediction} isFr={isFr} />
 
                   {/* Heatmaps */}
                   {localResult.heatmap_b && (<>
@@ -3078,6 +3132,8 @@ function UploadModal({ onClose, lang }) {
                     </div>
                   </div>
                 </div>
+
+                <MalignancyChip prediction={result.prediction} isFr={isFr} />
 
                 {/* HEATMAPS */}
                 <p className="mono" style={{ fontSize:'9px', color:'rgba(255,255,255,0.4)', letterSpacing:'2.5px', marginBottom:'12px', textTransform:'uppercase', fontWeight:'700' }}>§ 01 · {isFr?'Cartes GradCAM++ · Interprétabilité':'GradCAM++ Heatmaps · Interpretability'}</p>
