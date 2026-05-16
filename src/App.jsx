@@ -3105,6 +3105,8 @@ const DEMO_SAMPLES = [
   { mri:'/demo/sample-5-glioma-b.jpg',   json:'/demo/prediction-5-glioma-b.json' },
 ]
 
+let sessionBackendReady = false
+
 function UploadModal({ onClose, lang, showDemoButton = false, autoTriggerDemo = false, onPhaseChange }) {
   const [phase, setPhase] = useState('idle')
   const [result, setResult] = useState(null)
@@ -3112,9 +3114,21 @@ function UploadModal({ onClose, lang, showDemoButton = false, autoTriggerDemo = 
   const [preview, setPreview] = useState(null)
   const [demoIndex, setDemoIndex] = useState(0)
   const [demoUsed, setDemoUsed] = useState(false)
+  const [backendStatus, setBackendStatus] = useState(sessionBackendReady ? 'green' : 'yellow')
   const fileRef = useRef(null)
   const isFr = lang === 'fr'
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
+
+  useEffect(() => {
+    if (sessionBackendReady) return
+    const ctrl = new AbortController()
+    const timer = setTimeout(() => ctrl.abort(), 6000)
+    fetch(`${API_URL}/`, { method:'GET', signal:ctrl.signal })
+      .then(() => { sessionBackendReady = true; setBackendStatus('green') })
+      .catch(err => { if (err.name !== 'AbortError') setBackendStatus('red') })
+      .finally(() => clearTimeout(timer))
+    return () => { clearTimeout(timer); ctrl.abort() }
+  }, [])
 
   const handleFile = async (file) => {
     if (!file||!file.type.startsWith('image/')) return
@@ -3124,7 +3138,7 @@ function UploadModal({ onClose, lang, showDemoButton = false, autoTriggerDemo = 
       const res=await fetch(`${API_URL}/predict`,{method:'POST',body:fd})
       const data=await res.json()
       if(!res.ok){if(data.error==='not_mri'){setPhase('not_mri');return} setPhase('invalid');return}
-      setResult(data); setPhase('result')
+      setResult(data); setPhase('result'); sessionBackendReady = true; setBackendStatus('green')
     } catch { setPhase('error') }
   }
 
@@ -3289,6 +3303,7 @@ function UploadModal({ onClose, lang, showDemoButton = false, autoTriggerDemo = 
           @keyframes scanSweep{0%{top:-10%;opacity:0}10%{opacity:1}90%{opacity:1}100%{top:110%;opacity:0}}
           @keyframes barIn{from{width:0}}
           @keyframes mapReveal{from{opacity:0;clip-path:inset(0 100% 0 0)}to{opacity:1;clip-path:inset(0 0 0 0)}}
+          @keyframes statusPulse{0%,100%{opacity:1}50%{opacity:0.55}}
         `}</style>
 
         <CornerMark pos="tl" offset={14} /><CornerMark pos="tr" offset={14} />
@@ -3320,6 +3335,23 @@ function UploadModal({ onClose, lang, showDemoButton = false, autoTriggerDemo = 
 
         {/* BODY */}
         <div style={{ padding:isMobile?'24px 22px 26px':'28px 32px 30px' }}>
+
+          {/* BACKEND STATUS PILL */}
+          {(()=> {
+            const S = {
+              green:  { dot:'🟢', color:'#10B981', label:isFr?'Système prêt':'System ready' },
+              yellow: { dot:'🟡', color:'#FFB703', label:isFr?'Démarrage — la première analyse peut prendre 30 secondes':'Warming up — first scan may take 30 seconds' },
+              red:    { dot:'🔴', color:'#E63946', label:isFr?'Système hors ligne — réessayer dans un instant':'System offline — try again in a moment' },
+            }[backendStatus]
+            return (
+              <div style={{ display:'flex', justifyContent:'center', marginBottom:'18px' }}>
+                <div role="status" aria-live="polite" style={{ display:'inline-flex', alignItems:'center', gap:'8px', padding:'6px 14px', borderRadius:'999px', background:'rgba(10,22,40,0.6)', border:`1px solid ${S.color}`, color:S.color, fontFamily:"'Inter',system-ui,sans-serif", fontSize:'12px', fontWeight:600, letterSpacing:'0.2px', animation: backendStatus==='yellow' ? 'statusPulse 1.8s ease-in-out infinite' : 'none' }}>
+                  <span style={{ fontSize:'10px', lineHeight:1 }} aria-hidden="true">{S.dot}</span>
+                  <span>{S.label}</span>
+                </div>
+              </div>
+            )
+          })()}
 
           {/* IDLE — dropzone */}
           {phase==='idle' && (<>
@@ -3453,6 +3485,23 @@ function UploadModal({ onClose, lang, showDemoButton = false, autoTriggerDemo = 
                     <p className="mono" style={{ fontSize:'10px', color:'#00B4D8', fontWeight:'800', margin:0, letterSpacing:'1.5px', textTransform:'uppercase', display:'inline-flex', alignItems:'center', gap:'8px' }}><span style={{ width:'6px', height:'6px', background:'#00B4D8', borderRadius:'50%' }} />{isFr?'Consensus B+D · Carte finale':'Consensus B+D · Final heatmap'}</p>
                     <span className="mono" style={{ fontSize:'9px', color:'rgba(0,180,216,0.65)', letterSpacing:'1.2px', textTransform:'uppercase' }}>{isFr?'Superposition moyenne':'Average overlay'}</span>
                   </div>
+                </div>
+
+                {/* HEATMAP LEGEND */}
+                <div style={{ marginTop:'10px', padding:'10px 14px', display:'flex', flexDirection:'column', gap:'5px', fontFamily:"'Inter',system-ui,sans-serif" }}>
+                  <div style={{ display:'flex', alignItems:'center', gap:'16px', flexWrap:'wrap', fontSize:'11px', color:'rgba(255,255,255,0.7)' }}>
+                    <span style={{ display:'inline-flex', alignItems:'center', gap:'7px' }}>
+                      <span aria-hidden="true" style={{ width:'10px', height:'10px', background:'#E63946', borderRadius:'2px', display:'inline-block' }} />
+                      {isFr?'Attention élevée du modèle':'High model attention'}
+                    </span>
+                    <span style={{ display:'inline-flex', alignItems:'center', gap:'7px' }}>
+                      <span aria-hidden="true" style={{ width:'10px', height:'10px', background:'#00B4D8', borderRadius:'2px', display:'inline-block' }} />
+                      {isFr?'Attention faible':'Low attention'}
+                    </span>
+                  </div>
+                  <p style={{ margin:0, fontSize:'11px', fontStyle:'italic', color:'rgba(255,255,255,0.5)', lineHeight:1.55 }}>
+                    {isFr?'Pour une prédiction fiable, les régions rouges doivent recouvrir l\'emplacement réel de la tumeur.':'For a trustworthy prediction, red regions should overlap with the actual tumor location.'}
+                  </p>
                 </div>
 
                 {/* PROBABILITY DISTRIBUTION */}
